@@ -1,0 +1,118 @@
+{
+  "schema": "caseproof_target_example_registry_v1",
+  "status": "PLANNED",
+  "description": "Expected JSON Schema results only. valid does not assert HTTP acceptance, cross-record integrity, approval eligibility or implemented /api/v1 routes.",
+  "examples": [
+    {"file": "examples/create-minimal.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": true},
+    {"file": "examples/create-parent.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": true},
+    {"file": "examples/create-forbidden-tenant_id.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/create-forbidden-actor_id.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/create-forbidden-roles.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {
+      "file": "examples/create-forbidden-expected_revision.json",
+      "schema": "commands.schema.json#/$defs/CreateChange",
+      "valid": false
+    },
+    {"file": "examples/create-forbidden-owner_id.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/create-parent-unpaired.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/create-invalid-uuid.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/create-invalid-id-newline.json", "schema": "commands.schema.json#/$defs/CreateChange", "valid": false},
+    {"file": "examples/evaluation-valid.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": true},
+    {
+      "file": "examples/evaluation-unknown-context.json",
+      "schema": "commands.schema.json#/$defs/RecordEvaluation",
+      "valid": true,
+      "note": "DTO valid, with defaults; suite-required missing facts must produce INCONCLUSIVE. This is not a gate-PASS example."
+    },
+    {"file": "examples/evaluation-boolean.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": false},
+    {"file": "examples/evaluation-string.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": false},
+    {"file": "examples/evaluation-negative.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": false},
+    {"file": "examples/evaluation-too-large.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": false},
+    {"file": "examples/evaluation-fractional.json", "schema": "commands.schema.json#/$defs/RecordEvaluation", "valid": false},
+    {
+      "file": "examples/evaluation-integral-float.json",
+      "schema": "commands.schema.json#/$defs/RecordEvaluation",
+      "valid": true,
+      "runtime_valid": false,
+      "note": "JSON Schema integer accepts 1.0; the strict JSON HTTP runtime must reject it."
+    },
+    {
+      "file": "examples/evaluation-forbidden-answer.json",
+      "schema": "commands.schema.json#/$defs/RecordEvaluation",
+      "valid": false
+    },
+    {"file": "examples/submit-empty.json", "schema": "commands.schema.json#/$defs/SubmitChange", "valid": true},
+    {"file": "examples/submit-forbidden-revision.json", "schema": "commands.schema.json#/$defs/SubmitChange", "valid": false},
+    {"file": "examples/decision-approve.json", "schema": "commands.schema.json#/$defs/Decision", "valid": true},
+    {"file": "examples/decision-reject.json", "schema": "commands.schema.json#/$defs/Decision", "valid": true},
+    {"file": "examples/decision-missing-reason.json", "schema": "commands.schema.json#/$defs/Decision", "valid": false},
+    {"file": "examples/decision-short-reason.json", "schema": "commands.schema.json#/$defs/Decision", "valid": false},
+    {
+      "file": "examples/decision-trim-short.json",
+      "schema": "commands.schema.json#/$defs/Decision",
+      "valid": true,
+      "runtime_valid": false,
+      "note": "Schema checks original length only. The stripped seven-code-point reason is invalid at runtime."
+    },
+    {
+      "file": "examples/decision-blank.json",
+      "schema": "commands.schema.json#/$defs/Decision",
+      "valid": true,
+      "runtime_valid": false
+    },
+    {"file": "examples/decision-unknown-property.json", "schema": "commands.schema.json#/$defs/Decision", "valid": false},
+    {"file": "examples/headers-create-valid.json", "schema": "commands.schema.json#/$defs/CreateHeaders", "valid": true},
+    {"file": "examples/headers-mutation-valid.json", "schema": "commands.schema.json#/$defs/MutationHeaders", "valid": true},
+    {"file": "examples/headers-create-revision.json", "schema": "commands.schema.json#/$defs/CreateHeaders", "valid": false},
+    {"file": "examples/headers-missing-key.json", "schema": "commands.schema.json#/$defs/CreateHeaders", "valid": false},
+    {
+      "file": "examples/headers-missing-revision.json",
+      "schema": "commands.schema.json#/$defs/MutationHeaders",
+      "valid": false
+    },
+    {"file": "examples/headers-leading-zero.json", "schema": "commands.schema.json#/$defs/MutationHeaders", "valid": false},
+    {"file": "examples/headers-key-newline.json", "schema": "commands.schema.json#/$defs/MutationHeaders", "valid": false},
+    {"file": "examples/snapshot-genesis.json", "schema": "change-revision.schema.json", "valid": true},
+    {"file": "examples/snapshot-missing-null.json", "schema": "change-revision.schema.json", "valid": false},
+    {"file": "examples/snapshot-envelope-cycle.json", "schema": "change-revision.schema.json", "valid": false},
+    {"file": "examples/decision-note-domain.json", "schema": "decision-note.schema.json", "valid": true},
+    {"file": "examples/decision-note-domain-assessment.json", "schema": "decision-note.schema.json", "valid": false},
+    {"file": "examples/decision-note-release.json", "schema": "decision-note.schema.json", "valid": true},
+    {"file": "examples/transition-change_created.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-evaluation_recorded.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-submitted_for_domain_review.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-domain_approve.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-domain_reject.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-approved_for_demo.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-release_reject.json", "schema": "change-transition.schema.json", "valid": true},
+    {"file": "examples/transition-invalid-genesis-run.json", "schema": "change-transition.schema.json", "valid": false},
+    {"file": "examples/audit-genesis.json", "schema": "audit-event.schema.json", "valid": true},
+    {"file": "examples/audit-invalid-genesis-hash.json", "schema": "audit-event.schema.json", "valid": false},
+    {
+      "file": "examples/run-complete.json",
+      "schema": "evaluation-run.schema.json",
+      "valid": true,
+      "note": "Structural specimen only; suite coverage and referenced records are not demonstrated."
+    },
+    {"file": "examples/run-incomplete.json", "schema": "evaluation-run.schema.json", "valid": true},
+    {"file": "examples/run-incomplete-false-pass.json", "schema": "evaluation-run.schema.json", "valid": false},
+    {
+      "file": "examples/assessment-structural.json",
+      "schema": "assessment-manifest.schema.json",
+      "valid": true,
+      "note": "Synthetic placeholder hashes, not an internally verified approval history."
+    },
+    {"file": "examples/assessment-self-hash.json", "schema": "assessment-manifest.schema.json", "valid": false},
+    {
+      "file": "examples/envelope-structural.json",
+      "schema": "approval-envelope.schema.json",
+      "valid": true,
+      "note": "Synthetic placeholder hashes; no approval or external anchor was executed."
+    },
+    {"file": "examples/envelope-self-hash.json", "schema": "approval-envelope.schema.json", "valid": false},
+    {"file": "examples/fingerprint-create.json", "schema": "mutation-fingerprint.schema.json", "valid": true},
+    {"file": "examples/fingerprint-create-revision.json", "schema": "mutation-fingerprint.schema.json", "valid": false},
+    {"file": "examples/error-stale.json", "schema": "error.schema.json", "valid": true},
+    {"file": "examples/error-private-detail.json", "schema": "error.schema.json", "valid": false}
+  ]
+}

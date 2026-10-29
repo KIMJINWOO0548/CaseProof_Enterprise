@@ -1,0 +1,119 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Common target value definitions",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "$defs": {
+    "UUIDv4": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$(?![\\s\\S])",
+      "description": "Lowercase RFC 4122 variant UUID version 4 for API-issued objects."
+    },
+    "RegisteredId": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}$(?![\\s\\S])",
+      "description": "Registered tenant, actor, synthetic pack, product, workflow, rule, case or enum-like identifier."
+    },
+    "SHA256": {"type": "string", "pattern": "^[0-9a-f]{64}$(?![\\s\\S])"},
+    "UTCTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\\.[0-9]{6}Z$(?![\\s\\S])",
+      "description": "Normalized UTC instant with exactly six fractional digits. Calendar validity requires a format checker."
+    },
+    "InputTimestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Offset input is accepted then normalized to UTCTimestamp before storage and hashing."
+    },
+    "BusinessDate": {"type": "string", "format": "date", "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$(?![\\s\\S])"},
+    "SafeInteger": {"type": "integer", "minimum": -9007199254740991, "maximum": 9007199254740991, "x-runtime-strict-json-integer": true},
+    "Revision": {"type": "integer", "minimum": 1, "maximum": 9007199254740991, "x-runtime-strict-json-integer": true},
+    "NonnegativeInteger": {"type": "integer", "minimum": 0, "maximum": 9007199254740991, "x-runtime-strict-json-integer": true},
+    "ClaimDays": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 9999,
+      "x-runtime-strict-json-integer": true,
+      "description": "Runtime rejects JSON floats, including 1.0; JSON Schema integer alone does not express that restriction."
+    },
+    "Reason": {
+      "type": "string",
+      "minLength": 8,
+      "maxLength": 500,
+      "description": "Original and Python str.strip() result must each contain 8–500 Unicode code points. Store strip result; preserve NFC/NFD; reject surrogates at runtime."
+    },
+    "Status": {"enum": ["DRAFT", "PENDING_DOMAIN_REVIEW", "PENDING_RELEASE", "REJECTED", "APPROVED_FOR_DEMO"]},
+    "TransitionKind": {
+      "enum": [
+        "CHANGE_CREATED",
+        "EVALUATION_RECORDED",
+        "SUBMITTED_FOR_DOMAIN_REVIEW",
+        "DOMAIN_APPROVE",
+        "DOMAIN_REJECT",
+        "APPROVED_FOR_DEMO",
+        "RELEASE_REJECT"
+      ]
+    },
+    "ParentRelation": {"enum": ["CORRECTS_REJECTED", "REPLACES_DRAFT", "FOLLOWS_APPROVED"]},
+    "PayloadRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {"id": {"$ref": "#/$defs/UUIDv4"}, "payload_sha256": {"$ref": "#/$defs/SHA256"}},
+      "required": ["id", "payload_sha256"]
+    },
+    "RunRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/UUIDv4"},
+        "payload_sha256": {"$ref": "#/$defs/SHA256"},
+        "recorded_revision": {"$ref": "#/$defs/Revision"}
+      },
+      "required": ["id", "payload_sha256", "recorded_revision"]
+    },
+    "DecisionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/UUIDv4"},
+        "payload_sha256": {"$ref": "#/$defs/SHA256"},
+        "output_revision": {"$ref": "#/$defs/Revision"}
+      },
+      "required": ["id", "payload_sha256", "output_revision"]
+    },
+    "EventRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/UUIDv4"},
+        "payload_sha256": {"$ref": "#/$defs/SHA256"},
+        "sequence": {"$ref": "#/$defs/Revision"}
+      },
+      "required": ["id", "payload_sha256", "sequence"]
+    },
+    "TransitionRef": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {"$ref": "#/$defs/UUIDv4"},
+        "payload_sha256": {"$ref": "#/$defs/SHA256"},
+        "revision_to": {"$ref": "#/$defs/Revision"},
+        "audit_event_ref": {"$ref": "#/$defs/EventRef"}
+      },
+      "required": ["id", "payload_sha256", "revision_to", "audit_event_ref"]
+    },
+    "AuditCheckpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {"sequence": {"$ref": "#/$defs/NonnegativeInteger"}, "head_sha256": {"$ref": "#/$defs/SHA256"}},
+      "required": ["sequence", "head_sha256"],
+      "allOf": [
+        {
+          "if": {"properties": {"sequence": {"const": 0}}},
+          "then": {"properties": {"head_sha256": {"const": "0000000000000000000000000000000000000000000000000000000000000000"}}}
+        }
+      ]
+    }
+  }
+}

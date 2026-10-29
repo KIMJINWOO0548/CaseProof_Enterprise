@@ -1,0 +1,216 @@
+{
+  "schema": "caseproof_state_machine_v1",
+  "status": "PLANNED",
+  "api_namespace": "/api/v1",
+  "runtime_implemented": false,
+  "states": ["DRAFT", "PENDING_DOMAIN_REVIEW", "PENDING_RELEASE", "REJECTED", "APPROVED_FOR_DEMO"],
+  "terminal_states": ["REJECTED", "APPROVED_FOR_DEMO"],
+  "transitions": [
+    {
+      "kind": "CHANGE_CREATED",
+      "from_state": "NONE",
+      "to_state": "DRAFT",
+      "required_role": "ANALYST",
+      "revision_from": 0,
+      "revision_to": 1,
+      "guards": ["authenticated enabled actor", "same-tenant access", "integrity valid", "X-Expected-Revision absent"],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 0,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "null",
+      "decision_ref": "null",
+      "assessment_sha256": "null"
+    },
+    {
+      "kind": "EVALUATION_RECORDED",
+      "from_state": "DRAFT",
+      "to_state": "DRAFT",
+      "required_role": "ANALYST",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor is requester"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 1,
+        "DecisionNote": 0,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "required",
+      "decision_ref": "null",
+      "assessment_sha256": "null"
+    },
+    {
+      "kind": "SUBMITTED_FOR_DOMAIN_REVIEW",
+      "from_state": "DRAFT",
+      "to_state": "PENDING_DOMAIN_REVIEW",
+      "required_role": "ANALYST",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor is requester",
+        "latest full-suite run PASS",
+        "freeze active_run_id as selected run"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 0,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "required",
+      "decision_ref": "null",
+      "assessment_sha256": "null"
+    },
+    {
+      "kind": "DOMAIN_APPROVE",
+      "from_state": "PENDING_DOMAIN_REVIEW",
+      "to_state": "PENDING_RELEASE",
+      "required_role": "DOMAIN_REVIEWER",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor differs from requester and owner"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 1,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "null",
+      "decision_ref": "required",
+      "assessment_sha256": "null"
+    },
+    {
+      "kind": "DOMAIN_REJECT",
+      "from_state": "PENDING_DOMAIN_REVIEW",
+      "to_state": "REJECTED",
+      "required_role": "DOMAIN_REVIEWER",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor differs from requester and owner"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 1,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "null",
+      "decision_ref": "required",
+      "assessment_sha256": "null"
+    },
+    {
+      "kind": "APPROVED_FOR_DEMO",
+      "from_state": "PENDING_RELEASE",
+      "to_state": "APPROVED_FOR_DEMO",
+      "required_role": "RELEASE_APPROVER",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor differs from requester and owner",
+        "actor differs from domain reviewer",
+        "valid DOMAIN/APPROVE note and event",
+        "reconstructed evidence valid",
+        "latest full-suite gate PASS",
+        "source currently eligible for new approval"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 1,
+        "Assessment": 1,
+        "ApprovalEnvelope": 1
+      },
+      "run_ref": "null",
+      "decision_ref": "required",
+      "assessment_sha256": "required"
+    },
+    {
+      "kind": "RELEASE_REJECT",
+      "from_state": "PENDING_RELEASE",
+      "to_state": "REJECTED",
+      "required_role": "RELEASE_APPROVER",
+      "revision_from": "n>=1",
+      "revision_to": "n+1",
+      "guards": [
+        "authenticated enabled actor",
+        "same-tenant access",
+        "integrity valid",
+        "expected revision and CAS agree",
+        "actor differs from requester and owner",
+        "actor differs from domain reviewer",
+        "valid DOMAIN/APPROVE note and event"
+      ],
+      "insert_counts": {
+        "ChangeRevision": 1,
+        "ChangeTransition": 1,
+        "AuditEvent": 1,
+        "EvaluationRun": 0,
+        "DecisionNote": 1,
+        "Assessment": 0,
+        "ApprovalEnvelope": 0
+      },
+      "run_ref": "null",
+      "decision_ref": "required",
+      "assessment_sha256": "null"
+    }
+  ],
+  "invariants": [
+    "Every successful workflow transition increments revision by exactly one in one transaction.",
+    "Exactly one snapshot, transition and audit event accompany every transition, including reject and DRAFT evaluation.",
+    "Failed requests create neither workflow transitions nor successful idempotency records.",
+    "Creation fixes requester and owner to the authenticated actor; the three approval participants are distinct.",
+    "After submit, evaluation is a state error; terminal states have no outgoing transitions.",
+    "Active G5 jobs prohibit evaluate, submit and approve; G1 real_model_capability is false."
+  ],
+  "g5_extension": {
+    "status": "PLANNED_OPTIONAL_NOT_ACTIVE",
+    "real_model_capability_until_implemented": false,
+    "transition_kinds": ["EVALUATION_REQUESTED", "EVALUATION_COMPLETED"],
+    "note": "Not accepted by core transition schemas. Activate only with the complete separately tested job extension."
+  }
+}

@@ -1,0 +1,24 @@
+include AGENTS.md START_HERE.md VERIFY_PACKAGE.py
+include README.md CHANGELOG.md LICENSE NOTICE THIRD_PARTY_NOTICES.md
+include CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md
+include pyproject.toml requirements*.txt requirements*.lock
+include Dockerfile compose.yaml .dockerignore .editorconfig .gitattributes .gitignore
+recursive-include service *.py *.html *.css *.js
+recursive-include reference *.py
+recursive-include datasets *.json
+recursive-include tests *.py *.json
+recursive-include contracts *.json *.md
+recursive-include scripts *.py *.sh *.ps1
+recursive-include docs *.md *.json *.yaml *.yml *.csv *.log *.txt
+recursive-include prebuild *.md *.json *.yaml *.yml *.csv
+recursive-include .github *.yml *.yaml *.md
+global-exclude __pycache__ *.py[cod] *.sqlite* *.db .env .env.*
+prune reports
+prune evidence
+prune .venv
+prune .git
+
+prune archive
+prune .serena
+prune .runtime
+prune current

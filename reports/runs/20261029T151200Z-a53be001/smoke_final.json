@@ -1,0 +1,59 @@
+{
+  "profile": "SYNTHETIC_DEMO_ONLY",
+  "real_llm": false,
+  "real_insurance_decisions": false,
+  "recorded_at": "2026-10-29T15:26:22.039681+00:00",
+  "checks": [
+    {
+      "id": "change_created",
+      "passed": true
+    },
+    {
+      "id": "cross_tenant_404",
+      "passed": true
+    },
+    {
+      "id": "evaluation_2026-06-30",
+      "passed": true
+    },
+    {
+      "id": "evaluation_2026-07-01",
+      "passed": true
+    },
+    {
+      "id": "domain_review_pending",
+      "passed": true
+    },
+    {
+      "id": "self_approval_denied",
+      "passed": true
+    },
+    {
+      "id": "domain_review_approved",
+      "passed": true
+    },
+    {
+      "id": "demo_approval_only",
+      "passed": true
+    },
+    {
+      "id": "evidence_matches_approval",
+      "passed": true
+    },
+    {
+      "id": "record_integrity_verified",
+      "passed": true
+    },
+    {
+      "id": "audit_chain_valid",
+      "passed": true
+    },
+    {
+      "id": "no_external_anchor",
+      "passed": true
+    }
+  ],
+  "evidence_manifest_sha256": "a45a22abbae47000e79dacaf0d5e282c297fcb826e49779bf092611ee83bc66c",
+  "change_id": "aff4e2b2-bf08-4ddc-aff5-e0f2cc628e54",
+  "result": "PASS"
+}

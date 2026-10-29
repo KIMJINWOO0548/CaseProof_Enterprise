@@ -1,0 +1,18 @@
+# Allow-list the runtime build context. Source credentials and evidence stay out.
+**
+!Dockerfile
+!requirements.txt
+!requirements.lock
+!service/
+!service/**
+!reference/
+!reference/**
+!datasets/
+!datasets/**
+**/__pycache__/
+**/*.py[cod]
+**/*.sqlite*
+**/*.db
+**/.env*
+**/*.pem
+**/*.key

@@ -1,0 +1,23 @@
+# 검증 결과 — 5.3.0.dev0
+
+로컬 release-check 기록은 `docs/evidence/v5.3/`에 보존한다. 실행 환경은 Python 3.12.14, Linux x86_64, temporary SQLite, 고정 lock 의존성이다.
+
+| 검사 | 결과 |
+| --- | --- |
+| `python -m pip check` | PASS |
+| `python -m pytest -q` | 221 passed, 1 기존 Starlette/httpx deprecation warning, 22 subtests passed |
+| `python -m scripts.smoke --output docs/evidence/v5.3/smoke.json` | PASS, 12/12 checks |
+| `python -m scripts.check_ui_syntax` | PASS, 1 JavaScript file |
+| `python -m scripts.check_package` | PASS, 12 schemas / 62 examples / 14 canonical vectors / 175 files |
+| `pip-audit` on locked runtime dependencies | No known vulnerabilities found (OSV service; it checks hash presence, not hash validity) |
+| submit-integrity regression | PASS, 3 cases; corrupted JSON now fails closed with HTTP 409 and keeps DRAFT/revision unchanged |
+
+`pytest.log`, command metadata, lock hashes, smoke JSON and review history are bundled beside this file. Structural schema checks do not implement the planned `/api/v1` endpoints.
+
+## 미실행 범위
+
+- Chromium 다운로드가 손상된 ZIP으로 실패해 browser E2E를 실행하지 못했다. UI JavaScript syntax는 별도 통과했다.
+- Python 3.11/3.13, Windows, macOS, Docker/PostgreSQL, remote GitHub Actions는 이 실행에서 확인하지 않았다.
+- 외부 SME 검수, 비공개 holdout 연구, production 인증과 실제 보험 의사결정 적용은 수행하지 않았다.
+
+이 결과는 기록된 로컬 실행의 증거이며 공개 저장소 CI green, 보안 인증 또는 배포 승인을 뜻하지 않는다.

@@ -1,0 +1,37 @@
+{
+  "schema": "evaluation_run_v1",
+  "id": "00000000-0000-4000-8000-000000000028",
+  "tenant_id": "synthetic-tenant-a",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "recorded_revision": 2,
+  "actor_id": "synthetic-requester",
+  "created_at": "2026-10-29T03:34:56.123456Z",
+  "candidate_snapshot_id": "00000000-0000-4000-8000-000000000001",
+  "source_bundle_id": "00000000-0000-4000-8000-000000000002",
+  "dataset_version_id": "00000000-0000-4000-8000-000000000003",
+  "suite_version_id": "00000000-0000-4000-8000-000000000004",
+  "evaluator_version_id": "00000000-0000-4000-8000-000000000005",
+  "adapter_version_id": "00000000-0000-4000-8000-000000000006",
+  "run_input_sha256": "22bd3560cc59d41f57db0fa9f5426fb81745f30dc99f1da8144c416336470f93",
+  "run_config_sha256": "ef8dcd15ca56b2218112e7e083bf356c0bfc2663f98d23dc0f7591c65e05b409",
+  "case_results": [
+    {
+      "case_id": "synthetic-case-001",
+      "input_sha256": "8b3606056240ed7c80facdeec2b7353d82b57b2ea7b74aeec11fb1a04599c71d",
+      "output_sha256": "b9c891dd3ca3d0a8ba40b42c0f8a0c23926c07cb09114453e38b1e2f24728215",
+      "source_refs": [
+        {
+          "id": "00000000-0000-4000-8000-000000000050",
+          "payload_sha256": "52d4392671b6ff7fbb2d10e87916537f12c4493b06c5c19ccc43064c9c77f154"
+        }
+      ],
+      "resolution_status": "RESOLVED",
+      "verdict": "INCONCLUSIVE",
+      "complete": false,
+      "error_code": "SYNTHETIC_TIMEOUT",
+      "critical_failure": null
+    }
+  ],
+  "completion": "INCOMPLETE",
+  "gate_summary": "BLOCK"
+}

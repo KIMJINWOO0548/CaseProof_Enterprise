@@ -1,0 +1,14 @@
+{
+  "schema": "decision_note_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-000000000015",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "stage": "DOMAIN",
+  "decision": "APPROVE",
+  "actor_id": "synthetic-reviewer",
+  "input_revision": 3,
+  "output_revision": 4,
+  "reason": "Synthetic evidence reviewed.",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "assessment_sha256": "ec8346a1eedaaa84f74c06bc6f5ab8a2dcc5a266eed241ba538eee70a0e0e1fd"
+}

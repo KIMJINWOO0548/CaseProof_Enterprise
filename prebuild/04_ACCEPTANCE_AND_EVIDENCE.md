@@ -1,81 +1,74 @@
-# 인수 기준·위협 시나리오·증거 매트릭스 v5.2
+# 인수 기준·증거 매트릭스 v5.3
 
-## 상태 용어
+현재 실행 결과는 [VALIDATION](../docs/VALIDATION.md), 현재/미래 기능 구분은 [STATUS](../docs/STATUS.md), target 계약은 [08](08_IMPLEMENTATION_CONTRACTS.md)가 정본이다. 이 문서는 **다음 구현에서 통과시킬 인수 기준**이다. 원본의 과거 점수를 새 결과로 재사용하지 않는다.
 
-- `PRESENT`: 파일 또는 코드가 존재하며 해당 코드를 직접 읽었다. 동작·통과 보증은 아니다.
-- `PASS`: 지정 환경에서 명령 실행 exit 0과 해당 assertion 결과가 기록됐다. 범위/조건을 반드시 붙인다.
-- `FAIL`: 실제 실행에서 합격 조건을 충족하지 못했다.
-- `SKIPPED`: 외부 접근·의존성·참여자 등으로 실행하지 않았다. 근거 없이 PASS로 간주하지 않는다.
-- `PLANNED`: 아래 목표는 아직 수행되지 않은 계획이다.
+## 상태와 출시 단계
 
-2026-10-29 감사: 참조 unittest 49 PASS; Pydantic/JS 문법·모의 함수 공격은 제한된 단독 실행. pytest 90+22와 smoke 12/12는 **패키지의 이전 실행 기록**, 이번 감사에서는 두 명령이 의존성 문제로 SKIPPED/실행 실패였다. 코드 변경 후 과거 성적을 새로운 빌드의 통과 결과로 사용하면 안 된다.
+- PRESENT: 파일/코드가 있음. PASS와 다르다.
+- PASS: 명시된 환경·입력·명령 exit 0와 assertion 증거가 있음.
+- FAIL: 실행했지만 조건 미충족. 환경 설치 실패도 실패 사실을 기록한다.
+- SKIPPED: 기능/인프라/참여자 미확보로 해당 검증을 수행하지 않음.
+- PLANNED: 아직 구현되지 않은 목표.
 
-## Gate별 실증 매트릭스
+| 공개 수준 | 필요한 사실 | 허용 표현 |
+| --- | --- | --- |
+| 현재 5.3.0.dev0 | baseline 회귀 + 정직한 제한 + 코드/라이선스/재현 절차 | synthetic local prototype / implementation handoff |
+| v1 local demo | G1+G3+G4 실제 로컬 흐름과 브라우저 증거 | tested synthetic demo |
+| PostgreSQL demo | 위 조건 + G2 실제 비소유 app role/RLS/경합 | tested PG synthetic demo |
+| 비교실험 발표 | G5 실제 독립 검수/비노출 holdout/paired 원자료 | 해당 데이터·모델·환경으로 한정된 결과 |
+| 운영 서비스 | G6 및 실제 배포의 보안/개인정보/책임 검증 별도 | 현재 패키지는 여기에 해당하지 않음 |
 
-| Gate | 내용 | 완료 증거 | 미완료 시 판정 |
-|---|---|---|---|
-| G0 | 안전 실행·기준선 | Python/OS/패키지·demo DB 경로·input hashes·pytest·smoke log·exit | 개발 시작 전 환경 이슈 기록, 실제 결과를 추측하지 않음 |
-| G1 | P0·권한·API 기본 | 실제 SQLite TestClient의 P0 적대 테스트 fail→fix→pass, 기존 회귀, OpenAPI와 idempotency | DEMO 승인 관련 변경은 미완료. 운영 차단 |
-| G2 | PostgreSQL/RLS/동시성 | non-owner/NOBYPASSRLS 역할, 독립 세션, migration, pool·rollback 및 경합 증빙 | SQLite를 PG 대체 증거로 쓰지 않음 |
-| G3 | 보험 업무팩 | 합성 시점·특약·충돌/미승인/혼입과 제3팩 E2E. 실제 룰은 SME 서면 검수 | 보험업무 적합성 미검증 |
-| G4 | 사용자 업무 흐름 | 브라우저 클릭, 반려→시정→재평가, 접근성, 사용자 수·실패·시간 | API만으로 UI 성공 주장 금지 |
-| G5 | 실제 AI·비교 | 고정 데이터·독립 검수·분리된 블라인드·paired 통계·비용·실패 결과 | 360건/정확도/경쟁 우위 미검증 |
-| G6 | 운영·외부 | 독립 WORM/서명/복구; 2명 실무자, 타인 설치, 4종 훈련, 외부 리뷰, 제3팩 | 해당 보너스 0. 규제 인증은 별도 기관 사실 확인 |
+## Target 필수 인수 사례
 
-## 구체 테스트 매트릭스
+| ID | 공격/실패 또는 정상 사례 | 기대 결과 | 소유 task |
+| --- | --- | --- | --- |
+| A01 | status만 PENDING_RELEASE로 변조 | 409, release note/transition/audit 0 증가 | G1.3 |
+| A02 | reviewer/revision/approval hash 개별 변경 | integrity invalid; 새 승인 거부 | G1.3 |
+| A03 | note/snapshot/run/transition/event 누락·복제·역순 | 재구성 불일치, fail closed | G1.3/G1.6 |
+| A04 | requester가 DOMAIN/RELEASE 역할 동시 보유 | 자기 승인 403 | G1.3 |
+| A05 | DOMAIN reviewer가 RELEASE도 보유 | 동일인 최종 승인 403 | G1.3 |
+| A06 | A tenant ID를 B actor로 모든 경로 접근 | 404, A 자료/존재 정보 없음 | G1.4/G2.2 |
+| A07 | 같은 key, 같은 정규화 요청 | 객체·이벤트 1개, 원 status/result revision replay | G1.4 |
+| A08 | 같은 actor key, 다른 endpoint/resource/body/revision | 409 IDEMPOTENCY_CONFLICT | G1.4 |
+| A09 | commit 뒤 응답 유실, 이후 상태 진전 | 같은 key로 원 결과; 최신 integrity는 별도 | G1.4/G4 |
+| A10 | 사용 중지·권한 회수 뒤 기존 key 조회 | 인증/권한 거부, 이전 결과 유출 없음 | G1.4/G2.2 |
+| A11 | 각 write 경계에 예외 | 모든 행/head/key rollback, 부분 승인 0 | G1.3 |
+| A12 | 동시 session 동일 revision 승인 | effect 최대 1, 허용 conflict/replay 외 오류 0 | G2.3 |
+| A13 | tenant head 경합·timeout/deadlock | 전체 rollback + 503, bounded retry | G2.3 |
+| A14 | context 누락/빈 값/rollback→다른 tenant | fail closed, pool 누출 0 | G2.2 |
+| A15 | RLS app role이 owner/superuser/BYPASSRLS | 시험 자체 실패; 유효한 보안 결과로 인정 금지 | G2.1 |
+| A16 | reason 누락/공백/trim후 7자/501자 | 422; required/min/max 설명과 HTTP 일치 | G1.1/G1.4 |
+| A17 | claim_days bool/float/string/out of range | 422; schema integer의 1.0 한계 별도 검증 | G1.4 |
+| A18 | raw JSON duplicate key/surrogate/NaN | 422; 서버 예외·불일치 fingerprint 없음 | G1.4 |
+| A19 | run BLOCK→full PASS, 최신 INCOMPLETE | 실패 보존, 최신 incomplete veto | G1.5 |
+| A20 | 필요한 case/버전 coverage 누락·중복 | submission 차단; 부분 PASS 조합 금지 | G1.5 |
+| A21 | 승인 후 다른 change event·새 source version | 과거 seal 불변 | G1.6 |
+| A22 | 봉인 source bytes/DOMAIN reason 변경·삭제 | historical integrity invalid | G1.6 |
+| A23 | 사후 source withdrawal | 과거 무결성과 현재 eligibility 분리 | G1.6/G3 |
+| A24 | 계약/사고/청구일이 서로 다른 버전, rider UNKNOWN | 정책에 맞는 근거 또는 INCONCLUSIVE | G3 |
+| A25 | 선택된 DRAFT/REVOKED 특약·상충 우선순위 | unsafe base fallback 금지 | G3 |
+| A26 | 반려→새 linked change→새 full run | old decisions 보존; 승인 재사용 없음 | G4 |
+| A27 | XSS text, 키보드/초점, 네트워크 unknown | 안전한 text 표시·복구·역할별 안내 | G4 |
+| A28 | gold field를 model request에 섞음 | allowlist 거부; public bundle에 private gold 없음 | G5.1 |
+| A29 | baseline 또는 candidate incomplete | target INCOMPLETE + 확정 metrics null | G5.1 |
+| A30 | paired set/hash/group 불일치, 0분모 | INVALID 또는 명시적 null/reason | G5.1 |
+| A31 | job 중복 완료·worker crash·취소 경합 | terminal run 하나, 잔여 불완전성 보존 | G5.2 |
+| A32 | DB/head 전체 재작성과 외부 checkpoint 비교 | 독립 anchor가 있을 때 탐지 실증 | G6 |
 
-| ID / 우선순위 | 입력·사전조건 | 실행 | 기대 결과 | 현 상태 / 후속 |
-|---|---|---|---|---|
-| T01 P0 | 본문과 감사 정상, `PENDING_DOMAIN_REVIEW` | SQLite에서 status만 `PENDING_RELEASE`로 수정, 별도 승인자 POST | 409; release note/event 없음. 누락된 DOMAIN 승인이 드러나야 함 | ORM 스텁 재현만; 진짜 DB 미실행 |
-| T02 P0 | 현업 APPROVE 생성 | DOMAIN decision/event를 삭제·교체·복제·순서 변경 | 409, 누락/불일치 이유 | PLANNED, 실제 DB 시험 |
-| T03 P0 | 평가 두 개와 승인 근거 | request/result/verdict 중 한 필드 변경 또는 삭제 | 이후 승인 409, 승인 후 evidence false | 테스트 코드가 있으나 이번 pytest 미실행 |
-| T04 P0 | 동일 사람이 REQUESTER와 REVIEWER 권한 모두 보유 | 자기 domain approve | 403; 감사에는 거부 기록 정책에 따른 결과 | 참조 로직 단위 PASS; API 미실행 |
-| T05 P0 | reviewer와 release 권한을 동일 계정에 부여 | 같은 사람이 두 단계 승인 | 403; release note 없음 | API 미실행 |
-| T06 P0 | tenant A 요청 ID | tenant B로 read/evaluate/submit/decision/evidence | 404, 응답 본문에서 A 정보 0 | 참조 권한 테스트만 PASS |
-| T07 P1 | 요청 본문과 idempotency key 고정 | 동일 actor 같은 POST 두 번; 두 번째는 응답 유실 후 재시도 | 같은 객체·결정·이벤트, 과거 결과 replay 표시; 같은 key 다른 change ID·method·본문·expected_revision 409, 최신 무결성 별도 조회 | 생성 경로의 원본 함수+스텁에서는 중복 생성 관찰 |
-| T08 P1 | 동일 revision / 사용자 둘 | 동시에 별도 DB 연결로 승인 2건 | 정확히 한 승인; 다른 요청은 명시적 충돌/정상 replay, 부분 기록 0 | SQLite 및 PostgreSQL 실제 동시성 미실행 |
-| T09 P1 | PG RLS app role, A tenant context | B 행 select/update/delete/insert 및 FK 조합 | 데이터 미노출·변경 차단; integrity error는 최소 정보 | PLANNED |
-| T10 P1 | PG 연결 풀, A 트랜잭션 rollback | 같은 연결에서 B 요청과 미설정 요청 | A context 누출 없음; 미설정 fail-closed | PLANNED |
-| T11 P1 | 필수 승인 사유 없음·빈값·공백 8개 | OpenAPI/schema 및 POST | 스키마 required/minLength/maxLength; 서버 422. 입력과 strip 결과 각각 8–500 Unicode code point를 검증하고 스키마가 표현 못 하는 trim 규칙을 spec에서 설명 | Pydantic 단독에서 현 불일치 확인 |
-| T12 P1 | claim_days true, 문자열 30, 1.0, -1, 10000 | API evaluation | 런타임 엄격 타입·범위에 따른 422. JSON Schema의 integer만으로 1.0 거부를 표현할 수 없음을 별도 설명 | Pydantic 단독 bool→1 관찰, HTTP 미실행 |
-| T13 P1 | 동일 업무팩의 published 기본 룰, DRAFT 특약 | 해당 특약 가입/unknown 상태 입력 | 영향이 불명확하면 INCONCLUSIVE | resolver 단독 기본 룰로 RESOLVED 관찰; 실제 보험법상 정답 미확인 |
-| T14 P1 | 기준선 한 항목 `complete=false` | paired comparison | INVALID/INCOMPLETE; 확정 정확도/CI 미출력 | 참조 함수에서 비교 허용 재현 |
-| T15 P1 | 실행 중 오류 또는 network 응답 끊김 | 변경 요청 재조회 및 같은 키 재전송 | 동일 기록 혹은 명시적 실패, 중복/허위 성공 없음 | PLANNED |
-| T16 P2 | 승인 전 assessment manifest와 final envelope | 도메인 결정 삭제/사유 변경, 서명·외부 hash 검증 | 바뀐 근거 또는 외부 앵커 불일치 탐지, 자기 참조 없음 | PLANNED |
-| T17 P2 | prompt injection 텍스트 포함한 합성 출처 | 모델/RAG 연결 후 정상 정책·출처검증 우회 시도 | 권한 밖 동작 방지, 불신 입력 처리·결과 기록 | 현재 LLM 없음, N/A(미구현) |
-| T18 P2 | 모델이 존재하지 않는 clause/version 인용 | source validator | 미승인/다른 tenant/없는 출처는 PASS 금지 | PLANNED |
-| T19 P2 | 세 번째 가상 업무팩 | 코어 무변경으로 등록→UI/API/DB·격리 E2E | core hash 동일, 결과 정상, 외부인 시험 시 B05 검토 | PLANNED |
-| T20 P2 | 외부 장애·탈취·감사변조·롤백 모의훈련 | 운영 절차 실행·수정·재시험 | 4개 결과와 증거 보존; 외부 수행 시 B03 검토 | PLANNED |
+Baseline에 유사 테스트가 있어도 v1 task 통과로 자동 계산하지 않는다. API·DB 구조가 다르므로 target 경로와 실제 runtime role로 재실행한다.
 
-## 로그 및 증거 수집 규격
+## 결과 보관 형식
 
-`current/reports/runs/<UTC-run-id>/`에 다음을 둔다. Windows 경로를 위해 ID는 `YYYYMMDDTHHMMSSZ-<8자리 16진수>` 형식을 사용하며 콜론을 쓰지 않는다. 경로는 신규로 작성하며 기존 `reports/` 과거 파일을 수정·교체하지 않는다.
+신규 `reports/runs/YYYYMMDDTHHMMSSZ-xxxxxxxx/`를 만든다. 기존 경로 덮어쓰기 금지.
 
-1. `environment.json`: 실행 시각 UTC/KST, OS, Python/Node, 패키지 버전 및 lockfile/hash, DB 종류/버전/격리수준/role(비밀 제외), 브라우저 버전, worker 수, demo mode.
-2. `commands.txt`: 실제 작업 디렉터리, 명령, exit code. 토큰·인증정보는 포함 금지.
-3. `pytest.log`, `smoke.log`, `browser.log`, `security_scenarios.json`, `migration.log`: 실제 실행된 항목만 기록. 경쟁 비교·외부 검수 미실행은 가짜 로그를 만들지 않는다.
-4. `artifact_hashes.json`: 코드 커밋 또는 원본 SHA, 테스트·데이터·평가기·모델/프롬프트 버전, 실험 seed, 결과 hash. SHA만으로 타인 검증·불변성을 증명하지 않는다.
-5. `limitations.md`: 비실행·실패·원인·영향, 외부 의존, 이전과 신규 결과의 차이, 실제 보험사·법률 적용의 한계.
+- `run.json`: run_id, recorded_at UTC, input/source archive/commit hash, command list, exit_code, duration, status.
+- `environment.json`: Python/OS, dependency lock hash, installed versions, DB type/version/role/isolation, workers, browser version. 비밀번호/토큰/DSN 전체는 제외.
+- 실제 `pytest.log`, `smoke.json`, `browser.log`, `pg.log` 등. 실행하지 않았다면 파일을 꾸며내지 말고 run.json에 SKIPPED/reason.
+- `limitations.md`: 실패/미실행, 이전 상태와 차이, source/SME/model/운영 한계.
+- 외부 검수/비공개 원자료는 consent/권리/접근 범위를 기록한다. 공개 repo에 고객 정보나 private blind gold를 넣지 않는다.
 
-스모크 스크립트는 기본 경로를 덮어쓰므로 실행 전 사본 또는 안전한 출력경로로 바꾼다. 브라우저 스크립트의 고정 경로 삭제를 제거하기 전에는 원본 디렉터리에서 실행하지 않는다. 보관·서명·WORM은 구현·실증 전 PLANNED다.
+release evidence는 내용/비밀을 검토한 뒤 `docs/evidence/<release>/`에 필요한 것만 복사한다. SHA manifest는 byte 변화만 확인하며 안전성·저자·외부 검증을 보증하지 않는다.
 
-## R01–R09와 B01–B05 연결
+## 평가표
 
-| 코드 | 점수를 높이기 위한 독립 증거 | 대응 Gate |
-|---|---|---|
-| R01 | 시점/특약/충돌 실DB 재현, 실약관·실무자 검수와 한계 | G3, G5, G6 |
-| R02 | 독립 업무팩, tenant isolation 비소유 DB role, 제3팩 E2E | G2, G3 |
-| R03 | 최신 기능·라이선스와 동일 질문/정답/모델/지표·TCO 비교 | G5 |
-| R04 | 실제 UI/API/DB/마이그레이션·브라우저 E2E·배포/복구 | G1, G2, G4, G6 |
-| R05 | 전문가 검수 데이터, 오류/미탐/오탐·blind 비교·구간/비용 | G5 |
-| R06 | 공식 자료 원문·위협 모델, 실제 인가·감사, LLM red-team | G1, G2, G5, G6 |
-| R07 | 실제 역할별 사용자 시험과 반려/시정/복구·접근성 | G4 |
-| R08 | 제3자 설치, CI·관측·유지보수 | G0, G4, G6 |
-| R09 | 재현 가능한 시연, 실제 ROI 근거, 역할별 설명 및 본인 기여 | G4–G6 |
-| B01 | 보험 실무자 2명 이상 서면·개선 반영 | G6 |
-| B02 | 제3자 Windows 신규 설치·해시·실행 | G6 |
-| B03 | 장애/탈취/감사변조/롤백 4종의 외부 수행·수정·재시험 | G6 |
-| B04 | 외부 기술 리뷰·실질 피드백 반영 | G6 |
-| B05 | 제3자 독립 업무팩 코어 무수정 E2E·DB 격리 | G3, G6 |
-
-대상 항목의 세부 배점은 `../SCORECARD_105.csv`가 정본. 진척 상태와 점수는 독립 재평가로 다시 결정한다. 대략적 예상 점수를 성공으로 기재하지 않고, 각 보너스는 실제 외부 자료 없으면 0이다.
+[자체 105점 rubric](../docs/SCORECARD_105.csv)은 연구용 평가표다. 구현 gate 통과 수와 105점은 동일하지 않다. R01–R09는 실제 해당 증거로만 평가하고 B01–B05(외부 SME·타인 Windows·훈련·외부 기술리뷰·외부 제3팩)는 실제 외부 증거 없이는 0이다. 이 패키지에서 내부 agent가 수행한 검토를 ‘독립 외부 전문가 인증’으로 계산하지 않는다.

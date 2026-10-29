@@ -1,0 +1,9 @@
+[
+  ".gitignore",
+  "MANIFEST.in",
+  "service/app.py",
+  "service/domain/__init__.py",
+  "service/domain/canonical.py",
+  "tests/v1/test_canonical.py",
+  "VERIFY_PACKAGE.py"
+]

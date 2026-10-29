@@ -1,0 +1,20 @@
+{
+  "schema": "change_transition_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-000000000020",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "revision_from": 2,
+  "revision_to": 3,
+  "from_state": "DRAFT",
+  "to_state": "PENDING_DOMAIN_REVIEW",
+  "kind": "SUBMITTED_FOR_DOMAIN_REVIEW",
+  "actor_id": "synthetic-analyst",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "previous_snapshot_sha256": "f84708751d0eb0c4d74b36d4292fba3f31bb7bb5f916215cc20f7803511a950c",
+  "next_snapshot_sha256": "b00497c3f51bfd739fbbb76ea57660dbb05cbae7214050214eaf85063f30e65c",
+  "evaluation_run_id": "00000000-0000-4000-8000-000000000028",
+  "evaluation_run_sha256": "74367dc2c4fdac6b329d0090657d42b70a9f90788604862c6ac1691fd8ae554e",
+  "decision_id": null,
+  "decision_sha256": null,
+  "assessment_sha256": null
+}

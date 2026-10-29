@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "DecisionNote canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "decision_note_v1"},
+    "tenant_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "change_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "stage": {"enum": ["DOMAIN", "RELEASE"]},
+    "decision": {"enum": ["APPROVE", "REJECT"]},
+    "actor_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "input_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+    "output_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+    "reason": {"$ref": "common.schema.json#/$defs/Reason"},
+    "occurred_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"},
+    "assessment_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]}
+  },
+  "required": [
+    "schema",
+    "tenant_id",
+    "id",
+    "change_id",
+    "stage",
+    "decision",
+    "actor_id",
+    "input_revision",
+    "output_revision",
+    "reason",
+    "occurred_at",
+    "assessment_sha256"
+  ],
+  "allOf": [
+    {
+      "if": {"properties": {"stage": {"const": "RELEASE"}, "decision": {"const": "APPROVE"}}},
+      "then": {"properties": {"assessment_sha256": {"$ref": "common.schema.json#/$defs/SHA256"}}},
+      "else": {"properties": {"assessment_sha256": {"type": "null"}}}
+    }
+  ],
+  "x-runtime-rules": [
+    "output_revision = input_revision + 1.",
+    "(tenant_id, change_id, stage) is unique.",
+    "reason must already equal its Python str.strip() result."
+  ],
+  "x-hash-purpose": "decision",
+  "x-canonicalization": "caseproof.c14n.v1"
+}

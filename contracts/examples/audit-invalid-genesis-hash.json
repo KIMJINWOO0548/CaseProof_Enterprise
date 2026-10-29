@@ -1,0 +1,14 @@
+{
+  "schema": "audit_event_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-00000000003c",
+  "sequence": 1,
+  "prev_hash": "eb81b2e49cfe2b56693575e71af55503c660ad0bc70bdf49718907318bc6b653",
+  "actor_id": "synthetic-requester",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "subject_type": "CHANGE",
+  "subject_id": "00000000-0000-4000-8000-00000000000a",
+  "kind": "CHANGE_CREATED",
+  "transition_id": "00000000-0000-4000-8000-00000000001e",
+  "transition_sha256": "f50ccd42f9cac3b67df4a3403ccfeea556dd009b471383956daa7c9e22228399"
+}

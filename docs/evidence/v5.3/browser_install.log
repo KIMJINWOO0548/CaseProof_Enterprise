@@ -1,0 +1,41 @@
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31441:18
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31967:9
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:30864:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31441:18
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31967:9
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:30864:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31441:18
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31967:9
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:30864:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31441:18
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31967:9
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:30864:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Downloading Chrome for Testing 156.0.8078.4 (playwright chromium v1248)[2m from https://cdn.playwright.dev/builds/cft/156.0.8078.4/linux64/chrome-linux64.zip[22m
+|■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■■| 100% of 0 MiB
+Error: End of central directory record signature not found. Either not a zip file, or file is truncated.
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31441:18
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:31967:9
+    at <workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/utilsBundle.js:30864:11
+    at FSReqCallback.wrapper [as oncomplete] (node:fs:730:5)
+Failed to install browsers
+Error: Failed to download Chrome for Testing 156.0.8078.4 (playwright chromium v1248), caused by
+Error: Download failure, code=1
+    at ChildProcess.<anonymous> (<workspace>/.venv/lib/python3.12/site-packages/playwright/driver/package/lib/coreBundle.js:33774:32)
+    at ChildProcess.emit (node:events:514:28)
+    at ChildProcess._handle.onexit (node:internal/child_process:324:12)

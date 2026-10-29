@@ -1,0 +1,20 @@
+{
+  "schema": "change_transition_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-000000000024",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "revision_from": 6,
+  "revision_to": 7,
+  "from_state": "PENDING_RELEASE",
+  "to_state": "REJECTED",
+  "kind": "RELEASE_REJECT",
+  "actor_id": "synthetic-release_approver",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "previous_snapshot_sha256": "4dc7509f19c1b4857ab5a140fb53534576d9359efaf37ffe2fc3faf26ffeb10d",
+  "next_snapshot_sha256": "b00497c3f51bfd739fbbb76ea57660dbb05cbae7214050214eaf85063f30e65c",
+  "evaluation_run_id": null,
+  "evaluation_run_sha256": null,
+  "decision_id": "00000000-0000-4000-8000-000000000038",
+  "decision_sha256": "57fbbfdd988d734ea1f69189405f2b4c8956017267a7d6c325b493d6758ac794",
+  "assessment_sha256": null
+}

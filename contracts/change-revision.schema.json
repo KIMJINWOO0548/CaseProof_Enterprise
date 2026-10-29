@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChangeRevision canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "change_revision_v1"},
+    "tenant_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "change_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "revision": {"$ref": "common.schema.json#/$defs/Revision"},
+    "status": {"$ref": "common.schema.json#/$defs/Status"},
+    "title": {"type": "string"},
+    "pack_version_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "product_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "workflow": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "rule_key": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "requester_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "owner_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "domain_reviewer_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/RegisteredId"}, {"type": "null"}]},
+    "release_approver_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/RegisteredId"}, {"type": "null"}]},
+    "candidate_snapshot_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "source_bundle_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "dataset_version_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "suite_version_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "evaluator_version_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "active_run_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]},
+    "active_job_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]},
+    "parent_change_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]},
+    "parent_relation": {"anyOf": [{"$ref": "common.schema.json#/$defs/ParentRelation"}, {"type": "null"}]},
+    "assessment_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]},
+    "created_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"},
+    "updated_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"}
+  },
+  "required": [
+    "schema",
+    "tenant_id",
+    "change_id",
+    "revision",
+    "status",
+    "title",
+    "pack_version_id",
+    "product_id",
+    "workflow",
+    "rule_key",
+    "requester_id",
+    "owner_id",
+    "domain_reviewer_id",
+    "release_approver_id",
+    "candidate_snapshot_id",
+    "source_bundle_id",
+    "dataset_version_id",
+    "suite_version_id",
+    "evaluator_version_id",
+    "active_run_id",
+    "active_job_id",
+    "parent_change_id",
+    "parent_relation",
+    "assessment_sha256",
+    "created_at",
+    "updated_at"
+  ],
+  "allOf": [
+    {
+      "oneOf": [
+        {"properties": {"parent_change_id": {"type": "null"}, "parent_relation": {"type": "null"}}},
+        {
+          "required": ["parent_change_id", "parent_relation"],
+          "properties": {
+            "parent_change_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+            "parent_relation": {"$ref": "common.schema.json#/$defs/ParentRelation"}
+          }
+        }
+      ]
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["PENDING_DOMAIN_REVIEW", "PENDING_RELEASE", "APPROVED_FOR_DEMO"]}}},
+      "then": {"properties": {"active_run_id": {"$ref": "common.schema.json#/$defs/UUIDv4"}}}
+    },
+    {
+      "if": {"properties": {"status": {"enum": ["DRAFT", "PENDING_DOMAIN_REVIEW"]}}},
+      "then": {"properties": {"domain_reviewer_id": {"type": "null"}, "release_approver_id": {"type": "null"}}}
+    },
+    {
+      "if": {"properties": {"status": {"const": "APPROVED_FOR_DEMO"}}},
+      "then": {
+        "properties": {
+          "domain_reviewer_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+          "release_approver_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+          "assessment_sha256": {"$ref": "common.schema.json#/$defs/SHA256"}
+        }
+      },
+      "else": {"properties": {"assessment_sha256": {"type": "null"}}}
+    }
+  ],
+  "x-runtime-rules": [
+    "Create assigns requester_id = owner_id = authenticated actor.id.",
+    "All create content and scope fields stay immutable across workflow revisions.",
+    "active_run_id is the latest committed run in DRAFT and the frozen selected run after submit.",
+    "active_job_id is always null in G1; non-null requires the separately gated G5 job extension.",
+    "No approval envelope hash is part of this payload."
+  ],
+  "x-hash-purpose": "change-revision",
+  "x-canonicalization": "caseproof.c14n.v1"
+}

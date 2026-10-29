@@ -1,0 +1,12 @@
+{
+  "title": "Synthetic demonstration change",
+  "pack_version_id": "synthetic.auto.v1",
+  "product_id": "SYNTH-AUTO-101\n",
+  "workflow": "CLAIM_REVIEW",
+  "rule_key": "DOCUMENT_WINDOW_DAYS",
+  "candidate_snapshot_id": "00000000-0000-4000-8000-000000000001",
+  "source_bundle_id": "00000000-0000-4000-8000-000000000002",
+  "dataset_version_id": "00000000-0000-4000-8000-000000000003",
+  "suite_version_id": "00000000-0000-4000-8000-000000000004",
+  "evaluator_version_id": "00000000-0000-4000-8000-000000000005"
+}

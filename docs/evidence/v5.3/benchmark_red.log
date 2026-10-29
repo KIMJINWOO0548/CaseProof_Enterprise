@@ -1,0 +1,207 @@
+FFFFFFFF.                                                                [100%]
+=================================== FAILURES ===================================
+____ test_incomplete_pair_has_no_accuracy_or_confidence_interval[baseline] _____
+
+side = 'baseline'
+
+    @pytest.mark.parametrize('side', ['baseline', 'candidate', 'both'])
+    def test_incomplete_pair_has_no_accuracy_or_confidence_interval(side):
+        baseline, candidate = run(), run()
+        if side in ('baseline', 'both'):
+            baseline['cases'][0]['complete'] = False
+        if side in ('candidate', 'both'):
+            candidate['cases'][1]['complete'] = False
+        report = compare_runs(baseline, candidate)
+>       assert report['status'] == 'INVALID'
+E       AssertionError: assert 'ELIGIBLE_FOR_HUMAN_REVIEW' == 'INVALID'
+E         
+E         - INVALID
+E         + ELIGIBLE_FOR_HUMAN_REVIEW
+
+tests/test_benchmark_completeness.py:28: AssertionError
+____ test_incomplete_pair_has_no_accuracy_or_confidence_interval[candidate] ____
+
+side = 'candidate'
+
+    @pytest.mark.parametrize('side', ['baseline', 'candidate', 'both'])
+    def test_incomplete_pair_has_no_accuracy_or_confidence_interval(side):
+        baseline, candidate = run(), run()
+        if side in ('baseline', 'both'):
+            baseline['cases'][0]['complete'] = False
+        if side in ('candidate', 'both'):
+            candidate['cases'][1]['complete'] = False
+        report = compare_runs(baseline, candidate)
+>       assert report['status'] == 'INVALID'
+E       AssertionError: assert 'BLOCKED' == 'INVALID'
+E         
+E         - INVALID
+E         + BLOCKED
+
+tests/test_benchmark_completeness.py:28: AssertionError
+______ test_incomplete_pair_has_no_accuracy_or_confidence_interval[both] _______
+
+side = 'both'
+
+    @pytest.mark.parametrize('side', ['baseline', 'candidate', 'both'])
+    def test_incomplete_pair_has_no_accuracy_or_confidence_interval(side):
+        baseline, candidate = run(), run()
+        if side in ('baseline', 'both'):
+            baseline['cases'][0]['complete'] = False
+        if side in ('candidate', 'both'):
+            candidate['cases'][1]['complete'] = False
+        report = compare_runs(baseline, candidate)
+>       assert report['status'] == 'INVALID'
+E       AssertionError: assert 'BLOCKED' == 'INVALID'
+E         
+E         - INVALID
+E         + BLOCKED
+
+tests/test_benchmark_completeness.py:28: AssertionError
+_________ test_malformed_input_returns_invalid_without_crashing[None] __________
+
+bad = None
+
+    @pytest.mark.parametrize('bad', [None, {}, {'cases': None}, {'cases': [None]}, {'cases': [{'id': []}]}])
+    def test_malformed_input_returns_invalid_without_crashing(bad):
+        malformed = deepcopy(bad)
+        if isinstance(malformed, dict):
+            malformed.update(dataset_hash='a' * 64, evaluator_hash='b' * 64)
+>       assert compare_runs(malformed, run())['status'] == 'INVALID'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_benchmark_completeness.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+reference/paired_benchmark.py:23: in compare_runs
+    if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+.0 = <tuple_iterator object at 0x7fd2afe9f670>
+
+>   if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+               ^^^^^^^^^^^^
+E   AttributeError: 'NoneType' object has no attribute 'get'
+
+reference/paired_benchmark.py:23: AttributeError
+_________ test_malformed_input_returns_invalid_without_crashing[bad1] __________
+
+bad = {}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'cases': None}, {'cases': [None]}, {'cases': [{'id': []}]}])
+    def test_malformed_input_returns_invalid_without_crashing(bad):
+        malformed = deepcopy(bad)
+        if isinstance(malformed, dict):
+            malformed.update(dataset_hash='a' * 64, evaluator_hash='b' * 64)
+>       assert compare_runs(malformed, run())['status'] == 'INVALID'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_benchmark_completeness.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+baseline = {'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+candidate = {'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbb... False, 'correct': True, 'complete': True}, {'id': 'new-rule', 'critical': False, 'correct': False, 'complete': True}]}
+
+    def compare_runs(baseline: dict, candidate: dict) -> dict:
+        """Input schema: {dataset_hash,evaluator_hash,cases:[{id,critical,correct,complete}]}."""
+        required_keys = ('dataset_hash','evaluator_hash')
+        if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+            return {'status':'INVALID', 'reasons':['SNAPSHOT_NOT_COMPARABLE']}
+>       b = {x['id']:x for x in baseline['cases']}
+                                ^^^^^^^^^^^^^^^^^
+E       KeyError: 'cases'
+
+reference/paired_benchmark.py:25: KeyError
+_________ test_malformed_input_returns_invalid_without_crashing[bad2] __________
+
+bad = {'cases': None}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'cases': None}, {'cases': [None]}, {'cases': [{'id': []}]}])
+    def test_malformed_input_returns_invalid_without_crashing(bad):
+        malformed = deepcopy(bad)
+        if isinstance(malformed, dict):
+            malformed.update(dataset_hash='a' * 64, evaluator_hash='b' * 64)
+>       assert compare_runs(malformed, run())['status'] == 'INVALID'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_benchmark_completeness.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+baseline = {'cases': None, 'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+candidate = {'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbb... False, 'correct': True, 'complete': True}, {'id': 'new-rule', 'critical': False, 'correct': False, 'complete': True}]}
+
+    def compare_runs(baseline: dict, candidate: dict) -> dict:
+        """Input schema: {dataset_hash,evaluator_hash,cases:[{id,critical,correct,complete}]}."""
+        required_keys = ('dataset_hash','evaluator_hash')
+        if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+            return {'status':'INVALID', 'reasons':['SNAPSHOT_NOT_COMPARABLE']}
+>       b = {x['id']:x for x in baseline['cases']}
+                                ^^^^^^^^^^^^^^^^^
+E       TypeError: 'NoneType' object is not iterable
+
+reference/paired_benchmark.py:25: TypeError
+_________ test_malformed_input_returns_invalid_without_crashing[bad3] __________
+
+bad = {'cases': [None]}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'cases': None}, {'cases': [None]}, {'cases': [{'id': []}]}])
+    def test_malformed_input_returns_invalid_without_crashing(bad):
+        malformed = deepcopy(bad)
+        if isinstance(malformed, dict):
+            malformed.update(dataset_hash='a' * 64, evaluator_hash='b' * 64)
+>       assert compare_runs(malformed, run())['status'] == 'INVALID'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_benchmark_completeness.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+baseline = {'cases': [None], 'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+candidate = {'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbb... False, 'correct': True, 'complete': True}, {'id': 'new-rule', 'critical': False, 'correct': False, 'complete': True}]}
+
+    def compare_runs(baseline: dict, candidate: dict) -> dict:
+        """Input schema: {dataset_hash,evaluator_hash,cases:[{id,critical,correct,complete}]}."""
+        required_keys = ('dataset_hash','evaluator_hash')
+        if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+            return {'status':'INVALID', 'reasons':['SNAPSHOT_NOT_COMPARABLE']}
+>       b = {x['id']:x for x in baseline['cases']}
+             ^^^^^^^
+E       TypeError: 'NoneType' object is not subscriptable
+
+reference/paired_benchmark.py:25: TypeError
+_________ test_malformed_input_returns_invalid_without_crashing[bad4] __________
+
+bad = {'cases': [{'id': []}]}
+
+    @pytest.mark.parametrize('bad', [None, {}, {'cases': None}, {'cases': [None]}, {'cases': [{'id': []}]}])
+    def test_malformed_input_returns_invalid_without_crashing(bad):
+        malformed = deepcopy(bad)
+        if isinstance(malformed, dict):
+            malformed.update(dataset_hash='a' * 64, evaluator_hash='b' * 64)
+>       assert compare_runs(malformed, run())['status'] == 'INVALID'
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_benchmark_completeness.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+baseline = {'cases': [{'id': []}], 'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb'}
+candidate = {'dataset_hash': 'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa', 'evaluator_hash': 'bbbbbbbbbbbbbb... False, 'correct': True, 'complete': True}, {'id': 'new-rule', 'critical': False, 'correct': False, 'complete': True}]}
+
+    def compare_runs(baseline: dict, candidate: dict) -> dict:
+        """Input schema: {dataset_hash,evaluator_hash,cases:[{id,critical,correct,complete}]}."""
+        required_keys = ('dataset_hash','evaluator_hash')
+        if any(not baseline.get(k) or baseline.get(k) != candidate.get(k) for k in required_keys):
+            return {'status':'INVALID', 'reasons':['SNAPSHOT_NOT_COMPARABLE']}
+>       b = {x['id']:x for x in baseline['cases']}
+             ^^^^^^^^^
+E       TypeError: unhashable type: 'list'
+
+reference/paired_benchmark.py:25: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_benchmark_completeness.py::test_incomplete_pair_has_no_accuracy_or_confidence_interval[baseline]
+FAILED tests/test_benchmark_completeness.py::test_incomplete_pair_has_no_accuracy_or_confidence_interval[candidate]
+FAILED tests/test_benchmark_completeness.py::test_incomplete_pair_has_no_accuracy_or_confidence_interval[both]
+FAILED tests/test_benchmark_completeness.py::test_malformed_input_returns_invalid_without_crashing[None]
+FAILED tests/test_benchmark_completeness.py::test_malformed_input_returns_invalid_without_crashing[bad1]
+FAILED tests/test_benchmark_completeness.py::test_malformed_input_returns_invalid_without_crashing[bad2]
+FAILED tests/test_benchmark_completeness.py::test_malformed_input_returns_invalid_without_crashing[bad3]
+FAILED tests/test_benchmark_completeness.py::test_malformed_input_returns_invalid_without_crashing[bad4]
+8 failed, 1 passed in 0.05s

@@ -1,0 +1,46 @@
+FF.                                                                      [100%]
+=================================== FAILURES ===================================
+____________ test_selected_unapproved_rider_is_inconclusive[DRAFT] _____________
+
+state = 'DRAFT'
+
+    @pytest.mark.parametrize('state', ['DRAFT', 'REVOKED'])
+    def test_selected_unapproved_rider_is_inconclusive(state):
+        rules = load_rules()
+        rider = deepcopy(next(r for r in rules if r['rule_id'] == 'AR-AUTO-2026-H1'))
+        rider.update(rule_id='PENDING-RIDER-1', rider='PENDING_RIDER', source_state=state,
+                     priority=1000, value=999)
+        rules.append(rider)
+        before = deepcopy(rules)
+        result = resolve(query(), rules)
+>       assert result.status == 'INCONCLUSIVE'
+E       AssertionError: assert 'RESOLVED' == 'INCONCLUSIVE'
+E         
+E         - INCONCLUSIVE
+E         + RESOLVED
+
+tests/test_unapproved_rider.py:25: AssertionError
+___________ test_selected_unapproved_rider_is_inconclusive[REVOKED] ____________
+
+state = 'REVOKED'
+
+    @pytest.mark.parametrize('state', ['DRAFT', 'REVOKED'])
+    def test_selected_unapproved_rider_is_inconclusive(state):
+        rules = load_rules()
+        rider = deepcopy(next(r for r in rules if r['rule_id'] == 'AR-AUTO-2026-H1'))
+        rider.update(rule_id='PENDING-RIDER-1', rider='PENDING_RIDER', source_state=state,
+                     priority=1000, value=999)
+        rules.append(rider)
+        before = deepcopy(rules)
+        result = resolve(query(), rules)
+>       assert result.status == 'INCONCLUSIVE'
+E       AssertionError: assert 'RESOLVED' == 'INCONCLUSIVE'
+E         
+E         - INCONCLUSIVE
+E         + RESOLVED
+
+tests/test_unapproved_rider.py:25: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_unapproved_rider.py::test_selected_unapproved_rider_is_inconclusive[DRAFT]
+FAILED tests/test_unapproved_rider.py::test_selected_unapproved_rider_is_inconclusive[REVOKED]
+2 failed, 1 passed in 0.03s

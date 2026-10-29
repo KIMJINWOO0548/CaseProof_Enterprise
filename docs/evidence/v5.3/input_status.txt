@@ -1,0 +1,29 @@
+# 구현 상태 — 5.3.0.dev0
+
+2026-10-29. 아래 ‘현재’는 hardened baseline `/api`를 뜻한다. 미래 `/api/v1`은 아직 구현되지 않았다. 통과 수·환경·미실행은 [VALIDATION.md](VALIDATION.md)를 함께 읽는다.
+
+| 기능 | 현재 | 남은 작업 |
+| --- | --- | --- |
+| 합성 규칙·두 tenant·숫자 검증 | 구현, 기존 정답 보존 | G3의 전체 시점·rider 사실 모델 |
+| 생성/평가/제출/두 단계 승인 | 구현 | G1 target executor와 일관 API |
+| 상태/revision/reviewer 감사 대조 | 이번 baseline 보강 | immutable ChangeRevision/Transition 테이블 |
+| 사유 required/8–500, strict claim/revision | 이번 baseline 보강 | raw JSON duplicate/surrogate 등 target parser |
+| requester-only evaluation / replay 전 권한·무결성 | 이번 baseline 보강 | 모든 mutation의 전역 actor idempotency |
+| 선택한 미승인 특약 보류 | 이번 baseline 보강 | 승인 이력·소급·등록시점·unknown 사실 모델 |
+| 비교 기준선/후보 미완료 처리 | INVALID, 확정 통계 미출력으로 보강 | target paired CI/metadata/gold 분리 |
+| smoke/browser/CLI 안전한 임시 상태 | 보강, 검증 범위는 VALIDATION | 실제 브라우저 설치·클릭 시험 |
+| package/lock/CI/license/docs | 구성 파일 제공, 로컬 확인 범위 기록 | 실제 GitHub CI 및 공개 owner 설정 |
+| 세부 계약·schema/examples/hash vectors | 제공, 구조 검증 | 미래 서버 enforcement |
+| full-suite immutable run / 실패 뒤 재평가 | PLANNED | G1.5 |
+| preapproval assessment / approval envelope | PLANNED | G1.6 |
+| PostgreSQL/RLS/migration/경합 | PLANNED | G2 |
+| linked correction UI/완전 접근성 | PLANNED | G4 |
+| 실제 LLM/RAG/parser/agent | PLANNED, 외부 호출 없음 | G5 |
+| 160/80/120 독립 검수·비노출 실험 | PLANNED; 공개 20 사례와 다름 | G5 + 실제 검수자/holdout |
+| SSO/MFA, 외부 WORM/signing, backup drill | PLANNED | G6 및 별도 운영 검증 |
+
+`/api` 평가 키는 change 범위의 기존 제한적 기능이다. 다른 mutation의 재전송은 아직 중복/충돌을 완전히 다루지 않는다. DRAFT에 실패 결과가 남으면 이 baseline change는 제출할 수 없으므로 새 change로 다시 시작한다. target은 full-suite run과 명시적인 parent relation을 도입한다.
+
+현재 bearer 토큰은 고엔트로피로 생성하고 DB에 hash만 저장하지만 expiration/rotation/revocation UI가 없다. 서버에 공유 인터넷으로 접속시키지 않는다. 기본 UI 토큰은 메모리에만 보관한다. `CASEPROOF_DEMO_MODE=1`을 명시한 로컬 데모만 허용한다.
+
+내부 hash chain과 record projection은 감사 데이터를 통째로 재작성할 권한을 가진 공격자에 대한 독립 보증이 아니다. 최신 evidence가 유효해도 실보험 지급/계약·법규 적합성이나 실제 배포 승인을 뜻하지 않는다.

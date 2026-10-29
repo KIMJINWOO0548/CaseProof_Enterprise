@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=77,<85", "wheel>=0.45,<1"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "caseproof-local-demo"
+version = "5.3.0.dev1"
+description = "Synthetic insurance-rule verification and human-review research prototype"
+readme = "README.md"
+requires-python = ">=3.11,<3.14"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE", "THIRD_PARTY_NOTICES.md"]
+dynamic = ["dependencies"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Topic :: Software Development :: Testing",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<10",
+  "httpx>=0.27,<1",
+  "jsonschema>=4.23,<5",
+  "build>=1.2,<2",
+  "setuptools>=77,<85",
+  "wheel>=0.45,<1",
+]
+browser = ["playwright>=1.45,<2"]
+
+[project.scripts]
+caseproof-demo = "service.cli:main"
+
+[tool.setuptools]
+# The runtime intentionally retains its original sibling-directory layout.
+# datasets is a data-only namespace directory; it is not a public Python API.
+packages = ["service", "service.domain", "reference", "datasets"]
+include-package-data = false
+
+[tool.setuptools.dynamic]
+dependencies = {file = ["requirements.txt"]}
+
+[tool.setuptools.package-data]
+service = ["static/*.html", "static/*.css", "static/*.js"]
+datasets = ["*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-config --strict-markers"

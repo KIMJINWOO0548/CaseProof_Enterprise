@@ -1,0 +1,2 @@
+UI request retry contract: PASS (lost response, completed request, GET, retryable conflict, changed body)
+exit_code=0

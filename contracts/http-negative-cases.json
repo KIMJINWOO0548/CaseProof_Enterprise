@@ -1,0 +1,31 @@
+{
+  "schema": "caseproof_target_http_negative_cases_v1",
+  "status": "PLANNED_NOT_EXECUTED",
+  "description": "Raw-body and protocol vectors for future actual /api/v1 HTTP tests, not JSON Schema example assertions.",
+  "cases": [
+    {
+      "id": "duplicate-key",
+      "body_utf8": "{\"decision\":\"APPROVE\",\"decision\":\"REJECT\",\"reason\":\"Synthetic review complete.\"}",
+      "expected_status": 422
+    },
+    {
+      "id": "nan",
+      "body_utf8": "{\"suite_version_id\":\"00000000-0000-4000-8000-000000000001\",\"case_inputs\":[{\"case_id\":\"case-1\",\"claim_days\":NaN,\"case_context\":{}}]}",
+      "expected_status": 422
+    },
+    {"id": "infinity", "body_utf8": "{\"claim_days\":Infinity}", "expected_status": 422},
+    {"id": "invalid-utf8", "body_hex": "7b226465636973696f6e223a22ff227d", "expected_status": 422},
+    {
+      "id": "lone-surrogate",
+      "body_utf8": "{\"decision\":\"APPROVE\",\"reason\":\"Synthetic \\ud800 review\"}",
+      "expected_status": 422
+    },
+    {"id": "integral-float", "schema_example": "examples/evaluation-integral-float.json", "expected_status": 422},
+    {"id": "trim-short-reason", "schema_example": "examples/decision-trim-short.json", "expected_status": 422},
+    {"id": "blank-reason", "schema_example": "examples/decision-blank.json", "expected_status": 422},
+    {"id": "create-revision-header", "schema_example": "examples/headers-create-revision.json", "expected_status": 422},
+    {"id": "missing-idempotency", "schema_example": "examples/headers-missing-key.json", "expected_status": 422},
+    {"id": "missing-revision", "schema_example": "examples/headers-missing-revision.json", "expected_status": 422},
+    {"id": "query-on-mutation", "query_string": "tenant_id=synthetic-other", "expected_status": 422}
+  ]
+}

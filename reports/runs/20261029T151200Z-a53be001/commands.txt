@@ -1,0 +1,58 @@
+Run directory created 2026-10-29 UTC / 2026-10-30 KST; environment.json records the later capture time.
+Working directory: CaseProof_Enterprise root after the Git-preserving source move.
+Input: user-provided CaseProof_Enterprise_v5_3 (read-only), source verifier reported 187 files, no issues.
+Git comparison base: 4b8e67c.
+Python: .venv/Scripts/python.exe. Node: bundled Node executable. Synthetic temporary SQLite only.
+
+1. Input folder: python VERIFY_PACKAGE.py / equivalent imported verify(root) call before import.
+   187 files matched; source folder unchanged. Original manifest copied to docs/provenance/v5_3_input_manifest.json.
+2. python -m pip install --require-hashes -r requirements-dev.lock --disable-pip-version-check
+   exit0; project venv only. dependencies.txt.
+3. python -m scripts.windows_checks pytest -q tests/test_unapproved_rider.py tests/test_benchmark_completeness.py tests/test_safe_tools.py
+   exit1, 11 failed /4 passed. reference_tools_red.txt.
+4. Same tests plus tests/test_v4_controls.py after reference/safe-tool imports.
+   exit0, 47 passed. reference_tools_green.txt.
+5. Service merge initial observation42failed74passed is a console-summary record, NOT rawstdout. service_merge_red.txt explicitly states this.
+6. python -m scripts.windows_checks pytest -q tests/test_v53_hardening.py tests/test_submit_integrity.py tests/test_cli_database.py tests/test_service.py tests/test_transition_integrity.py tests/test_idempotency.py
+   exit0,202passed. service_merge_checks.txt.
+7. python -m scripts.windows_checks pytest -q
+   first integrated run exit0,288passed+22subtests. full_initial.txt.
+8. python -m scripts.windows_checks pytest -q tests/v1/test_canonical.py
+   missingmodule RED, then exit0,13passed. canonical_red.txt and canonical_green.txt. The empty match warning was subsequently removed without changing assertions.
+9. Independent read-only integration review found malformed audit reference IDs used as unhashable keys. Parent test:
+   python -m scripts.windows_checks pytest -q tests/test_corrupt_audit_ids.py
+   exit1,4failed. review_ids_red.txt.
+10. After validating reference IDs and simplifying canonical parser:
+    python -m scripts.windows_checks pytest -q tests/test_corrupt_audit_ids.py tests/v1/test_canonical.py
+    exit0,17passed. review_canonical_green.txt.
+11. python -m scripts.windows_checks pytest -q
+    FINAL: exit0,305passed+22subtests, one existing Starlette/httpx deprecation warning. pytest_final.txt.
+12. python -m scripts.windows_checks scripts.smoke --output reports/runs/20261029T151200Z-a53be001/smoke_final.json
+    exit0,12/12. smoke_final.txt.
+13. python -m scripts.check_ui_syntax (bundled Node directory on process PATH)
+    exit0. ui_syntax.txt. node scripts/check_ui_retries.cjs exit0, ui_retries.txt.
+14. python -m pip check
+    exit0. pip_check.txt.
+15. python -m build --no-isolation
+    exit0. Initial dev0 and final dev1 artifacts both retained; build_final.txt records dev1.
+16. python -m scripts.check_distribution dist
+    exit1 because dev0 and dev1 both existed. distribution_final.txt.
+    Copied only the new dev1 wheel+sdist into dist/verified-dev1, preserving older local outputs.
+    python -m scripts.check_distribution dist/verified-dev1
+    exit0. distribution_verified.txt.
+17. New .runtime/wheel-check virtualenv:
+    python -m pip install --require-hashes -r requirements.lock
+    python -m pip install --no-deps dist/verified-dev1/caseproof_local_demo-5.3.0.dev1-py3-none-any.whl
+    exit0, wheel_dependencies.txt / wheel_install.txt.
+18. From an owned temp cwd outside checkout, installed Python executed scripts/check_distribution.py --installed and imported installed service.domain.canonical.
+    First attempt: assertions passed, wrapper cleanup failed because cwd still inside tempfolder. wheel_installed.txt preserved.
+    Restoring cwd before cleanup: exit0. wheel_installed_verified.txt; wrapper source is check_installed_wrapper.txt.
+    Reused scripts.windows_checks initialization-only socket workaround; app assertions were not retried.
+19. python -m scripts.check_package
+    exit0,12schemas/62examples/14vectors. package_final.txt. Source count is time-dependent until final docs/manifest are written.
+20. All three dataset JSONs and service/models.py, integrity.py, idempotency.py, reference/evidence_pack.py matched their original4b8e67c bytes after root move; preserved_baseline.json.
+21. Source line endings normalized to LF for .gitattributes before generating final manifest, archive/history untouched. normalized_paths.json.
+22. Pinned GitHub Action commit SHAs were verified using official repository commit endpoints via authenticated gh api (checkout/setup-python/setup-node/upload-artifact/dependency-review).
+
+Not run: PostgreSQL/RLS, rendered browser E2E, new external dependency advisory query, actual LLM, real insurance data, independent human review.
+GitHub device codes and authentication credentials are not part of this record.

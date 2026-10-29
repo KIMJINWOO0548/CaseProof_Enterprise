@@ -1,0 +1,125 @@
+{
+  "schema": "caseproof_canonical_vectors_v1",
+  "status": "PLANNED_PROTOCOL_FIXED_REFERENCE_VECTORS",
+  "canonicalization": "caseproof.c14n.v1",
+  "hash_formula": "SHA256(UTF8('caseproof:' + purpose + ':v1\\n') || canonical_utf8)",
+  "note": "Hashes were cross-checked with Python hashlib and the system sha256sum utility during artifact preparation. This is not an implemented service canonicalizer or another-language serializer validation.",
+  "vectors": [
+    {
+      "id": "reverse-key-order-unicode-and-controls",
+      "purpose": "request",
+      "input": {"z": null, "korean": "한글 가 가", "integer": 1, "boolean": true, "a": "quote:\" newline:\n slash:/ backslash:\\"},
+      "canonical_utf8_hex": "7b2261223a2271756f74653a5c22206e65776c696e653a5c6e20736c6173683a2f206261636b736c6173683a5c5c222c22626f6f6c65616e223a747275652c22696e7465676572223a312c226b6f7265616e223a22ed959ceab88020eab08020e18480e185a1222c227a223a6e756c6c7d",
+      "hash": "fab449d319efaa8ca9e60b5145c81cbb94ebb48efcfde98f910b1a5a3901b614"
+    },
+    {
+      "id": "same-payload-different-purpose",
+      "purpose": "assessment",
+      "input": {"z": null, "korean": "한글 가 가", "integer": 1, "boolean": true, "a": "quote:\" newline:\n slash:/ backslash:\\"},
+      "canonical_utf8_hex": "7b2261223a2271756f74653a5c22206e65776c696e653a5c6e20736c6173683a2f206261636b736c6173683a5c5c222c22626f6f6c65616e223a747275652c22696e7465676572223a312c226b6f7265616e223a22ed959ceab88020eab08020e18480e185a1222c227a223a6e756c6c7d",
+      "hash": "74b63b2f69bc7ec452a4e55a1172e8c5580564f3656beadfcb9ddeaa84ea8d9d"
+    },
+    {
+      "id": "null-empty-values",
+      "purpose": "request",
+      "input": {"null": null, "object": {}, "array": []},
+      "canonical_utf8_hex": "7b226172726179223a5b5d2c226e756c6c223a6e756c6c2c226f626a656374223a7b7d7d",
+      "hash": "c0c647fd2e9935c303a89412d52b347054b3611f35e90612970d0921f5209c88"
+    },
+    {
+      "id": "safe-integer-boundaries",
+      "purpose": "request",
+      "input": {"zero": 0, "maximum": 9007199254740991, "minimum": -9007199254740991},
+      "canonical_utf8_hex": "7b226d6178696d756d223a393030373139393235343734303939312c226d696e696d756d223a2d393030373139393235343734303939312c227a65726f223a307d",
+      "hash": "fc37eb63979309d84cab091e416dac27f86d54ae027c093ac52e47d2f1b43e02"
+    },
+    {
+      "id": "codepoint-key-order",
+      "purpose": "request",
+      "input": {"😀": "supplementary", "": "private-use", "가": "Korean", "A": "ASCII"},
+      "canonical_utf8_hex": "7b2241223a224153434949222c22eab080223a224b6f7265616e222c22ee8080223a22707269766174652d757365222c22f09f9880223a22737570706c656d656e74617279227d",
+      "hash": "cb4ba8358ba75ba0239bfd2d4e5bbf4c72eb3fd1dcb6291b62a9bcf32bab32dc"
+    },
+    {
+      "id": "control-escaping",
+      "purpose": "request",
+      "input": {"text": "\u0000\u0001\b\f\n\r\t\"\\/"},
+      "canonical_utf8_hex": "7b2274657874223a225c75303030305c75303030315c625c665c6e5c725c745c225c5c2f227d",
+      "hash": "0abf1655be91cf10c2dc9ec60045d28e85b37a768b9e82681339e5e1620c735e"
+    },
+    {
+      "id": "composed-korean",
+      "purpose": "request",
+      "input": {"text": "가"},
+      "canonical_utf8_hex": "7b2274657874223a22eab080227d",
+      "hash": "c54d8c5c9195c3db8d75e48f25650f53a1254b10c9794785b924c0860d6d27fd"
+    },
+    {
+      "id": "decomposed-korean",
+      "purpose": "request",
+      "input": {"text": "가"},
+      "canonical_utf8_hex": "7b2274657874223a22e18480e185a1227d",
+      "hash": "54a2b5c5c0658f89dc6edbd5c21b1d60cdd0def85f2083a37a174ba1b53ddd6a"
+    },
+    {
+      "id": "combining-latin",
+      "purpose": "request",
+      "input": {"composed": "é", "decomposed": "é"},
+      "canonical_utf8_hex": "7b22636f6d706f736564223a22c3a9222c226465636f6d706f736564223a2265cc81227d",
+      "hash": "e1840f8aa604ed3a74661686ce3471fb629018e94159563e1ad976953e479c38"
+    },
+    {
+      "id": "normalized-utc",
+      "purpose": "transition",
+      "input": {"occurred_at": "2026-10-29T03:34:56.123456Z"},
+      "canonical_utf8_hex": "7b226f636375727265645f6174223a22323032362d31302d32395430333a33343a35362e3132333435365a227d",
+      "hash": "4030797b747e3b0253e23955a16b91b4a4d37d3d9328b13264e0150cc33b1305",
+      "pre_normalization_input": {"occurred_at": "2026-10-29T12:34:56.123456+09:00"},
+      "normalization": "Normalize equal instant to exactly six UTC fractional digits before canonicalization."
+    },
+    {
+      "id": "boolean-false",
+      "purpose": "request",
+      "input": {"value": false},
+      "canonical_utf8_hex": "7b2276616c7565223a66616c73657d",
+      "hash": "af6606fed564fe27d1a87c1ecb558ab8135b7ba98b8cade7c5ea66c2136e6cd1"
+    },
+    {
+      "id": "integer-zero",
+      "purpose": "request",
+      "input": {"value": 0},
+      "canonical_utf8_hex": "7b2276616c7565223a307d",
+      "hash": "78f27ee76007f904bd781f9d0c13bf5900d9c37e060bc21ddbf32c8ce6cd44ff"
+    },
+    {
+      "id": "optional-field-null",
+      "purpose": "request",
+      "input": {"optional": null},
+      "canonical_utf8_hex": "7b226f7074696f6e616c223a6e756c6c7d",
+      "hash": "69fb94df72664cf1e5b1d76b3603fca2e917c95a9d0401d0affbacb00f0761d2"
+    },
+    {
+      "id": "empty-object",
+      "purpose": "request",
+      "input": {},
+      "canonical_utf8_hex": "7b7d",
+      "hash": "fb8e956b6647e1a568a8e6a07726f9010dbcc81dda13fd76487dfe24c9fe5eda"
+    }
+  ],
+  "runtime_rejections": [
+    {
+      "id": "float-integral",
+      "raw_json": "{\"value\":1.0}",
+      "reason": "Floats are forbidden even when mathematically integral."
+    },
+    {"id": "float-fractional", "raw_json": "{\"value\":1.5}", "reason": "Floats are forbidden."},
+    {"id": "unsafe-integer", "raw_json": "{\"value\":9007199254740992}", "reason": "Outside safe integer range."},
+    {
+      "id": "duplicate-key",
+      "raw_json": "{\"value\":1,\"value\":2}",
+      "reason": "Duplicate keys are forbidden before object construction."
+    },
+    {"id": "surrogate", "raw_json": "{\"value\":\"\\ud800\"}", "reason": "Surrogate code points are forbidden."},
+    {"id": "nan", "raw_json": "{\"value\":NaN}", "reason": "Non-finite JSON values are forbidden."}
+  ]
+}

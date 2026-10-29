@@ -1,0 +1,85 @@
+FFF                                                                      [100%]
+=================================== FAILURES ===================================
+_____ test_importing_browser_tool_has_no_database_or_network_side_effects ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_importing_browser_tool_ha0')
+
+    def test_importing_browser_tool_has_no_database_or_network_side_effects(tmp_path):
+        sentinel = tmp_path / '_temporary_ui_demo.sqlite3'
+        sentinel.write_text('keep this unrelated database', encoding='utf-8')
+        result = subprocess.run(
+            [sys.executable, '-c', 'import scripts.browser_e2e'],
+            cwd=tmp_path,
+            env={**os.environ, 'PYTHONPATH': str(Path(__file__).resolve().parents[1])},
+            capture_output=True, text=True, timeout=10,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<string>", line 1, in <module>
+E           File "<workspace>/CaseProof_Enterprise_v5_3/scripts/browser_e2e.py", line 38, in <module>
+E             browser=pw.chromium.launch(**opts)
+E                     ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/playwright/sync_api/_generated.py", line 4103, in launch
+E             self._sync(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/playwright/_impl/_sync_base.py", line 111, in _sync
+E             return task.result()
+E                    ^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/playwright/_impl/_browser_type.py", line 101, in launch
+E             await self._channel.send(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 78, in send
+E             return await self._connection.wrap_api_call(
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/playwright/_impl/_connection.py", line 636, in wrap_api_call
+E             raise rewrite_error(error, f"{parsed_st['apiName']}: {error}") from None
+E         playwright._impl._errors.Error: BrowserType.launch: Executable doesn't exist at /root/.cache/ms-playwright/chromium_headless_shell-1248/chrome-headless-shell-linux64/chrome-headless-shell
+E         ╔════════════════════════════════════════════════════════════╗
+E         ║ Looks like Playwright was just installed or updated.       ║
+E         ║ Please run the following command to download new browsers: ║
+E         ║                                                            ║
+E         ║     playwright install                                     ║
+E         ║                                                            ║
+E         ║ <3 Playwright Team                                         ║
+E         ╚════════════════════════════════════════════════════════════╝
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['<workspace>/.venv/bin/python', '-c', 'import scripts.browser_e2e'], return...ight Team                                         ║\n╚════════════════════════════════════════════════════════════╝\n').returncode
+
+tests/test_safe_tools.py:20: AssertionError
+_______________ test_smoke_refuses_to_overwrite_existing_report ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_smoke_refuses_to_overwrit0')
+
+    def test_smoke_refuses_to_overwrite_existing_report(tmp_path):
+        from scripts.smoke import run
+        target = tmp_path / 'existing.json'
+        target.write_text('preserved', encoding='utf-8')
+        with pytest.raises(FileExistsError):
+>           run(output=target)
+E           TypeError: run() got an unexpected keyword argument 'output'
+
+tests/test_safe_tools.py:29: TypeError
+____________ test_smoke_writes_requested_report_without_fixed_paths ____________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_smoke_writes_requested_re0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f1b279b4260>
+
+    def test_smoke_writes_requested_report_without_fixed_paths(tmp_path, monkeypatch):
+        from scripts.smoke import run
+        monkeypatch.chdir(tmp_path)
+        target = tmp_path / 'new' / 'run.json'
+>       report = run(output=target)
+                 ^^^^^^^^^^^^^^^^^^
+E       TypeError: run() got an unexpected keyword argument 'output'
+
+<workspace>/CaseProof_Enterprise_v5_3/tests/test_safe_tools.py:37: TypeError
+=============================== warnings summary ===============================
+tests/test_safe_tools.py::test_smoke_refuses_to_overwrite_existing_report
+  <workspace>/.venv/lib/python3.12/site-packages/fastapi/testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED tests/test_safe_tools.py::test_importing_browser_tool_has_no_database_or_network_side_effects
+FAILED tests/test_safe_tools.py::test_smoke_refuses_to_overwrite_existing_report
+FAILED tests/test_safe_tools.py::test_smoke_writes_requested_report_without_fixed_paths
+3 failed, 1 warning in 2.43s

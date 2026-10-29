@@ -1,149 +1,219 @@
-# CaseProof Enterprise v5.2 Implementation Plan
+# CaseProof v1 Implementation Plan — v5.3 handoff
 
-> 실행자: `01_TARGET_DESIGN.md`와 이 계획을 함께 읽는다. 아래 체크박스는 미래 구현 작업이다. **현재 이 패키지에는 v5.1 기준 코드만 있으며 해당 계획을 실행하지 않았다.** 단계별 실행 전에 사용 가능한 관련 개발·검증 skill을 선택하고, 동작 결과를 증거로 남긴다.
+> For agentic workers: implement one reviewable task at a time. Use `superpowers:executing-plans` or `superpowers:subagent-driven-development` when available; otherwise the same test-first procedure works without installed skills. Checkboxes below refer to **future v1 work**, not the already hardened `/api` baseline.
 
-**Goal:** 합성 데이터 검증 시제품의 승인·감사 결함을 우선 차단하고, 실험·보험 업무·운영 준비도를 증거 기반으로 높인다.
+**Goal:** 합성 답변 변경의 평가·사람 승인·증거를 일관되게 연결하고, 공개 저장소에서 재현할 수 있는 v1을 만든다.
 
-**Architecture:** 기존 FastAPI/SQLAlchemy/SQLite 레퍼런스를 보존하면서 전이 이력과 결정·감사를 같은 트랜잭션으로 묶고, 실제 PostgreSQL 테넌트 격리 및 독립 증거 보존을 단계적으로 추가한다. 보험 룰 및 AI 어댑터는 검증 도구로만 사용하며 실지급·계약 실행은 없다.
+**Architecture:** FastAPI/SQLAlchemy 모듈형 단일 서비스. 불변 snapshot/transition/note/run과 조회 projection을 한 transaction에 쓰며, 외부 모델·외부 anchor는 별도 gate 뒤 연결한다.
 
-**Tech Stack:** Python, FastAPI, Pydantic v2, SQLAlchemy 2, SQLite local; 이후 PostgreSQL, Alembic, Playwright. 실제 버전은 클린 환경에서 잠금 파일과 해시로 기록한다. 브라우저/API는 공식 문서 버전 확인 후 적용.
+**Tech stack:** Python 3.11–3.13, Pydantic2, SQLAlchemy2, FastAPI, SQLite local; G2 PostgreSQL/Alembic, G4 Playwright. 실행 버전·hash는 lock으로 고정하고 변경 시 전체 검증한다.
 
-**Spec:** `prebuild/01_TARGET_DESIGN.md`; 보험 실험은 `prebuild/03_INSURANCE_AND_EXPERIMENT.md`; 각 Gate의 독립 결과는 `prebuild/04_ACCEPTANCE_AND_EVIDENCE.md`.
+**Spec:** [01 설계](01_TARGET_DESIGN.md), [08 정확한 계약](08_IMPLEMENTATION_CONTRACTS.md), [03 실험](03_INSURANCE_AND_EXPERIMENT.md), [04 인수](04_ACCEPTANCE_AND_EVIDENCE.md).
 
-## 전역 규칙
+## Global constraints
 
-- 현재 소스는 `current/`. 같은 이름의 historical archive는 런타임 정본이 아니다.
-- 합성 데이터와 격리 테스트 DB만 사용. 실행 전 DB URL·서비스·파일 삭제 경로·외부 연결·권한 명령 확인. 운영 DB 삭제/마이그레이션 금지.
-- 테스트 정답·평가기준·과거 로그 삭제 또는 수정으로 PASS 위조 금지. 이전 결과와 신규 결과를 분리한다.
-- 모든 미실행은 SKIPPED와 이유; exit 0과 관찰 기록이 없는 항목은 PASS 금지. 오류·로그는 secret/PII 없이 재현 가능하게 보관.
-- 하나의 구현 작업은 실패하는 테스트 → 최소 수정 → 통과 테스트 → 기존 회귀 → 기록 순서. 이 문서는 사용자 요청에 따라 **구현 코드를 작성하지 않았다.**
+- 저장소 루트의 `service/`가 코드다. `current/`를 다시 만들지 않는다.
+- `/api` baseline과 `/api/v1` target은 분리한다. 기존 테스트·합성 정답을 삭제/수정하여 성공시키지 않는다.
+- 모든 v1 mutation: `(tenant_id,actor_id,key)` UNIQUE, create 외 expected revision header, `extra=forbid`.
+- `caseproof.c14n.v1`, `H(purpose,payload)`와 전이 필드는 08 계약 그대로 사용한다.
+- synthetic only; real-model capability는 G5 job 경계가 통과하기 전 false.
+- 성공 결과/전이/행/head/idempotency는 원자적이다. 외부 network I/O와 DB transaction을 겹치지 않는다.
+- 각 task는 실패 테스트 → 실패 확인 → 구현 → 해당 시험+전체 회귀 → 증거와 focused commit 순서다.
+- 외부 인프라·검수자 미확보는 SKIPPED; fake evidence 또는 빈 테스트 collection로 gate를 통과시키지 않는다.
 
-## 변경 파일·책임 지도
+## Review focus
 
-| 대상 | 작업 | 역할 |
-|---|---|---|
-| `current/service/app.py` | 수정 | 인증/권한 경계, 상태 전이, 무결성 검사, 안전한 트랜잭션 경로 |
-| `current/service/models.py` | 수정 | transition/decision/idempotency·tenant 제약 |
-| `current/service/schemas.py` | 수정 | 엄격한 입력, 필수 사유, OpenAPI 계약 |
-| `current/service/db.py` | 수정 | 세션/트랜잭션 경계, G2의 PostgreSQL tenant context |
-| `current/service/seed.py` | 수정 | 가상업무팩 seed, 사람과 출처 가상 데이터만 |
-| `current/reference/resolver.py` | 수정 | 승인·시점·특약 불확실성을 안전하게 처리 |
-| `current/reference/paired_benchmark.py` | 수정 | 기준/후보 양측 완료·정답 라벨·비교 유효성 |
-| `current/service/static/index.html` | 수정 | 역할별 접근·거절 사유·복구·이력 및 접근성 |
-| `current/tests/` 신규 테스트 | 추가 | 독립 실패→성공 회귀. 기존 테스트와 정답 보존 |
-| `current/migrations/` | G2 신규 | Alembic schema/role 정책. 과거 승인 복구를 가장한 event 생성 금지 |
-| `current/reports/runs/<UTC-run-id>/` | 신규 | 명령, exit code, 환경·DB 종류, 입력 SHA, 상세 결과, 미실행 사유 |
-| `current/scripts/` | 수정 또는 신규 | 설치/DB 안전성, 브라우저·재현 도구. 고정 테스트 DB 자동 삭제 제거 |
-| `current/docs/` | 수정 | 코드로 증명된 것만 현재 상태, 목표는 계획으로 분리 |
+1. 같은 사람이 여러 역할로 자기 승인한다 → G1.3 `test_multirole_self_approval_denied`.
+2. 응답 유실·권한 회수·서로 다른 대상에서 key가 재사용된다 → G1.4 `test_replay_*`.
+3. 최신 incomplete를 과거 PASS로 대체하거나 옛 실패를 삭제한다 → G1.5 `test_latest_run_veto`.
+4. 승인 뒤 다른 change/event/source 버전 때문에 hash가 바뀐다 → G1.6 `test_unrelated_updates_preserve_seal`.
+5. RLS 인증 bootstrap·rollback·pool 재사용 또는 model input에서 tenant/gold가 새어 나온다 → G2.2, G5.1.
 
-## 공통 Review Focus
+## 파일·인터페이스 지도
 
-1. 동일인이 여러 role을 가져도 요청·현업·최종 승인을 모두 통과할 수 없어야 한다 — G1 `test_multirole_separation`.
-2. DB 상태/승인자/전이/note/event의 단독 변경과 삭제·중복·역순은 실패해야 한다 — G1 `test_transition_integrity_*`.
-3. 동일 idempotency 키의 동시 요청 및 응답 유실 뒤 재전송은 결과를 한 번만 생성한다 — G1/G2 `test_idempotency_*`.
-4. 테넌트 context 누락·위조 및 연결 풀 재사용은 데이터를 노출하지 않는다 — G2 `test_rls_*`.
-5. 미승인/시점 오류/미확인 특약 및 baseline/candidate incomplete는 정상 PASS로 처리하지 않는다 — G3/G5 테스트.
+| 모듈 | 인터페이스 / 책임 |
+| --- | --- |
+| `service/domain/canonical.py` | `canonical_bytes(value: object) -> bytes`, `content_hash(purpose: str, value: object) -> str` |
+| `service/domain/types.py` | frozen `ActorContext(tenant_id, actor_id, roles)`, `CommandContext(method, route_template, resource_id, key, expected_revision, body)`, `CommandResult(status_code, data, result_revision, replayed)` |
+| `service/domain/state_machine.py` | `apply_transition(snapshot: dict|None, command: dict, actor: ActorContext) -> dict`; no DB/clock/network |
+| `service/domain/gates.py` | `check_run_gate(run: dict, suite: dict, source_eligibility: dict) -> dict` |
+| `service/domain/evidence.py` | `build_assessment(history: dict, preapproval_revision: int) -> dict`; `verify_evidence(material: dict) -> dict` |
+| `service/commands.py` | `execute_command(session_factory, actor: ActorContext, command: CommandContext) -> CommandResult`; one unit of work |
+| `service/auth.py` | `authenticate(token: str, registry, db) -> ActorContext` with G2 bootstrap boundary |
+| `service/evaluation/runner.py` | `run_suite(case_inputs: list[dict], suite: dict, snapshots: dict, adapter) -> dict` |
+| `service/evaluation/adapters.py` | `FakeDeterministicAdapter.evaluate(case_input: dict, context: dict) -> dict` with no gold input |
+| `service/api/v1.py` | `build_router(session_factory, authenticator) -> APIRouter` |
+| `service/models_v1.py`, `migrations/` | exact target records and revisioned DDL |
 
----
+`dict` payloads above are the typed schemas in `contracts/`, not arbitrary dictionaries accepted from HTTP. Define Pydantic/domain types from those schemas in G1.1. Helper functions do not commit; only execute_command owns the commit. Avoid introducing another competing transaction helper.
 
-## Gate 0 — 실행 환경과 기준선 확보
+## G0 — fresh baseline / artifact checks
 
-**의존성:** 없음. **복잡도:** S–M. **결과:** 코드 변경 없이 당시 환경의 사실을 로그로 남긴다.
+**Files:** existing `requirements*.lock`, `scripts/check_package.py`, `tests/`, `docs/STATUS.md`.
 
-- [ ] 원본 ZIP SHA/manifest를 확인하고 임시 복사본에서 `current/`를 작업 디렉터리로 한다. 코드·datasets·tests를 비교해 이전 감사 당시와 같은지 기록한다.
-- [ ] 실제 Python·OS, lockfile 여부, pip 설치 대상·프록시, DB URL·demo_mode, 토큰/비밀·외부 요청·삭제 경로를 검토한다. 의존성이 없으면 별도 venv에서 설치 시도하고 실패 원인을 기록한다. 설치 실패 시 우회·무근거 PASS 금지.
-- [ ] `python -m pytest -q`와 `python -m scripts.smoke`를 실행한다. `smoke.py`는 성공 시 현재 디렉터리의 `reports/integration_smoke.json`을 덮으므로 별도 작업 복사본에서만 실행한다. 상세 로그와 exit code 기록.
-- [ ] JS 문법, `service.schemas` JSON Schema, `/openapi.json`과 HTML 응답을 각각 실제 가능한 범위에서 검사한다. API 서버를 시작할 수 없다면 OpenAPI는 SKIPPED로 기록한다.
-- [ ] 감사 당시의 49 unittest 성공, 전체 pytest·smoke 미실행, 과거 90+22/12 기록을 각각 분리한다. 이번 환경의 새 결과와 섞지 않는다.
+- [ ] Run `python VERIFY_PACKAGE.py` before changing the package; record source SHA. Once edited, the original manifest is expected to differ.
+- [ ] Create a fresh venv; install `python -m pip install --require-hashes -r requirements-dev.lock`; run `python -m pip check`.
+- [ ] Run `python -m pytest -q`, `python -m scripts.smoke`, `python -m scripts.check_ui_syntax`, `python -m scripts.check_package` and save actual exit codes.
+- [ ] Read `docs/VALIDATION.md` for earlier observations, but do not reuse them as this run's result. Record platform/DB/role/worker and source hashes.
 
-**인수:** 코드·데이터 변화 없이 환경/명령/출력/미실행을 남기고 `run_id`로 이후 결과와 연결. 실패한 환경에서 다음 Gate의 실제 통과는 주장하지 않는다.
+**Done:** baseline reproduces; failures are investigated before v1 work. Original approved-row bypass regression remains green.
 
-## Gate 1 — 실제 SQLite P0 재현·수정과 기본 API 계약
+## G1.1 — strict DTOs, canonical bytes, pure state machine
 
-**의존성:** Gate 0의 의존성 확보. **복잡도:** L. **우선순위:** 최상.
+**Create:** `service/domain/{types,canonical,state_machine}.py`, `service/api/{schemas_v1,errors}.py`; `tests/v1/test_contracts.py`, `tests/v1/test_state_machine.py`.
+**Consumes:** `contracts/` and 08 §§1–4,8–10. **Produces:** shared types/functions in the map.
 
-### Task 1.1 — P0 실제 적대 테스트
+- [ ] Write `test_canonical_vectors` using stored canonical UTF-8 hex/hash literals; reject float, int outside ±9007199254740991, duplicate raw JSON keys, lone surrogate, malformed UTF-8.
+- [ ] Write `test_revision_and_actor_rules`: genesis=1; allowed commands increment once; all illegal state/kind combinations, missing note, requester=reviewer and reviewer=approver reject.
+- [ ] Run `python -m pytest tests/v1/test_contracts.py tests/v1/test_state_machine.py -q`; confirm genuine failures before implementation.
+- [ ] Implement typed normalization and the pure state table. Inject ID/time through command input; state machine does not call uuid/clock itself. Validate field combinations and preserve null vs empty arrays.
+- [ ] Run targeted tests then entire suite. Commit `feat: define versioned command and evidence contracts`.
 
-**파일:** 기존 `service/app.py`, `models.py`; 신규 `tests/test_transition_integrity.py`; 참고 `../independent_audit/audit_probe.py`, `../independent_audit/live_probes.py`.
+**Done:** target data shapes/golden vectors are deterministic; `/api` behavior unchanged. Test vectors are not proof the future HTTP route enforces raw JSON policy—test that again in G1.4.
 
-- [ ] 임시 SQLite + TestClient에서 요청 생성, 서로 다른 규정 PASS 2건, 제출까지 수행한다. DB `Change.status`만 `PENDING_RELEASE`로 바꾸고 DOMAIN note/event는 생성하지 않는다.
-- [ ] 다른 release approver로 최종 승인을 호출한다. **수정 후 기대:** 409, `APPROVED_FOR_DEMO` 없음, 신규 release note/event 없음. 수정 전 실제 응답이 200인지 409인지 기록하고, ORM 스텁에서 확인한 결과와 구분한다. 재현이 안 되면 조건·버전 차이를 설명한다.
-- [ ] 동일한 실제 DB에서 domain_reviewer_id/status/revision 개별 변조, note/event 누락/중복/역순, tenant 뒤섞임, 승인 후 평가 변경을 각 테스트로 추가한다.
-- [ ] 정상적인 세 사람의 합성 승인과 evidence 결과가 기존 테스트와 함께 성공하는 대조군을 둔다.
+## G1.2 — immutable schema and fresh-DB migration
 
-### Task 1.2 — 원자적 전이·무결성
+**Create:** `service/models_v1.py`, `migrations/env.py`, `migrations/versions/0001_v1.py`, `tests/v1/test_schema.py`.
+**Consumes:** G1.1 types. **Produces:** tables in 08 §5.
 
-- [ ] `models.py`의 transition 모델을 목표 설계 I-03에 맞춰 추가한다. `NONE/0 → DRAFT/1` genesis, 평가의 DRAFT 내 revision 증가, revision gap·중복 거부, tenant 복합 FK 및 합법적 상태/이벤트 매핑을 둔다. 신규 DB에서 검증한다.
-- [ ] `app.py`에서 생성·평가·제출·검토·승인/반려 전이가 공통 검증을 통과하도록 정리한다. 각 단계의 상태, revision, 담당자, 존재해야 할 note/event, 제출·평가 결과를 교차 대조한다. 없는 과거 이력을 조작해 만들지 않는다.
-- [ ] 한 트랜잭션에서 status/revision/CAS + note + audit + 전이 이력을 기록한다. 중간 단계에 예외를 주입해 네 종류 레코드가 함께 rollback되는지 확인한다.
-- [ ] assessment manifest와 approval envelope의 순서를 설계 I-06대로 구현한다. DOMAIN 승인 근거와 승인 직전 revision/event 집합을 동결하고 이후 revision/event로 재구성하지 않는다. 해시가 자기 자신을 참조하지 않는지 확인한다. 최종 승인 후 변경/삭제가 검출돼야 한다.
-- [ ] 기존 SQLite 테스트와 `python -m pytest -q`, `python -m scripts.smoke`를 다시 실행한다. smoke의 고정 출력 경로를 옵션으로 바꾸거나 별도 실행 사본을 사용해 기존 `current/reports/` 파일을 보존하고, 새 결과를 `reports/runs/<run_id>/`에 기록한다.
+- [ ] Test `(tenant,change,revision_to)` and `(tenant,change,stage)` uniqueness, revision bounds, tenant composite FKs and no partial genesis records after rollback.
+- [ ] Test baseline DB import stays legacy-unverified; no fabricated DOMAIN events or automatic approval.
+- [ ] Implement Alembic on disposable DBs. Choose **no latest_revision FK** as fixed in 08; keep child FKs and verify projection in every command. Do not mix the alternate cyclic FK design.
+- [ ] Run `python -m pytest tests/v1/test_schema.py -q`, blank-DB `alembic upgrade head`, `downgrade base`, `upgrade head`, and whole suite.
+- [ ] Commit `feat: add immutable change record schema` with actual migration logs.
 
-**인수:** 모든 적대 테스트 403/409·원자적 rollback, 정상 시나리오 승인, 기존 테스트 이상 없음. DB 전체 조작을 막는다고 주장하지 않는다.
+**Done:** empty SQLite migration and integrity tests pass; PG behavior still unverified until G2. Production data rollback is not tested by dropping an empty test schema.
 
-### Task 1.3 — 입력·권한·재시도
+## G1.3 — atomic transition executor
 
-**파일:** `schemas.py`, `app.py`, `models.py`, `service/static/index.html`; 신규 `tests/test_api_contract.py`, `tests/test_idempotency.py`.
+**Create:** `service/commands.py`, `service/repositories.py`, `tests/v1/test_transactions.py`, `tests/v1/test_integrity.py`.
+**Consumes:** G1.1+G1.2. **Produces:** `execute_command(...)`, `load_history(db,tenant_id,change_id)->dict`.
 
-- [ ] `Decision.reason`을 필수로 노출하고 입력 원문과 strip 결과를 각각 Unicode code point 기준 8–500으로 검증. `/openapi.json`의 required/minLength/maxLength 및 trim 후 검증 규칙 설명을 확인한다. 공백만 또는 trim 후 7자 거부.
-- [ ] `claim_days`는 strict JSON integer(0–9999). `true`, `1.0`, `"30"`, 음수·10000은 422; 정수 30은 정상. JSON Schema integer는 1.0 거부를 표현할 수 없으므로 stricter runtime 정책은 OpenAPI 설명/확장 및 오류 메시지에 표시하고 실제 HTTP 요청으로 별도 검증한다.
-- [ ] create/evaluation/submit/domain-decision/release-decision에 actor·tenant·operation별 key + request hash를 적용한다. fingerprint에 method·정규화 route·change ID·본문·expected_revision을 포함한다. 같은 본문 재전송과 응답 유실 후 replay는 과거 결과와 replay 표시, 같은 key·다른 경로/대상/본문은 409. tenant/actor를 바꾼 replay 불가; 최신 무결성 판정은 별도 조회.
-- [ ] 기본 정책으로 requester만 evaluation 가능하도록 UI와 API를 맞춘다. 다른 분석가와 동일인 다중역할의 부정 시도는 각각 403. 대리평가가 추가되면 별도의 명시적 설계와 테스트가 필요.
-- [ ] SQLite에서 동시 요청의 제약·롤백을 확인하되 운영 동시성 결론은 G2 실제 PostgreSQL 실행 전 보류한다.
+- [ ] Add status-only P0 reproduction to v1; expected 409 and zero new release note/transition/audit.
+- [ ] Test mutation of each status/revision/actor/hash, deletion/duplication/reordering of every record type and cross-tenant child FK. Honest three-person path remains possible.
+- [ ] Parameterize exception injection after projection/note/snapshot/transition/audit/head stages; assert **all** persisted state equals pre-request state, not merely response 500.
+- [ ] Implement deterministic reconstruction, common lock order, CAS, rollback and structured errors. Validate reject paths too. App roles cannot UPDATE/DELETE immutable tables (enforce in PG G2).
+- [ ] Run `python -m pytest tests/v1/test_transactions.py tests/v1/test_integrity.py -q` plus whole suite; commit `feat: atomically bind workflow state and evidence`.
 
-**인수:** 실제 `/openapi.json`과 API 요청 테스트가 일치, 모든 replay/role negative 케이스 통과. 서버 미실행 시 PASS 금지.
+**Done:** every mutation uses one executor; malformed data fails closed without uncaught parsing exceptions. Full DB owner rewrite is explicitly out of threat coverage.
 
-## Gate 2 — PostgreSQL·RLS·마이그레이션·동시성
+## G1.4 — idempotency and actual v1 HTTP boundaries
 
-**의존성:** Gate 1. **복잡도:** L. **파일:** `db.py`, `models.py`, `migrations/`, `compose.*`, `tests/test_pg_rls.py`, `tests/test_pg_concurrency.py`.
+**Create:** `service/api/v1.py`, `service/idempotency.py`, `tests/v1/test_http.py`, `tests/v1/test_idempotency.py`.
+**Modify:** `service/app.py` only to register target router with explicit new configuration, preserving baseline route behavior.
+**Consumes:** executor/types/auth. **Produces:** endpoint table in 08 §8 and actor-scoped result lookup.
 
-- [ ] 버전 잠금·hash 및 disposable PostgreSQL DB를 만들고 schema migration을 빈 DB에 적용/다운그레이드/재적용한다. 임의 이름/URL이나 기존 DB 삭제 금지. 외부서비스 연결은 별도 승인·명시 설정.
-- [ ] owner/migration role과 non-owner/NOBYPASSRLS app role을 분리. tenant 테이블의 SELECT/INSERT/UPDATE/DELETE 별 USING/WITH CHECK 적용. app role로만 시험; owner/superuser 우회는 별도 관찰하고 통과 근거로 쓰지 않는다.
-- [ ] 인증된 tenant context는 transaction-local로 세팅한다. 인증 누락, context null/빈 문자열, forged tenant, rollback·connection pool 재사용, 타사 ID/복합 FK·join/insert/update/delete 및 오류 누출을 검사한다. SET context 자체가 DB 신원보증은 아니므로 SQL injection/app role 침해 모델을 별도 기술한다.
-- [ ] tenant-head → change → 관련 기록 → idempotency 순서의 락과 CAS를 모든 쓰기 경로에서 통일한다. 서로 다른 session/worker에서 같은 revision 동시 승인 및 같은 idempotency 동시 호출, 다른 change의 tenant audit 동시 append, lock timeout/deadlock과 재시도를 확인한다.
-- [ ] 적어도 100회 경합 반복은 회귀 탐지 예시일 뿐 무경합·성능 보증이 아니다. 성공/충돌/예상치 못한 5xx 및 중복 승인 수, DB·격리수준·worker 수를 공개한다.
-- [ ] v5.1 legacy 데이터는 기존 기록을 보존하고 `legacy-unverified`로 격리하는 마이그레이션 계획을 테스트한다. 임의의 DOMAIN 승인 이력 생성 금지.
+- [ ] Test same key+same semantic request returns same object/status/result_revision; only replayed changes. Test same actor key across route/resource/body/revision gives 409.
+- [ ] Simulate successful commit followed by lost response, advance change state and retry original key: original result is replayed before stale checking. Revoked/disabled actor receives no replay.
+- [ ] Test raw JSON duplicate key, bool/float/string claim_days, missing/whitespace reason, extra tenant/actor/revision body fields; invalid revision header/leading zeros/key; cross-tenant IDs are 404.
+- [ ] Implement normalized fingerprint and success-record transaction. Failure responses do not reserve keys; 503 outcome unknown tells client to query/retry same key. `POST create` rejects revision header.
+- [ ] Run `python -m pytest tests/v1/test_http.py tests/v1/test_idempotency.py -q`; export actual v1 OpenAPI and compare DTO/header/errors to contracts; run whole suite and commit.
 
-**인수:** 비소유 app role 기준 tenant A→B 노출·수정 0, 정상 처리, 요청당 승인 최대 1, 허용 충돌 외 예외 0, rollback 및 복구 확인. 데이터베이스 슈퍼유저의 전체 재작성은 외부 앵커 전 탐지 보장 불가.
+**Done:** HTTP enforcement is proven independently of JSON Schema limitations. Actual multi-session PG duplicate/race tests belong to G2.
 
-## Gate 3 — 합성 보험 규정·업무팩
+## G1.5 — immutable full-suite runs and current-run gate
 
-**의존성:** G1, 업무팩은 G2의 tenant model과 결합. **복잡도:** L.
+**Create:** `service/evaluation/{adapters,runner}.py`, `service/domain/gates.py`, `tests/v1/test_runs.py`, `tests/v1/test_gate.py`.
+**Consumes:** immutable snapshot refs and `EvaluationRun` model. **Produces:** full run and one EVALUATION_RECORDED transition.
 
-- [ ] `models.py`, `resolver.py`, `schemas.py`, `seed.py`에 pack/source/version/contract context와 시점별 승인 상태를 도입한다. 기존 합성 데이터는 명시적으로 버전업·검증하고 숨겨 수정하지 않는다.
-- [ ] 계약/사고/청구/상담 날짜를 서로 다르게 입력한다. 기준일 누락, 원문 미승인, DRAFT 특약, unknown과 confirmed-none 구분, 미승인 상위 우선순위, 같은 우선순위 충돌, 소급·미등록 시점, 유사 상품 및 타 tenant 문서 섞임은 fail-closed.
-- [ ] 보험 현업 검토 전 '개별 특약이 있을 때 기본 규칙으로 돌아가도 된다'는 정책을 확정하지 않는다. 기본값은 INCONCLUSIVE; 담당자가 근거를 확인한 정책만 별도 버전으로 허용한다.
-- [ ] 세 번째 완전 독립 가상 업무팩을 코어 수정 없이 등록. 기존 두 팩과 격리, API·DB·UI 생성→평가→검토→승인→증거의 E2E를 수행한다. 외부인이 독립 수행한 증거가 있어야 B05 1점을 준다.
+- [ ] Test exact required case set, duplicates/missing/unknown IDs, snapshot mismatch, insufficient distinct **policy_version** coverage, critical failure and incomplete output.
+- [ ] Test run1 BLOCK→run2 full PASS permits submit while run1 persists; run3 INCOMPLETE blocks without falling back to run2. Partial PASS fragments cannot be combined.
+- [ ] Implement fake deterministic adapter and synchronous full suite under bounded local computation. Record completion/gate_summary independently of HTTP 201.
+- [ ] Run `python -m pytest tests/v1/test_runs.py tests/v1/test_gate.py -q`, end-to-end three-role scenario and whole suite; commit.
 
-**인수:** 정해진 합성 사례 전부 재현 가능, 불확실성을 거짓 PASS로 바꾸지 않음. 실제 약관의 해석·금융법 적합성은 SME 서면 검토 전 별도 미검증.
+**Done:** selected run is `active_run_id` frozen at submit. Candidate/source change requires a new immutable change snapshot, not altered old results.
 
-## Gate 4 — 업무 UI·시정·복구·접근성
+## G1.6 — frozen assessment and final approval envelope
 
-**의존성:** G1, G3에서 확장된 정보. **복잡도:** M–L.
+**Create:** `service/domain/evidence.py`, `tests/v1/test_evidence.py`.
+**Consumes:** complete history from G1.3 and selected run from G1.5. **Produces:** assessment/envelope and evidence diagnostic endpoint.
 
-- [ ] 생성→결과 확인→반려→새 version 시정→재평가→다른 사람이 승인→감사 증거의 UI 화면과 입력 오류·권한 거부·통신 단절·복구 화면을 구현한다.
-- [ ] REJECTED를 terminal로 두고 새 change_id에 parent_change_id를 연결해 새로 평가하며, 반려 이력과 기존 증거를 덮지 않는다. 실행 성공 후 응답 유실 시 UI가 pending 작업의 동일 Idempotency-Key와 fingerprint를 유지해 같은 결과를 재생한다. 새 키를 매번 생성하는 현재 동작은 재시도 경로에서 바꾼다. `scripts/browser_e2e.py`의 고정 파일 삭제는 제거하고 `tempfile.TemporaryDirectory`를 사용한다.
-- [ ] Playwright 실제 브라우저로 세 역할의 클릭·POST·DB·화면 변화·감사 확인 및 P0 negative를 검증한다. `browser_acceptance.py`의 로그인 검사는 전체 E2E가 아님을 명시한다.
-- [ ] 키보드/스크린리더/초점/레이블·색 외 텍스트·반응형을 시험한다. 사용자 관찰은 5명 이상을 목표로 하되 참여자·업무 경험·시나리오·실패율·시간·편향을 기록한다. 사용자 미참여면 미실시.
+- [ ] Test preapproval revision p excludes final p+1 from assessment; envelope includes final note/transition/event without a hash cycle.
+- [ ] Test changes to frozen source bytes, note reason, event or run invalidate evidence; unrelated later tenant events/new source versions preserve historical seal.
+- [ ] Test source withdrawn after sealing: historical integrity stays valid and current eligibility changes separately. No anchor configured stays NOT_CONFIGURED.
+- [ ] Implement canonical payload reconstruction from immutable records, compare stored bytes/hash, emit three separate integrity/eligibility/anchor dimensions.
+- [ ] Run `python -m pytest tests/v1/test_evidence.py -q` and whole suite; commit.
 
-## Gate 5 — 모델 어댑터·360건 비교 실험
+**G1 completion:** all G1 tasks and real HTTP/SQLite end-to-end pass. Snapshot bytes and code hashes are recorded. Still no production release or PG claim.
 
-**의존성:** G1–G3. **복잡도:** L.
+## G2.1 — PostgreSQL role/migration foundation
 
-- [ ] 가상 모델 어댑터부터 검증한 후 외부 모델은 별도 설정·키·비용·egress 확인 하에 선택적으로 연결한다. 실제 고객자료 금지. 실제 지급·계약 API/tool 호출 금지.
-- [ ] paired benchmark에서 기준/후보 양쪽 `complete`를 검증한다. 한쪽이라도 미완료면 정확도·신뢰구간·개선치의 확정 결과를 내지 않는다; 재시도 또는 `INVALID/INCOMPLETE` 반환.
-- [ ] `03_INSURANCE_AND_EXPERIMENT.md`의 160/80/120 고정 split, 독립 검수, 데이터 누수 방지, baseline·예산·지표·쌍체 차이·비용을 준수한다. 전체 360건 및 전문가 검수는 아직 계획이다.
-- [ ] 실서비스 연결 전 Promptfoo 등 외부 도구는 라이선스·가격·로컬/호스팅·전송처를 다시 확인한다. 경쟁 도구의 강점은 재사용하며 기술적 우위는 동일조건 실험 전 주장 금지.
+**Create:** `compose.postgres-test.yaml`, `scripts/pg_test_bootstrap.py`, migration role/policy SQL, `tests/postgres/test_roles.py`, `tests/postgres/test_migrations.py`.
+**Modify:** `service/db.py`, dev optional dependencies with Alembic and psycopg locks.
 
-## Gate 6 — 운영 리허설·외부 검증
+- [ ] Use a clearly disposable PG17 test instance with generated credentials outside Git. Refuse non-test database names and never reset a user-configured production URL.
+- [ ] Test migrator owner, non-owner/NOBYPASSRLS app role, explicit grants and no app schema create/immutable update/delete. Fail setup if app is superuser/owner/BYPASSRLS.
+- [ ] Apply migration on empty DB; verify downgrade/upgrade in disposable DB, source snapshots and FK consistency.
+- [ ] Run `python -m pytest tests/postgres/test_roles.py tests/postgres/test_migrations.py -q` against real PG. No engine→SQLite substitution.
 
-**의존성:** G1–G5 중 해당 기능 완료. **복잡도:** L.
+## G2.2 — RLS authentication and cross-tenant isolation
 
-- [ ] 독립 계정/서명키 기반 외부 WORM 앵커·이벤트 경계, 키 회전, 접근 감사 및 복구를 구현하고 DB 전체 변조/복구 시 탐지 재현. SHA 체인만으로 WORM이라 주장하지 않는다.
-- [ ] 백업/복구 RTO/RPO는 목표와 실제 측정을 분리한다. 장애/토큰 탈취/감사변조/롤백 4개 시나리오를 합성 환경에서 훈련하고 원인·조치·재시험을 남긴다. B03은 외부 수행 증빙까지 필요.
-- [ ] 실무자 2명 이상의 독립 서면 검토, 제3자 Windows 설치, 독립 보안·기술 리뷰 및 제3팩 무수정 E2E의 증빙을 보존한다. 미참여·비동의 시 0점이고 대체 생성하지 않는다.
-- [ ] 금융당국/금융보안원 가이드 원문·적용 버전과 전문, 회사 정보보호 요구사항을 해당 시점에 다시 확인한다. 이번 보도자료 확인은 인증·법률 자문이 아니다.
+**Modify:** `service/auth.py`, `service/db.py`; **Create:** `tests/postgres/test_rls.py`, `tests/postgres/test_auth_bootstrap.py`.
 
-## 최종 보고 형식
+- [ ] Test registry→tenant context→enabled User lookup before data access; null/empty/malformed context reads zero rows and denies writes.
+- [ ] Test SELECT/INSERT/UPDATE/DELETE/FK for every tenant table as app role, not owner. Test A rollback→B and A exception→no-context on reused pooled connection.
+- [ ] Implement transaction-local context and parameterized SQL. Store secret registry outside repo; unknown/duplicate registry entry is handled per 08 §11.
+- [ ] Run both files, full PG tests and baseline suite. Record context/role/DB version, excluding credentials.
 
-각 Gate에 대해 `변경 파일 / 변경 내용 / 실제 명령 / 환경 / 테스트 수와 성공·실패 / 미실행 / 제한 / 증거 파일 / 남은 위험`을 기록한다. 점수는 `SCORECARD_105.csv` 각 세부 항목별 0·절반·만점과 실제 증거를 기준으로 독립 재채점한다. 외부 보너스는 외부 증거 없이는 0이다. 단계 완료와 전체 105점은 동일하지 않다.
+## G2.3 — independent-session concurrency and bounded failure
+
+**Create:** `tests/postgres/test_concurrency.py`, `tests/postgres/test_lock_failure.py`.
+
+- [ ] Barrier-start two real sessions with same revision/key: one effect, coherent replay or specified conflict, no duplicate note/head sequence. Repeat 100 trials and record counts.
+- [ ] Race different changes under same tenant; inject lock timeout/deadlock; verify entire rollback and 503 Retry-After 1. No unbounded automatic retries.
+- [ ] Verify no external adapter calls occur while transaction holds tenant lock; request cancellation cannot commit half a state.
+- [ ] Run target and full suites; commit G2 completion only with actual role/worker/DB/latency evidence.
+
+## G3 — approved synthetic policy packs and time/context
+
+**Create:** `service/policies/{schema,resolver,registry}.py`, `datasets/packs/`, `tests/policies/test_bitemporal.py`, `test_riders.py`, `test_pack_isolation.py`.
+**Interface:** `resolve_context(context: dict, pack_snapshot: dict, recorded_as_of: str) -> dict`; result includes reasons and source/version/clause refs.
+
+- [ ] Test valid/recorded interval boundaries, contract/incident/claim/consultation dates that differ, missing required date, timezone normalization and from>=to registration rejection.
+- [ ] Test CONFIRMED-empty vs UNKNOWN rider, unknown/unapproved/withdrawn rider, ambiguity/priority conflict, unapproved retroactivity and wrong tenant/product/source.
+- [ ] Implement the ordered filtering contract in 08 §12; preserve candidate rejection reasons and conservative INCONCLUSIVE. Do not encode unreviewed real insurance law as fact.
+- [ ] Register a third fictional pack using the registry API/config only; record unchanged core hash and full API/DB/browser flow. External B05 credit still needs an external tester.
+- [ ] Run `python -m pytest tests/policies -q`, full suites; commit.
+
+## G4 — UI correction, retry recovery, accessibility
+
+**Modify:** `service/static/`; **Create:** `tests/browser/test_v1_workflow.py`, `test_retry_accessibility.py`.
+
+- [ ] Exercise analyst→full suite→submit→domain reject→linked new change→re-evaluate→different reviewers approve→evidence.
+- [ ] Simulate dropped success response; UI keeps exact pending key/body/revision, offers same-key recovery, never creates a new key automatically for an uncertain outcome.
+- [ ] Exercise 403/404/409/422/loading/empty/network states, keyboard navigation, focus restoration, labels, textual verdicts and narrow viewport.
+- [ ] Render user/source/model text with text nodes; test XSS payloads in reason/title/output, no executable HTML. Do not store bearer tokens in browser persistent storage.
+- [ ] Run real Playwright clicks with three distinct users and server+DB assertions. Record browser/version and failures separately from API tests. User study with five participants remains a separate observed activity.
+
+## G5.1 — model/gold boundary and metrics
+
+**Create:** `service/evaluation/{datasets,benchmark,metrics}.py`, `tests/evaluation/test_gold_boundary.py`, `test_paired.py`, `test_split.py`.
+
+- [ ] Test model input allowlist excludes GoldRecord/expected annotations; group connected components cannot appear in multiple splits; private gold never enters ZIP/Git/UI.
+- [ ] Test both arms incomplete, mismatched case/snapshot/rubric, critical severity vs observed critical failure, zero denominator and insufficient clusters.
+- [ ] Implement exact 08 §14 paired/group-bootstrap specification using newly locked NumPy; do not label two Wilson intervals a paired CI.
+- [ ] Run synthetic hand-checked count/CI fixtures and full suite. Public dev examples remain demo; 160/80/120 private study is not fabricated to fill quotas.
+
+## G5.2 — optional external model job boundary
+
+**Create:** `service/evaluation/{jobs,worker}.py`, `tests/evaluation/test_jobs.py`, optional provider adapter/config.
+
+- [ ] Before external provider activation, implement 08 §15 queue/lease/attempt/terminal run contract with network outside DB locks.
+- [ ] Test response loss, duplicate completion, cancel/complete race, worker crash/restart, lease expiry and latest incomplete veto; another change under same tenant must progress during network wait.
+- [ ] Use synthetic input only; require explicit provider config, cost cap and timeout. Record model/prompt/source/input/output hash; don't log secret/raw private data. No payment/insurance-decision tool.
+- [ ] Provider unavailable leaves real-model capability false and deterministic workflow usable. Actual model/red-team results are only reported if executed.
+
+## G6 — external evidence and release candidate
+
+**Create:** `service/anchors/`, backup/restore runbooks and tests only when infrastructure exists.
+
+- [ ] Define signed anchor payload as tenant checkpoint + approval envelope hash, key ID/version and retention; separate writer key and DB owner. Verify DB wholesale rewrite and restored checkpoint against independent anchor.
+- [ ] Run four synthetic exercises: service outage, token theft, evidence tampering, rollback/restore. Measure actual RTO/RPO with environment and timestamps; planned targets are not results.
+- [ ] Obtain consented written feedback from two insurance-domain reviewers; independent Windows install, technical review and third-pack exercise. If unavailable, keep each SKIPPED and bonus at 0.
+- [ ] Execute publishing procedure, fresh CI, distribution/wheel validation, dependency/secret audit and license/provenance review. Public Git remote creation/push remains an explicit user action or separately authorized task.
+
+## Per-task report
+
+`task ID | changed files/behavior | red-test evidence | green commands/exit | environment/DB/role | regressions | skipped checks | evidence path | remaining limitation | next task`.
+
+Only mark a checkbox after its assertions pass. Update status and release notes to the final behavior, not the initial plan. An internal coding-agent review is useful engineering review and is never an external SME/security certification.

@@ -1,0 +1,31 @@
+# 출처·보존·변경 내역
+
+입력은 사용자가 제공한 `CaseProof_Enterprise_Prebuild_v5_2.zip`이다.
+
+원본 ZIP SHA-256:
+`ecfb52d364db710679b1cb6cd0bf979d13c3c4134cad11632260d82a3b255eb0`
+
+원본 `current/`의 실행 코드·테스트·합성 데이터 파일별 SHA는 [input_manifest.json](provenance/input_manifest.json)에 기록했다. source ZIP 자체는 공개 패키지 안에 중복 삽입하지 않았다. 원본 자료는 사용자의 제공 파일에 남아 있고 공개 저장소는 정리된 새 working tree다.
+
+## 보존과 제외
+
+원래의 테스트 파일 5개와 합성 JSON 3개는 바이트를 바꾸지 않고 보존했다. 추가 회귀는 새 파일에 작성했다. baseline의 좁은 API 계약은 유지하며 수정된 코드와 제한을 명시한다. 합성 규칙 값이나 정답을 구현에 맞춰 바꾼 것이 아니다.
+
+제외한 자료는 legacy/중복 ZIP/과거 DOCX 보고서/예전 자체 점수·불완전한 환경 로그/폐기된 프롬프트다. 원본의 외부 자료 사용권과 과거 구현완료 표현을 이번 공개 저장소의 사실로 승계하지 않는다. `scripts/create_v5_report.py`와 이전 `scripts/verify_manifest.py`는 과거 고정 보고서와 해시 형식에 묶여 있어 제거하고 새 검증·패키징 도구로 교체했다.
+
+원본 감사의 19/105 및 이전 자체 평가의 80/105는 당시의 서로 다른 증거 조건이다. 현재 패키지의 새 성능·보안 점수로 제시하지 않는다. 원본 기준 코드의 새 실행에서 90 pytest +22 subtests가 통과한 것은 사실이며, 추가된 공격 시험은 그 기존 커버리지의 빈틈을 보여준다. 새 수정본의 결과는 [VALIDATION](VALIDATION.md)에서 구분한다.
+
+## 이번 변경
+
+- 기존 audit event 순서를 재구성하여 상태/revision/담당자와 비교하고, 정합성 없는 승인·평가·replay를 차단한다.
+- 승인 사유의 OpenAPI/실제 validation을 일치시키고 strict 숫자·revision·추가 필드 정책과 requester-only evaluation을 적용한다.
+- 비교 양측 미완료와 malformed input을 안전하게 처리하며 확정 통계를 내지 않는다.
+- 선택된 적용 가능 DRAFT/REVOKED 특약을 몰래 제외하여 base rule로 판정하던 경로를 보류한다. 실제 약관 해석을 검증했다는 의미는 아니다.
+- smoke/browser/CLI의 임시 파일·출력·DB 경로를 안전하게 바꾸고 재현용 패키지 검사/분배 검사/locked 환경을 추가한다.
+- 정확한 `/api/v1` 구현 계약·schema·예제·hash vectors·task/test 매핑을 작성하고 OSS 루트/CI/라이선스·기여·보안 문서를 구성한다.
+
+## 저작권과 외부 의존성
+
+Apache-2.0은 maintainer가 배포 권한을 가진 프로젝트 원본/변경분에 적용하는 기본 라이선스다. 사용자 제공 원본의 권리 소유관계를 이번 작업이 독립적으로 확인한 것은 아니다. 최초 게시자는 원본 권한을 확인하고 필요한 권리 표시를 보존해야 한다. 외부 dependency는 그 자체 라이선스를 따른다. [THIRD_PARTY_NOTICES](../THIRD_PARTY_NOTICES.md)를 참고한다.
+
+모든 검토와 수정은 AI 보조 작업이다. 내부 agent 간 교차 검토를 실제 외부 보험 실무자·보안 인증기관의 검수로 표시하지 않는다. 공개 예제는 private holdout이 아니며, 예제 hash/approver ID는 실제 사람의 승인 증거가 아니다.

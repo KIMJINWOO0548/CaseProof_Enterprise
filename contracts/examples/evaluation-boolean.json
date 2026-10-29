@@ -1,0 +1,18 @@
+{
+  "suite_version_id": "00000000-0000-4000-8000-000000000004",
+  "case_inputs": [
+    {
+      "case_id": "synthetic-case-001",
+      "claim_days": true,
+      "case_context": {
+        "contract_date": "2026-01-02",
+        "incident_date": null,
+        "claim_date": "2026-06-30",
+        "consultation_date": null,
+        "rider_context_status": "CONFIRMED",
+        "riders": [],
+        "recorded_as_of": "2026-10-29T12:34:56.123456+09:00"
+      }
+    }
+  ]
+}

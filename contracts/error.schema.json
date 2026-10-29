@@ -1,0 +1,163 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Target safe error response",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "code": {
+          "enum": [
+            "UNAUTHENTICATED",
+            "FORBIDDEN",
+            "REQUESTER_ONLY",
+            "SEPARATION_OF_DUTIES",
+            "NOT_FOUND",
+            "IDEMPOTENCY_CONFLICT",
+            "AUDIT_INTEGRITY_FAILURE",
+            "EVIDENCE_RECORD_TAMPERED",
+            "INVALID_STATUS",
+            "STALE_REVISION",
+            "EVALUATION_INCOMPLETE",
+            "RELEASE_GATE_BLOCKED",
+            "SOURCE_NOT_ELIGIBLE",
+            "SNAPSHOT_MISMATCH",
+            "INVALID_REQUEST",
+            "RETRYABLE_CONFLICT",
+            "OUTCOME_UNKNOWN",
+            "INTERNAL_ERROR"
+          ]
+        },
+        "message": {"type": "string"},
+        "retryable": {"type": "boolean"},
+        "request_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "details": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "current_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+            "fields": {
+              "type": "array",
+              "uniqueItems": true,
+              "items": {
+                "enum": [
+                  "Idempotency-Key",
+                  "X-Expected-Revision",
+                  "candidate_snapshot_id",
+                  "case_context",
+                  "case_id",
+                  "case_inputs",
+                  "claim_days",
+                  "dataset_version_id",
+                  "decision",
+                  "evaluator_version_id",
+                  "pack_version_id",
+                  "parent_change_id",
+                  "parent_relation",
+                  "product_id",
+                  "reason",
+                  "rule_key",
+                  "source_bundle_id",
+                  "suite_version_id",
+                  "title",
+                  "workflow"
+                ]
+              }
+            }
+          },
+          "required": []
+        }
+      },
+      "required": ["code", "message", "retryable", "request_id", "details"],
+      "allOf": [
+        {
+          "if": {"properties": {"code": {"enum": ["RETRYABLE_CONFLICT", "OUTCOME_UNKNOWN"]}}},
+          "then": {"properties": {"retryable": {"const": true}}},
+          "else": {"properties": {"retryable": {"const": false}}}
+        },
+        {
+          "if": {"properties": {"code": {"const": "STALE_REVISION"}}},
+          "then": {
+            "properties": {
+              "details": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {"current_revision": {"$ref": "common.schema.json#/$defs/Revision"}},
+                "required": []
+              }
+            }
+          },
+          "else": {"properties": {"details": {"not": {"required": ["current_revision"]}}}}
+        },
+        {
+          "if": {"properties": {"code": {"const": "INVALID_REQUEST"}}},
+          "then": {
+            "properties": {
+              "details": {
+                "type": "object",
+                "additionalProperties": false,
+                "properties": {
+                  "fields": {
+                    "type": "array",
+                    "uniqueItems": true,
+                    "items": {
+                      "enum": [
+                        "Idempotency-Key",
+                        "X-Expected-Revision",
+                        "candidate_snapshot_id",
+                        "case_context",
+                        "case_id",
+                        "case_inputs",
+                        "claim_days",
+                        "dataset_version_id",
+                        "decision",
+                        "evaluator_version_id",
+                        "pack_version_id",
+                        "parent_change_id",
+                        "parent_relation",
+                        "product_id",
+                        "reason",
+                        "rule_key",
+                        "source_bundle_id",
+                        "suite_version_id",
+                        "title",
+                        "workflow"
+                      ]
+                    }
+                  }
+                },
+                "required": []
+              }
+            }
+          },
+          "else": {"properties": {"details": {"not": {"required": ["fields"]}}}}
+        }
+      ]
+    }
+  },
+  "required": ["error"],
+  "x-http-status-by-code": {
+    "UNAUTHENTICATED": 401,
+    "FORBIDDEN": 403,
+    "REQUESTER_ONLY": 403,
+    "SEPARATION_OF_DUTIES": 403,
+    "NOT_FOUND": 404,
+    "IDEMPOTENCY_CONFLICT": 409,
+    "AUDIT_INTEGRITY_FAILURE": 409,
+    "EVIDENCE_RECORD_TAMPERED": 409,
+    "INVALID_STATUS": 409,
+    "STALE_REVISION": 409,
+    "EVALUATION_INCOMPLETE": 409,
+    "RELEASE_GATE_BLOCKED": 409,
+    "SOURCE_NOT_ELIGIBLE": 409,
+    "SNAPSHOT_MISMATCH": 409,
+    "INVALID_REQUEST": 422,
+    "RETRYABLE_CONFLICT": 503,
+    "OUTCOME_UNKNOWN": 503,
+    "INTERNAL_ERROR": 500
+  }
+}

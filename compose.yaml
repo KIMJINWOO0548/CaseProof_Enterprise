@@ -1,0 +1,25 @@
+# Synthetic local demonstration. Never place real customer data in this volume.
+services:
+  caseproof-demo:
+    build:
+      context: .
+    ports:
+      - "127.0.0.1:8000:8000"
+    environment:
+      CASEPROOF_DEMO_MODE: "1"
+      CASEPROOF_DATABASE_URL: "sqlite:////data/caseproof.sqlite3"
+    volumes:
+      - local_demo_db:/data
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    init: true
+    stop_grace_period: 15s
+    restart: "no"
+
+volumes:
+  local_demo_db:

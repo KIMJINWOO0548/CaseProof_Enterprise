@@ -1,0 +1,20 @@
+name: Feature request
+description: Propose a scoped improvement to the research prototype.
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem and intended user
+    validations:
+      required: true
+  - type: textarea
+    id: outcome
+    attributes:
+      label: Observable outcome and acceptance criteria
+    validations:
+      required: true
+  - type: textarea
+    id: scope
+    attributes:
+      label: Scope, alternatives, and prebuild gate
+      description: Explain required data, dependencies, external services, and human review.

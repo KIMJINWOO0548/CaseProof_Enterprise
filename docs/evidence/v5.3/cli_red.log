@@ -1,0 +1,92 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_cli_uses_environment_database_and_leaves_other_files_alone ________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-0/test_cli_uses_environment_data0')
+
+    def test_cli_uses_environment_database_and_leaves_other_files_alone(tmp_path):
+        repo = Path(__file__).resolve().parents[1]
+        target = tmp_path / 'chosen.sqlite3'
+        default = tmp_path / 'caseproof_demo.sqlite3'
+        default.write_bytes(b'do not touch')
+        result = subprocess.run(
+            [sys.executable, '-m', 'service.cli', 'init-demo'], cwd=tmp_path,
+            env={**os.environ, 'PYTHONPATH': str(repo), 'CASEPROOF_DEMO_MODE': '1',
+                 'CASEPROOF_DATABASE_URL': f'sqlite:///{target}'},
+            capture_output=True, text=True, timeout=15,
+        )
+>       assert result.returncode == 0, result.stderr
+E       AssertionError: Traceback (most recent call last):
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1958, in _exec_single_context
+E             self.dialect.do_execute(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 1192, in do_execute
+E             cursor.execute(statement, parameters)
+E         sqlite3.DatabaseError: file is not a database
+E         
+E         The above exception was the direct cause of the following exception:
+E         
+E         Traceback (most recent call last):
+E           File "<frozen runpy>", line 198, in _run_module_as_main
+E           File "<frozen runpy>", line 88, in _run_code
+E           File "<workspace>/CaseProof_Enterprise_v5_3/service/cli.py", line 28, in <module>
+E             main()
+E           File "<workspace>/CaseProof_Enterprise_v5_3/service/cli.py", line 17, in main
+E             create_tables(engine)
+E           File "<workspace>/CaseProof_Enterprise_v5_3/service/db.py", line 19, in create_tables
+E             Base.metadata.create_all(engine)
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/sql/schema.py", line 6700, in create_all
+E             bind._run_ddl_visitor(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 3250, in _run_ddl_visitor
+E             conn._run_ddl_visitor(visitorcallable, element, **kwargs)
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2451, in _run_ddl_visitor
+E             ).traverse_single(element)
+E               ^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/sql/visitors.py", line 650, in traverse_single
+E             return meth(obj, **kw)
+E                    ^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/sql/ddl.py", line 1451, in visit_metadata
+E             [t for t in tables if self._can_create_table(t)]
+E                                   ^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/sql/ddl.py", line 1416, in _can_create_table
+E             return not self.checkfirst & bool_to_check or not self._has_table(
+E                                                               ^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/sql/ddl.py", line 1384, in _has_table
+E             self._has_tables.update(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 1394, in has_multi_table
+E             exist = self.has_table(connection, table_name, schema=schema, **kw)
+E                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<sqlalchemy generated cache() wrapper for sqlalchemy.dialects.sqlite.base.SQLiteDialect.has_table>", line 2, in has_table
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/reflection.py", line 90, in cache
+E             return fn(self, con, *args, **kw)
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/base.py", line 2433, in has_table
+E             info = self._get_table_pragma(
+E                    ^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/dialects/sqlite/base.py", line 3145, in _get_table_pragma
+E             cursor = connection.exec_driver_sql(statement)
+E                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1770, in exec_driver_sql
+E             ret = self._execute_context(
+E                   ^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1837, in _execute_context
+E             return self._exec_single_context(
+E                    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1977, in _exec_single_context
+E             self._handle_dbapi_exception(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 2347, in _handle_dbapi_exception
+E             raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/base.py", line 1958, in _exec_single_context
+E             self.dialect.do_execute(
+E           File "<workspace>/.venv/lib/python3.12/site-packages/sqlalchemy/engine/default.py", line 1192, in do_execute
+E             cursor.execute(statement, parameters)
+E         sqlalchemy.exc.DatabaseError: (sqlite3.DatabaseError) file is not a database
+E         [SQL: PRAGMA main.table_info("tenants")]
+E         (Background on this error at: https://sqlalche.me/e/21/4xp6)
+E         
+E       assert 1 == 0
+E        +  where 1 = CompletedProcess(args=['<workspace>/.venv/bin/python', '-m', 'service.cli', 'init-demo'], returnco... a database\n[SQL: PRAGMA main.table_info("tenants")]\n(Background on this error at: https://sqlalche.me/e/21/4xp6)\n').returncode
+
+tests/test_cli_database.py:19: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_cli_database.py::test_cli_uses_environment_database_and_leaves_other_files_alone
+1 failed in 0.30s

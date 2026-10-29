@@ -1,0 +1,11 @@
+{
+  "sha256": {
+    "datasets/synthetic_rules.json": "8fecafb12e69bb4902eb963d682ab75c4dbc607190c931f4f2d982098c4a0a79",
+    "datasets/resolver_test_cases.json": "8d3f72d1915137f854ff4b2af49eb79ca5a43ec88927a882469465f6633e06a8",
+    "datasets/synthetic_impact_graph.json": "1bb46c2c185d7195de2c897304a75962840d0e2d3832dde33b010d33cc6822da",
+    "service/models.py": "d898a80243d65bb56527508f4677ff0c151a74812ecc4093b46ce42366062926",
+    "service/integrity.py": "a101b68dfe279efd93a6ec822346349b9a4101534377464171ccb1f01edc8de6",
+    "service/idempotency.py": "b97774fafdad39b60df51329297fa6770fcf75d75133cf065f5346ae19574cc1",
+    "reference/evidence_pack.py": "cafe7bc007e87f9bd57a7bd936384e2de660cda8b5a896063f27e54bced70aee"
+  }
+}

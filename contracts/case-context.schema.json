@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Typed synthetic case context",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "contract_date": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}], "default": null},
+    "incident_date": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}], "default": null},
+    "claim_date": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}], "default": null},
+    "consultation_date": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}], "default": null},
+    "rider_context_status": {"enum": ["CONFIRMED", "UNKNOWN"], "default": "UNKNOWN"},
+    "riders": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "code": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+          "enrolled_from": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}]},
+          "enrolled_to": {"anyOf": [{"$ref": "common.schema.json#/$defs/BusinessDate"}, {"type": "null"}]},
+          "confirmation_evidence_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]}
+        },
+        "required": ["code", "enrolled_from", "enrolled_to", "confirmation_evidence_id"]
+      },
+      "default": []
+    },
+    "recorded_as_of": {"anyOf": [{"$ref": "common.schema.json#/$defs/InputTimestamp"}, {"type": "null"}], "default": null}
+  },
+  "required": [],
+  "x-runtime-rules": [
+    "Apply defaults before fingerprinting; normalize non-null recorded_as_of to UTC.",
+    "Absent required business facts produce an INCONCLUSIVE result according to the suite; they never imply PASS.",
+    "CONFIRMED plus [] is confirmed no riders. UNKNOWN is uncertainty.",
+    "Validate enrolled_from < enrolled_to when both are non-null."
+  ]
+}

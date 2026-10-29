@@ -1,0 +1,24 @@
+CaseProof local synthetic demonstration and implementation handoff
+Development package: 5.3.0.dev1
+
+Apache License 2.0 is the selected license for original project material made
+available by its rights holders, including original contributions to this
+repository. Copyright remains with the respective contributors.
+
+This package was prepared from a supplied CaseProof Enterprise v5.2 prebuild
+archive that contains an inherited v5.1 research prototype. The preparation
+changed repository organization, packaging, development workflows, and handoff
+documentation; it does not establish ownership of inherited material or certify
+completion of the proposed product design.
+
+The archive did not provide a complete authorship or third-party rights record.
+Before public distribution, the repository owner must confirm permission to
+release inherited code, synthetic fixtures, and documentation under the selected
+license. Third-party materials retain their own applicable terms. See
+THIRD_PARTY_NOTICES.md for provenance gaps and exclusions.
+
+CaseProof is not an Apache Software Foundation project. References to financial
+institutions, standards, or other products do not imply sponsorship, endorsement,
+certification, or permission to make insurance decisions.
+
+This NOTICE is informational and does not modify the Apache License 2.0.

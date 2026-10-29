@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Normalized mutation fingerprint canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "mutation_fingerprint_v1"},
+    "method": {"const": "POST"},
+    "route_template": {
+      "enum": [
+        "/api/v1/changes",
+        "/api/v1/changes/{change_id}/evaluation-runs",
+        "/api/v1/changes/{change_id}/submit",
+        "/api/v1/changes/{change_id}/domain-decision",
+        "/api/v1/changes/{change_id}/release-decision"
+      ]
+    },
+    "resource_id": {"anyOf": [{"const": "NEW"}, {"$ref": "common.schema.json#/$defs/UUIDv4"}]},
+    "body": {"type": "object"},
+    "expected_revision": {"anyOf": [{"$ref": "common.schema.json#/$defs/Revision"}, {"type": "null"}]}
+  },
+  "required": ["schema", "method", "route_template", "resource_id", "body", "expected_revision"],
+  "oneOf": [
+    {
+      "properties": {
+        "route_template": {"const": "/api/v1/changes"},
+        "resource_id": {"const": "NEW"},
+        "expected_revision": {"type": "null"},
+        "body": {"$ref": "commands.schema.json#/$defs/CreateChange"}
+      }
+    },
+    {
+      "properties": {
+        "route_template": {"const": "/api/v1/changes/{change_id}/evaluation-runs"},
+        "resource_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "expected_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+        "body": {"$ref": "commands.schema.json#/$defs/RecordEvaluation"}
+      }
+    },
+    {
+      "properties": {
+        "route_template": {"const": "/api/v1/changes/{change_id}/submit"},
+        "resource_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "expected_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+        "body": {"$ref": "commands.schema.json#/$defs/SubmitChange"}
+      }
+    },
+    {
+      "properties": {
+        "route_template": {"const": "/api/v1/changes/{change_id}/domain-decision"},
+        "resource_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "expected_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+        "body": {"$ref": "commands.schema.json#/$defs/Decision"}
+      }
+    },
+    {
+      "properties": {
+        "route_template": {"const": "/api/v1/changes/{change_id}/release-decision"},
+        "resource_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "expected_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+        "body": {"$ref": "commands.schema.json#/$defs/Decision"}
+      }
+    }
+  ],
+  "x-runtime-rules": [
+    "body has already passed strict JSON parsing, DTO validation, normalization and defaults.",
+    "Create body includes parent_change_id:null and parent_relation:null after defaults.",
+    "A successful key is unique by (tenant_id, actor_id, key), without operation in the unique key.",
+    "No query parameters are accepted on these mutation routes."
+  ],
+  "x-hash-purpose": "request",
+  "x-canonicalization": "caseproof.c14n.v1"
+}

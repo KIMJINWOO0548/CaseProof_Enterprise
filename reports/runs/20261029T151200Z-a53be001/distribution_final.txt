@@ -1,0 +1,2 @@
+Expected exactly one wheel and one sdist; use a clean build output directory.
+exit_code=1

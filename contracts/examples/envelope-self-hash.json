@@ -1,0 +1,25 @@
+{
+  "schema": "approval_envelope_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "preapproval_revision": 4,
+  "approved_revision": 5,
+  "assessment_sha256": "ec8346a1eedaaa84f74c06bc6f5ab8a2dcc5a266eed241ba538eee70a0e0e1fd",
+  "release_decision_ref": {
+    "id": "00000000-0000-4000-8000-000000000016",
+    "payload_sha256": "93221c1788df5dc17af6147a126da13f129aba31dbb61e2750cfd43fa80329ea"
+  },
+  "release_transition_ref": {
+    "id": "00000000-0000-4000-8000-000000000022",
+    "payload_sha256": "028bedeaa30218dc6525fb294727bdc2efdb7c2b4f1d158e1478b0765d520a11"
+  },
+  "release_event_ref": {
+    "id": "00000000-0000-4000-8000-000000000040",
+    "payload_sha256": "f728d6d1a52c235d33d18aec6ae1f184bf01bee2a8705ccf95fcbbcacbdd0d6e",
+    "sequence": 5
+  },
+  "approved_snapshot_sha256": "88263cf50b5ec912ab0090381459db1e6f273822942699a7959dfb5e58b972d8",
+  "approver_id": "synthetic-approver",
+  "approved_at": "2026-10-29T03:34:56.123456Z",
+  "approval_envelope_sha256": "51f967ee9c573feb7f5e6630a077cdb7a0c1edd120848443e7d247816267aef0"
+}

@@ -1,0 +1,15 @@
+{
+  "command": [
+    "python",
+    "-m",
+    "pytest",
+    "-q"
+  ],
+  "exit_code": 0,
+  "environment": {
+    "python": "3.12.14",
+    "platform": "Linux-6.18.55-x86_64-with-glibc2.39"
+  },
+  "source": "original v5.2 current/ unmodified v5.1 code",
+  "captured_at_utc": "2026-10-28T23:33:15.030000+00:00"
+}

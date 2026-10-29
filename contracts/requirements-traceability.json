@@ -1,0 +1,247 @@
+{
+  "schema": "caseproof_target_traceability_v1",
+  "status": "PLANNED",
+  "note": "target_test values are planned acceptance identifiers, not claims those files exist or have passed. Schema artifact checks are separate from runtime implementation.",
+  "requirements": [
+    {
+      "id": "V1-IDENTITY",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_server_owned_identity",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "1"
+    },
+    {
+      "id": "V1-STRICT-JSON",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_invalid_json_wire_values",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "1"
+    },
+    {
+      "id": "V1-REASON",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_reason_original_and_stripped_bounds",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "1"
+    },
+    {
+      "id": "V1-STRICT-INTEGER",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_claim_days_strict_integer",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "1"
+    },
+    {
+      "id": "V1-CANONICAL",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_canonical_vectors_v1",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "2"
+    },
+    {
+      "id": "V1-SNAPSHOT",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_snapshot_projection_reconstruction",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "3"
+    },
+    {
+      "id": "V1-PARENT",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_parent_same_tenant_no_gate_copy",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "3"
+    },
+    {
+      "id": "V1-TRANSITIONS",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_state_table_and_terminal_states",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "4"
+    },
+    {
+      "id": "V1-ATOMICITY",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_every_transition_rolls_back_all_rows",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "4"
+    },
+    {
+      "id": "V1-SEPARATION",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_multirole_separation_of_duties",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "4"
+    },
+    {
+      "id": "V1-COMPOSITE-FK",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_all_cross_tenant_foreign_keys",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "5"
+    },
+    {
+      "id": "V1-IMMUTABILITY",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_nonowner_immutable_tables_update_delete_denied",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "5"
+    },
+    {
+      "id": "V1-FULL-SUITE",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_full_suite_unique_case_coverage",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "6"
+    },
+    {
+      "id": "V1-LATEST-RUN",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_latest_incomplete_run_vetoes_old_pass",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "6"
+    },
+    {
+      "id": "V1-ASSESSMENT",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_assessment_fixed_scope_and_order",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "7"
+    },
+    {
+      "id": "V1-ENVELOPE",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_approval_envelope_noncyclic_hashes",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "7"
+    },
+    {
+      "id": "V1-EVIDENCE",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_evidence_reconstructs_actual_records",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "7"
+    },
+    {
+      "id": "V1-HEADERS",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_required_headers_and_body_forbid",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "8"
+    },
+    {
+      "id": "V1-IDEMPOTENCY",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_actor_key_replay_preserves_original_response",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "9"
+    },
+    {
+      "id": "V1-LOCK-ORDER",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_postgres_independent_sessions_lock_order",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "9"
+    },
+    {
+      "id": "V1-OUTCOME-UNKNOWN",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_outcome_unknown_same_key_recovery",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "9"
+    },
+    {
+      "id": "V1-ERROR-ORDER",
+      "gate": "G1",
+      "target_test": "tests/target/test_g1.py::test_error_precedence_no_tenant_leak",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "10"
+    },
+    {
+      "id": "V1-AUTH-BOOTSTRAP",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_demo_registry_and_current_user_roles",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "11"
+    },
+    {
+      "id": "V1-RLS",
+      "gate": "G2",
+      "target_test": "tests/target/test_g2.py::test_transaction_local_context_pool_rollback",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "11"
+    },
+    {
+      "id": "V1-SOURCE-TIME",
+      "gate": "G3",
+      "target_test": "tests/target/test_g3.py::test_business_dates_asof_rider_conflicts",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "12"
+    },
+    {
+      "id": "V1-PRIVATE-GOLD",
+      "gate": "G5",
+      "target_test": "tests/target/test_g5.py::test_adapter_allowlist_and_private_gold_exclusion",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "13"
+    },
+    {
+      "id": "V1-GROUP-SPLIT",
+      "gate": "G5",
+      "target_test": "tests/target/test_g5.py::test_group_connected_components_disjoint",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "13"
+    },
+    {
+      "id": "V1-PAIRED-METRICS",
+      "gate": "G5",
+      "target_test": "tests/target/test_g5.py::test_paired_incomplete_and_cluster_bootstrap",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "14"
+    },
+    {
+      "id": "V1-JOBS",
+      "gate": "G5",
+      "target_test": "tests/target/test_g5.py::test_job_completion_cancel_races",
+      "implemented": false,
+      "documentation": ["prebuild/08_IMPLEMENTATION_CONTRACTS.md"],
+      "section": "15"
+    },
+    {
+      "id": "V1-EXTERNAL-ANCHOR",
+      "gate": "G6",
+      "target_test": "tests/target/test_g6.py::test_independent_anchor_verification",
+      "implemented": false,
+      "documentation": ["prebuild/01_TARGET_DESIGN.md"],
+      "section": null
+    }
+  ]
+}

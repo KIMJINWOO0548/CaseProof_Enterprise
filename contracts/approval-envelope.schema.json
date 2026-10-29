@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Approval envelope canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "approval_envelope_v1"},
+    "tenant_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "change_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "preapproval_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+    "approved_revision": {"$ref": "common.schema.json#/$defs/Revision"},
+    "assessment_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+    "release_decision_ref": {"$ref": "common.schema.json#/$defs/PayloadRef"},
+    "release_transition_ref": {"$ref": "common.schema.json#/$defs/PayloadRef"},
+    "release_event_ref": {"$ref": "common.schema.json#/$defs/EventRef"},
+    "approved_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+    "approver_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "approved_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"}
+  },
+  "required": [
+    "schema",
+    "tenant_id",
+    "change_id",
+    "preapproval_revision",
+    "approved_revision",
+    "assessment_sha256",
+    "release_decision_ref",
+    "release_transition_ref",
+    "release_event_ref",
+    "approved_snapshot_sha256",
+    "approver_id",
+    "approved_at"
+  ],
+  "x-runtime-rules": [
+    "approved_revision = preapproval_revision + 1.",
+    "Generate assessment, release decision, approved snapshot, release transition, release event, then this envelope.",
+    "Referenced records match tenant, change, revision, approver and approval timestamp.",
+    "The envelope hash is excluded from this payload and from the release event."
+  ],
+  "x-hash-purpose": "approval-envelope",
+  "x-canonicalization": "caseproof.c14n.v1"
+}

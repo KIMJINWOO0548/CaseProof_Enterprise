@@ -1,0 +1,20 @@
+{
+  "schema": "change_transition_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-000000000023",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "revision_from": 5,
+  "revision_to": 6,
+  "from_state": "PENDING_RELEASE",
+  "to_state": "APPROVED_FOR_DEMO",
+  "kind": "APPROVED_FOR_DEMO",
+  "actor_id": "synthetic-release_approver",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "previous_snapshot_sha256": "04f703885134150e1b898aae9dc9b2a3fca0f26d91884068d671b7bf6e31108f",
+  "next_snapshot_sha256": "b00497c3f51bfd739fbbb76ea57660dbb05cbae7214050214eaf85063f30e65c",
+  "evaluation_run_id": null,
+  "evaluation_run_sha256": null,
+  "decision_id": "00000000-0000-4000-8000-000000000037",
+  "decision_sha256": "8d40a450360ad3d27a2d31056996d51445900b5219737f683cfa484f83ed9b88",
+  "assessment_sha256": "ec8346a1eedaaa84f74c06bc6f5ab8a2dcc5a266eed241ba538eee70a0e0e1fd"
+}

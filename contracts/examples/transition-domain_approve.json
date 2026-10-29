@@ -1,0 +1,20 @@
+{
+  "schema": "change_transition_v1",
+  "tenant_id": "synthetic-tenant-a",
+  "id": "00000000-0000-4000-8000-000000000021",
+  "change_id": "00000000-0000-4000-8000-00000000000a",
+  "revision_from": 3,
+  "revision_to": 4,
+  "from_state": "PENDING_DOMAIN_REVIEW",
+  "to_state": "PENDING_RELEASE",
+  "kind": "DOMAIN_APPROVE",
+  "actor_id": "synthetic-domain_reviewer",
+  "occurred_at": "2026-10-29T03:34:56.123456Z",
+  "previous_snapshot_sha256": "738db512e06ce17441e0929d35e6e7e5e78f7939937cb6e2a5a6c4448e31b72f",
+  "next_snapshot_sha256": "b00497c3f51bfd739fbbb76ea57660dbb05cbae7214050214eaf85063f30e65c",
+  "evaluation_run_id": null,
+  "evaluation_run_sha256": null,
+  "decision_id": "00000000-0000-4000-8000-000000000035",
+  "decision_sha256": "24e646ad0bb7c2d6e0d9966efcf922629983a611a7ce5fa98926928ec4e81da8",
+  "assessment_sha256": null
+}

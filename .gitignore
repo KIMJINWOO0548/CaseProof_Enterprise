@@ -1,7 +1,60 @@
-__pycache__/
-.pytest_cache/
+# Local environments and interpreter output.
 .venv/
-*.pyc
-*.sqlite3
-*.sqlite3-*
+venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.tox/
+.nox/
+.coverage
+.coverage.*
+htmlcov/
+
+# Builds and package metadata; release artifacts are generated locally.
+build/
+dist/
+*.egg-info/
+*.egg
+
+# Credentials and local state. Keep a deliberate, sanitized example if needed.
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.sqlite
+*.sqlite3
+*.sqlite-*
+*.sqlite3-*
+*.db
+*.db-*
+*.log
+secrets/
+.secrets/
+tokens/
+
+# Generated evidence needs explicit review before it is staged.
+reports/runs/
+reports/integration_smoke.json
+reports/ci/
+evidence/_temporary_*
+evidence/browser_*.png
+playwright-report/
+test-results/
+
+# Local editor and OS metadata.
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Preserved local tools/runtime, not source distributions.
+.serena/
+.runtime/
+current/

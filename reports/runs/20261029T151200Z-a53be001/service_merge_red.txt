@@ -1,0 +1,7 @@
+Observed pre-edit RED run (console output was not saved verbatim; this is an observation record).
+Command: ./.venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_v53_hardening.py tests/test_submit_integrity.py tests/test_cli_database.py --tb=short
+Exit: 1
+Result: 42 failed, 74 passed, 1 warning in 40.07s
+Windows socketpair initialization retries: 633
+Failure categories: stricter retained transition FK rejected five corruption injections; audit order and evaluation revision mismatch detection; malformed stored JSON; legacy source replay semantics conflicting with retained committed response semantics; revision type/header and extra-field validation; non-demo startup; CLI environment database.
+No production edits preceded this run. Full output is available in the task tool transcript.

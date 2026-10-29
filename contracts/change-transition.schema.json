@@ -1,0 +1,156 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ChangeTransition canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "change_transition_v1"},
+    "tenant_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "change_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "revision_from": {"$ref": "common.schema.json#/$defs/NonnegativeInteger"},
+    "revision_to": {"$ref": "common.schema.json#/$defs/Revision"},
+    "from_state": {"enum": ["NONE", "DRAFT", "PENDING_DOMAIN_REVIEW", "PENDING_RELEASE", "REJECTED", "APPROVED_FOR_DEMO"]},
+    "to_state": {"$ref": "common.schema.json#/$defs/Status"},
+    "kind": {"$ref": "common.schema.json#/$defs/TransitionKind"},
+    "actor_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "occurred_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"},
+    "previous_snapshot_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]},
+    "next_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+    "evaluation_run_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]},
+    "evaluation_run_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]},
+    "decision_id": {"anyOf": [{"$ref": "common.schema.json#/$defs/UUIDv4"}, {"type": "null"}]},
+    "decision_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]},
+    "assessment_sha256": {"anyOf": [{"$ref": "common.schema.json#/$defs/SHA256"}, {"type": "null"}]}
+  },
+  "required": [
+    "schema",
+    "tenant_id",
+    "id",
+    "change_id",
+    "revision_from",
+    "revision_to",
+    "from_state",
+    "to_state",
+    "kind",
+    "actor_id",
+    "occurred_at",
+    "previous_snapshot_sha256",
+    "next_snapshot_sha256",
+    "evaluation_run_id",
+    "evaluation_run_sha256",
+    "decision_id",
+    "decision_sha256",
+    "assessment_sha256"
+  ],
+  "oneOf": [
+    {
+      "properties": {
+        "kind": {"const": "CHANGE_CREATED"},
+        "from_state": {"const": "NONE"},
+        "to_state": {"const": "DRAFT"},
+        "previous_snapshot_sha256": {"type": "null"},
+        "evaluation_run_id": {"type": "null"},
+        "evaluation_run_sha256": {"type": "null"},
+        "decision_id": {"type": "null"},
+        "decision_sha256": {"type": "null"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"const": 0},
+        "revision_to": {"const": 1}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "EVALUATION_RECORDED"},
+        "from_state": {"const": "DRAFT"},
+        "to_state": {"const": "DRAFT"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "evaluation_run_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "decision_id": {"type": "null"},
+        "decision_sha256": {"type": "null"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "SUBMITTED_FOR_DOMAIN_REVIEW"},
+        "from_state": {"const": "DRAFT"},
+        "to_state": {"const": "PENDING_DOMAIN_REVIEW"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "evaluation_run_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "decision_id": {"type": "null"},
+        "decision_sha256": {"type": "null"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "DOMAIN_APPROVE"},
+        "from_state": {"const": "PENDING_DOMAIN_REVIEW"},
+        "to_state": {"const": "PENDING_RELEASE"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"type": "null"},
+        "evaluation_run_sha256": {"type": "null"},
+        "decision_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "decision_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "DOMAIN_REJECT"},
+        "from_state": {"const": "PENDING_DOMAIN_REVIEW"},
+        "to_state": {"const": "REJECTED"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"type": "null"},
+        "evaluation_run_sha256": {"type": "null"},
+        "decision_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "decision_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "APPROVED_FOR_DEMO"},
+        "from_state": {"const": "PENDING_RELEASE"},
+        "to_state": {"const": "APPROVED_FOR_DEMO"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"type": "null"},
+        "evaluation_run_sha256": {"type": "null"},
+        "decision_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "decision_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "assessment_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    },
+    {
+      "properties": {
+        "kind": {"const": "RELEASE_REJECT"},
+        "from_state": {"const": "PENDING_RELEASE"},
+        "to_state": {"const": "REJECTED"},
+        "previous_snapshot_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "evaluation_run_id": {"type": "null"},
+        "evaluation_run_sha256": {"type": "null"},
+        "decision_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+        "decision_sha256": {"$ref": "common.schema.json#/$defs/SHA256"},
+        "assessment_sha256": {"type": "null"},
+        "revision_from": {"$ref": "common.schema.json#/$defs/Revision"}
+      }
+    }
+  ],
+  "x-runtime-rules": [
+    "revision_to = revision_from + 1; each change has exactly one genesis and no gaps.",
+    "Every transition owns exactly one snapshot and one tenant AuditEvent in the same commit.",
+    "Cross-record tenant, actor, kind, subject, time and hashes must match."
+  ],
+  "x-hash-purpose": "transition",
+  "x-canonicalization": "caseproof.c14n.v1"
+}

@@ -1,0 +1,15 @@
+from pathlib import Path
+import importlib.util,os,runpy,sys,tempfile
+root=Path(__file__).resolve().parents[1]
+spec=importlib.util.spec_from_file_location('local_checks',root/'scripts/windows_checks.py')
+checks=importlib.util.module_from_spec(spec);spec.loader.exec_module(checks)
+# Reuse the same initialization-only workaround, with the distribution script as the module.
+with tempfile.TemporaryDirectory(prefix='caseproof_installed_') as folder:
+    os.chdir(folder)
+    sys.path.insert(0,str(root/'scripts'))
+    sys.argv=['windows_checks','check_distribution','--installed']
+    checks.main()
+    from service.domain.canonical import content_hash
+    assert content_hash('request',{})=='fb8e956b6647e1a568a8e6a07726f9010dbcc81dda13fd76487dfe24c9fe5eda'
+    print('Installed v1 canonical module: PASS')
+    os.chdir(root / '.runtime')

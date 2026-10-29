@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AuditEvent canonical payload",
+  "description": "PLANNED /api/v1 target contract. This is not the running /api OpenAPI or proof of runtime enforcement.",
+  "x-contract-status": "PLANNED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {"const": "audit_event_v1"},
+    "tenant_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "sequence": {"$ref": "common.schema.json#/$defs/Revision"},
+    "prev_hash": {"$ref": "common.schema.json#/$defs/SHA256"},
+    "actor_id": {"$ref": "common.schema.json#/$defs/RegisteredId"},
+    "occurred_at": {"$ref": "common.schema.json#/$defs/UTCTimestamp"},
+    "subject_type": {"const": "CHANGE"},
+    "subject_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "kind": {"$ref": "common.schema.json#/$defs/TransitionKind"},
+    "transition_id": {"$ref": "common.schema.json#/$defs/UUIDv4"},
+    "transition_sha256": {"$ref": "common.schema.json#/$defs/SHA256"}
+  },
+  "required": [
+    "schema",
+    "tenant_id",
+    "id",
+    "sequence",
+    "prev_hash",
+    "actor_id",
+    "occurred_at",
+    "subject_type",
+    "subject_id",
+    "kind",
+    "transition_id",
+    "transition_sha256"
+  ],
+  "allOf": [
+    {
+      "if": {"properties": {"sequence": {"const": 1}}},
+      "then": {"properties": {"prev_hash": {"const": "0000000000000000000000000000000000000000000000000000000000000000"}}}
+    }
+  ],
+  "x-runtime-rules": [
+    "Tenant sequences are continuous from 1; prev_hash equals the prior event hash.",
+    "Request rejections belong to separate operational logs, never this approval audit chain."
+  ],
+  "x-hash-purpose": "audit-event",
+  "x-canonicalization": "caseproof.c14n.v1"
+}
