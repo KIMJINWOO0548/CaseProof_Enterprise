@@ -1,5 +1,5 @@
 from typing import Literal
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, Field, field_validator
 from datetime import datetime, date
 
 Hex64 = str
@@ -20,7 +20,11 @@ class ChangeCreate(BaseModel):
         return v
 
 class EvalRequest(BaseModel):
-    claim_days: int = Field(ge=0,le=9999)
+    claim_days: int = Field(
+        strict=True, ge=0, le=9999,
+        description='JSON integer only (0–9999); booleans, strings and floats such as 1.0 are rejected at runtime.',
+        json_schema_extra={'x-strict-json-integer': True},
+    )
     basis_date: date
     rider_codes: list[str] = Field(default_factory=list,max_length=20)
     requested_policy_version: str | None = None
@@ -37,9 +41,15 @@ class Transition(BaseModel):
     reason: str = Field(default='',max_length=500)
 
 class Decision(Transition):
+    reason: str = Field(
+        min_length=8, max_length=500,
+        description='Required reason: both the original and str.strip() result must contain 8–500 Unicode code points; the stripped value is stored.',
+    )
     decision: Literal['APPROVE','REJECT']
-    @model_validator(mode='after')
-    def require_reason(self):
-        if len(self.reason.strip()) < 8:
-            raise ValueError('reason must contain at least 8 meaningful characters')
-        return self
+    @field_validator('reason')
+    @classmethod
+    def require_reason(cls, value):
+        value = value.strip()
+        if not 8 <= len(value) <= 500:
+            raise ValueError('reason after str.strip() must contain 8–500 Unicode code points')
+        return value

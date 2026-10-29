@@ -1,0 +1,1000 @@
+FFFFE...EFEE.EEEEEE                                                      [100%]
+=================================== ERRORS ====================================
+_ ERROR at setup of test_claim_days_rejects_non_integer_or_out_of_range_json[-1] _
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_claim_days_rejects_non_in4')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+____ ERROR at setup of test_claim_days_accepts_bounded_json_integers[9999] ____
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_claim_days_accepts_bounde2')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+___ ERROR at setup of test_decision_rejects_missing_or_invalid_reason[None] ___
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_rejects_missing_0')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_____ ERROR at setup of test_decision_rejects_missing_or_invalid_reason[] _____
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_rejects_missing_1')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_ ERROR at setup of test_decision_rejects_missing_or_invalid_reason[1234567 ] _
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_rejects_missing_3')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_ ERROR at setup of test_decision_rejects_missing_or_invalid_reason[reason4] __
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_rejects_missing_4')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_ ERROR at setup of test_decision_rejects_missing_or_invalid_reason[reason5] __
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_rejects_missing_5')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_ ERROR at setup of test_decision_stores_trimmed_unicode_reason[  \uac80\ud1a0\uadfc\uac70\ub97c\ud655\uc778\ud588\uc2b5\ub2c8\ub2e4  ] _
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_stores_trimmed_u0')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+_ ERROR at setup of test_decision_stores_trimmed_unicode_reason[\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600] _
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_stores_trimmed_u1')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+___ ERROR at setup of test_decision_stores_trimmed_unicode_reason[reason2] ____
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-174/test_decision_stores_trimmed_u2')
+
+    @pytest.fixture
+    def fx(tmp_path):
+        dbpath=tmp_path/'caseproof.sqlite3'
+        app=create_app(f'sqlite:///{dbpath}',demo_mode=True)
+        create_tables(app.state.db_engine)
+        with app.state.session_factory() as db:
+            seed_demo(db,TOKENS)
+            db.commit()
+>       with TestClient(app) as client:
+             ^^^^^^^^^^^^^^^
+
+tests\test_service.py:26: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+.venv\Lib\site-packages\starlette\testclient.py:559: in __enter__
+    self.portal = portal = stack.enter_context(anyio.from_thread.start_blocking_portal(**self.async_backend))
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:526: in enter_context
+    result = _enter(cm)
+             ^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:137: in __enter__
+    return next(self.gen)
+           ^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\from_thread.py:554: in start_blocking_portal
+    portal = future.result()
+             ^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+.venv\Lib\site-packages\anyio\from_thread.py:538: in run_blocking_portal
+    run_eventloop(
+.venv\Lib\site-packages\anyio\_core\_eventloop.py:83: in run
+    return async_backend.run(func, args, {}, backend_options)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2547: in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:58: in __enter__
+    self._lazy_init()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py:137: in _lazy_init
+    self._loop = events.new_event_loop()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:823: in new_event_loop
+    return get_event_loop_policy().new_event_loop()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\events.py:720: in new_event_loop
+    return self._loop_factory()
+           ^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py:316: in __init__
+    super().__init__(proactor)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:640: in __init__
+    self._make_self_pipe()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py:787: in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+family = <AddressFamily.AF_INET: 2>, type = <SocketKind.SOCK_STREAM: 1>
+proto = 0
+
+    def _fallback_socketpair(family=AF_INET, type=SOCK_STREAM, proto=0):
+        if family == AF_INET:
+            host = _LOCALHOST
+        elif family == AF_INET6:
+            host = _LOCALHOST_V6
+        else:
+            raise ValueError("Only AF_INET and AF_INET6 socket address families "
+                             "are supported")
+        if type != SOCK_STREAM:
+            raise ValueError("Only SOCK_STREAM socket type is supported")
+        if proto != 0:
+            raise ValueError("Only protocol zero is supported")
+    
+        # We create a connected TCP socket. Note the trick with
+        # setblocking(False) that prevents us from having to create a thread.
+        lsock = socket(family, type, proto)
+        try:
+            lsock.bind((host, 0))
+>           lsock.listen()
+E           OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\socket.py:616: OSError
+================================== FAILURES ===================================
+_______ test_claim_days_rejects_non_integer_or_out_of_range_json[True] ________
+
+fx = (<starlette.testclient.TestClient object at 0x000002D30D832A80>, <fastapi.applications.FastAPI object at 0x000002D30DDD6FF0>)
+value = True
+
+    @pytest.mark.parametrize('value', [True, False, 1.0, '30', -1, 10000])
+    def test_claim_days_rejects_non_integer_or_out_of_range_json(fx, value):
+        client, _ = fx
+        response = evaluate(client, create(client), claim_days=value)
+>       assert response.status_code == 422, response.text
+E       AssertionError: {"id":"77c28b1e-d776-48f0-a86b-f0118a113fff","verdict":"BLOCK","result":{"verdict":"BLOCK","reason":"NUMERIC_POLICY_MISMATCH","resolved_rule_id":"AR-AUTO-2026-H1","expected_days":30,"ai_days_claim":1,"basis_date":"2026-06-30","source_clause":"A.1"},"reused":false,"revision":2}
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+tests\test_api_contract.py:10: AssertionError
+_______ test_claim_days_rejects_non_integer_or_out_of_range_json[False] _______
+
+fx = (<starlette.testclient.TestClient object at 0x000002D30DF8C590>, <fastapi.applications.FastAPI object at 0x000002D30DDD7EF0>)
+value = False
+
+    @pytest.mark.parametrize('value', [True, False, 1.0, '30', -1, 10000])
+    def test_claim_days_rejects_non_integer_or_out_of_range_json(fx, value):
+        client, _ = fx
+        response = evaluate(client, create(client), claim_days=value)
+>       assert response.status_code == 422, response.text
+E       AssertionError: {"id":"2e965a02-ab3b-49c4-ae16-32c6284f8b0b","verdict":"BLOCK","result":{"verdict":"BLOCK","reason":"NUMERIC_POLICY_MISMATCH","resolved_rule_id":"AR-AUTO-2026-H1","expected_days":30,"ai_days_claim":0,"basis_date":"2026-06-30","source_clause":"A.1"},"reused":false,"revision":2}
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+tests\test_api_contract.py:10: AssertionError
+________ test_claim_days_rejects_non_integer_or_out_of_range_json[1.0] ________
+
+fx = (<starlette.testclient.TestClient object at 0x000002D30DFF28D0>, <fastapi.applications.FastAPI object at 0x000002D30DF9EC00>)
+value = 1.0
+
+    @pytest.mark.parametrize('value', [True, False, 1.0, '30', -1, 10000])
+    def test_claim_days_rejects_non_integer_or_out_of_range_json(fx, value):
+        client, _ = fx
+        response = evaluate(client, create(client), claim_days=value)
+>       assert response.status_code == 422, response.text
+E       AssertionError: {"id":"af0bb82e-480d-4834-b912-933af3061fea","verdict":"BLOCK","result":{"verdict":"BLOCK","reason":"NUMERIC_POLICY_MISMATCH","resolved_rule_id":"AR-AUTO-2026-H1","expected_days":30,"ai_days_claim":1,"basis_date":"2026-06-30","source_clause":"A.1"},"reused":false,"revision":2}
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+tests\test_api_contract.py:10: AssertionError
+________ test_claim_days_rejects_non_integer_or_out_of_range_json[30] _________
+
+fx = (<starlette.testclient.TestClient object at 0x000002D30DE152B0>, <fastapi.applications.FastAPI object at 0x000002D30DFCF530>)
+value = '30'
+
+    @pytest.mark.parametrize('value', [True, False, 1.0, '30', -1, 10000])
+    def test_claim_days_rejects_non_integer_or_out_of_range_json(fx, value):
+        client, _ = fx
+        response = evaluate(client, create(client), claim_days=value)
+>       assert response.status_code == 422, response.text
+E       AssertionError: {"id":"0e2651fb-a12d-40f6-83a7-d75d534a2e2e","verdict":"PASS","result":{"verdict":"PASS","reason":"NUMERIC_POLICY_MATCH","resolved_rule_id":"AR-AUTO-2026-H1","expected_days":30,"ai_days_claim":30,"basis_date":"2026-06-30","source_clause":"A.1"},"reused":false,"revision":2}
+E       assert 201 == 422
+E        +  where 201 = <Response [201 Created]>.status_code
+
+C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\_pytest\unraisableexception.py:63: PytestUnraisableExceptionWarning: Exception ignored in: <function BaseEventLoop.__del__ at 0x000002D30ADFC720>
+
+Traceback (most recent call last):
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 732, in __del__
+    self.close()
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 697, in close
+    self._close_self_pipe()
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 779, in _close_self_pipe
+    self._ssock.close()
+    ^^^^^^^^^^^
+AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'
+
+Enable tracemalloc to get traceback where the object was allocated.
+See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+  warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+tests\test_api_contract.py:10: AssertionError
+_______ test_openapi_declares_required_reason_and_strict_integer_policy _______
+
+fx = (<starlette.testclient.TestClient object at 0x000002D30E462690>, <fastapi.applications.FastAPI object at 0x000002D30E4E7530>)
+
+    def test_openapi_declares_required_reason_and_strict_integer_policy(fx):
+        client, _ = fx
+        schemas = client.get('/openapi.json').json()['components']['schemas']
+        decision = schemas['Decision']
+>       assert 'reason' in decision['required']
+E       AssertionError: assert 'reason' in ['expected_revision', 'decision']
+
+tests\test_api_contract.py:23: AssertionError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[reason4]
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\_pytest\unraisableexception.py:63: PytestUnraisableExceptionWarning: Exception ignored in: <function BaseEventLoop.__del__ at 0x000002D30ADFC720>
+  
+  Traceback (most recent call last):
+    File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 732, in __del__
+      self.close()
+    File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 697, in close
+      self._close_self_pipe()
+    File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 779, in _close_self_pipe
+      self._ssock.close()
+      ^^^^^^^^^^^
+  AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'
+  
+  Enable tracemalloc to get traceback where the object was allocated.
+  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.
+    warnings.warn(pytest.PytestUnraisableExceptionWarning(msg))
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_api_contract.py::test_claim_days_rejects_non_integer_or_out_of_range_json[True]
+FAILED tests/test_api_contract.py::test_claim_days_rejects_non_integer_or_out_of_range_json[False]
+FAILED tests/test_api_contract.py::test_claim_days_rejects_non_integer_or_out_of_range_json[1.0]
+FAILED tests/test_api_contract.py::test_claim_days_rejects_non_integer_or_out_of_range_json[30]
+FAILED tests/test_api_contract.py::test_openapi_declares_required_reason_and_strict_integer_policy
+ERROR tests/test_api_contract.py::test_claim_days_rejects_non_integer_or_out_of_range_json[-1]
+ERROR tests/test_api_contract.py::test_claim_days_accepts_bounded_json_integers[9999]
+ERROR tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[None]
+ERROR tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[]
+ERROR tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[1234567 ]
+ERROR tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[reason4]
+ERROR tests/test_api_contract.py::test_decision_rejects_missing_or_invalid_reason[reason5]
+ERROR tests/test_api_contract.py::test_decision_stores_trimmed_unicode_reason[  \uac80\ud1a0\uadfc\uac70\ub97c\ud655\uc778\ud588\uc2b5\ub2c8\ub2e4  ]
+ERROR tests/test_api_contract.py::test_decision_stores_trimmed_unicode_reason[\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600\U0001f600]
+ERROR tests/test_api_contract.py::test_decision_stores_trimmed_unicode_reason[reason2]
+5 failed, 4 passed, 2 warnings, 10 errors in 10.67s
