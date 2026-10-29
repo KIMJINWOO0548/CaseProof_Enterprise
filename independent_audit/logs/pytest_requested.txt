@@ -1,0 +1,7 @@
+cwd=/workspace/scratch/f3c092e08075/audit_execution/current
+command=/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m pytest -q
+exit_code=1
+--- stdout ---
+
+--- stderr ---
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python: No module named pytest

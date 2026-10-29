@@ -1,0 +1,3 @@
+JSON parsed: 3/3
+rules: 10 unique ids; valid intervals; source states {'PUBLISHED': 9, 'DRAFT': 1}
+cases: 20 unique ids; distribution {'AURORA_NONLIFE': 13, 'HORIZON_LIFE': 7}

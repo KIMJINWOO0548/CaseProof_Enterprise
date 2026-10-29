@@ -1,0 +1,10 @@
+> **이력/우선순위 안내:** [v5.1 과거 로그] 아래 브라우저 실패 및 테스트 통과 기록은 본 v5.2 설계 보완 작업의 새 실행 결과가 아닙니다.
+
+2026-10-29 environment limitation
+- FastAPI HTTP TestClient API + SQLite integration: 90 pytest tests and 22 subtests passed.
+- Separate script smoke: 12/12 checks passed; reports/integration_smoke.json.
+- Browser UI evaluation attempted via local Chromium and real localhost uvicorn.
+- Chromium returned net::ERR_BLOCKED_BY_ADMINISTRATOR for 127.0.0.1 in this container environment.
+- Therefore do NOT claim browser UI acceptance test passed.
+- Re-run optional scripts/browser_acceptance.py on user's own machine with a new synthetic local DB and role token.
+- No screenshot from this blocked session is included.

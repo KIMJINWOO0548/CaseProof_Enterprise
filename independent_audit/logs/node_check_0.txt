@@ -1,0 +1,2 @@
+node --check /workspace/scratch/f3c092e08075/evaluation/logs/ui_script_0.js
+exit=0

@@ -1,0 +1,19 @@
+{
+  "_notice":"Fictional workflow dependency graph; no real insurance company system data.",
+  "edges":[
+    ["clause:A.1","rule:AUTO_DOCUMENT_DAYS"],
+    ["rule:AUTO_DOCUMENT_DAYS","workflow:AUTO_CLAIM_GUIDANCE"],
+    ["workflow:AUTO_CLAIM_GUIDANCE","test:T01-old-claim"],
+    ["workflow:AUTO_CLAIM_GUIDANCE","test:T02-cutover"],
+    ["workflow:AUTO_CLAIM_GUIDANCE","test:T04-missing-date"],
+    ["clause:L.4","rule:LIFE_DOCUMENT_DAYS"],
+    ["rule:LIFE_DOCUMENT_DAYS","workflow:LIFE_CLAIM_DOCUMENTS"],
+    ["workflow:LIFE_CLAIM_DOCUMENTS","test:T07-life-old"],
+    ["workflow:LIFE_CLAIM_DOCUMENTS","test:T08-life-new"],
+    ["workflow:LIFE_CLAIM_DOCUMENTS","test:T09-rider-old"],
+    ["clause:R.1","rule:LIFE_RIDER_PREMIUM"],
+    ["rule:LIFE_RIDER_PREMIUM","workflow:LIFE_CLAIM_DOCUMENTS"]
+  ],
+  "sentinel_tests":["T12-explicit-wrong-version","T13-conflicting-rule","T14-draft-isolation","T15-tenant-isolation"],
+  "prior_critical_failures":["T16-pre-recorded-amendment"]
+}

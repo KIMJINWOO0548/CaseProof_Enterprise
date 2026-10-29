@@ -1,0 +1,7 @@
+BASELINE audit_ok= True record_integrity= (True, []) notes= 0 status= PENDING_DOMAIN_REVIEW
+STATE_TAMPER audit_ok= True record_integrity= (True, []) domain_notes= 0 status= PENDING_RELEASE
+EXTRACTED_ROUTE_WITH_ORM_STUBS {'status': 'APPROVED_FOR_DEMO', 'revision': 5} audit_ok= True record_integrity= (True, []) notes= [('RELEASE', 'APPROVE')]
+INCOMPLETE_BASELINE {"accuracy_delta_pp": 100.0, "baseline_correct": 0, "baseline_wilson95": [0.0, 0.7935], "candidate_correct": 1, "candidate_wilson95": [0.2065, 1.0], "case_count": 1, "disagreements": ["S1"], "incomplete_ids": [], "new_critical_ids": [], "reasons": [], "status": "ELIGIBLE_FOR_HUMAN_REVIEW"}
+DRAFT_RIDER_OVER_PUBLISHED_BASE {"basis_date": "2026-06-30", "clause": "L.4", "date_basis": "contract_start_date", "policy_version": "P-LIFE-H1", "reason_codes": ["POLICY_RESOLVED"], "required_fields": [], "rule_id": "HZ-LIFE-2026-H1", "status": "RESOLVED", "unit": "DAY", "value": 45}
+REPLAY_SAME_CREATE {'id': 'synthetic-change-1', 'status': 'DRAFT'} {'id': 'synthetic-change-2', 'status': 'DRAFT'} unique_ids= True
+PASS: reproductions executed against extracted function bodies/reference code; fake ORM stubs are not a full integration test

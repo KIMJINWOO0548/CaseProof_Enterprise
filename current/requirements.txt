@@ -1,0 +1,5 @@
+fastapi>=0.115,<1
+pydantic>=2.8,<3
+sqlalchemy>=2.0,<3
+uvicorn>=0.30,<1
+# Install psycopg[binary] explicitly only when using a PostgreSQL deployment.

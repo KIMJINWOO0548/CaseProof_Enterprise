@@ -1,0 +1,26 @@
+﻿ID,기관,자료,발행일/버전,확인일(KST),URL,신뢰도·자료 성격,직접 확인한 주장·한계,설계 영향
+S01,금융위원회,금융분야 인공지능 가이드라인 개정 보도자료,2026-06-18,2026-10-29,https://www.fsc.go.kr/no010101/87142,높음·공식 보도자료 원문,"7대 원칙, 6/22 시행 예정 발표; 원문 첨부의 상세 본문은 별도 열람 실패",인적 책임/위험관리 설계; 법률 의무와 자율규제 구별
+S02,금융감독원 / KDI,금융 AI 위험관리 프레임워크 도입 보도자료 요약,2026-01-16,2026-10-29,https://eiec.kdi.re.kr/policy/materialView.do?num=275955,높음·KDI가 재게시한 공식 발표 요약,거버넌스·위험평가·위험통제. 1월 발표 이후 최종 프레임워크 전문은 직접 확인하지 못함,위험관리 구조의 참고; 확정판 준수 주장 금지
+S03,금융보안원,금융분야 인공지능 보안 안내서 게시,2026-06-19,2026-10-29,https://www.fsec.or.kr/bbs/detail?bbsNo=11977&menuNo=222,높음·공식 게시 페이지,2026.6 안내서 첨부 사실 확인; PDF 본문은 직접 열람되지 않음,항목별 매핑은 원문 확보 후 수행
+S04,금융보안원,금융분야 AI 에이전트 보안 평가기준 마련,2026-10-08,2026-10-29,https://www.fsec.or.kr/bbs/detail?bbsNo=12122&menuNo=69,높음·공식 보도자료 본문,"6개 분야·17개 항목 발표; 번호 있는 본문 분류는 5개, 2026 시범·2027 정식 확대 예정","인적 승인, 감사, 도구 통제 매핑; 이 시스템의 통과·인증 의미 아님"
+S05,OWASP,API Security Top 10,2023,2026-10-29,https://api-security.owasp.org/editions/2023/en/0x11-t10/,높음·원문,"BOLA, 인증, 기능권한, 자원소모 등 위험 목록",객체 권한·토큰·rate limit 공격 테스트
+S06,OWASP,LLM Top 10,2025,2026-10-29,https://genai.owasp.org/llm-top-10/,높음·원문,"LLM01 인젝션, LLM06 과도한 에이전시, LLM09 오정보",향후 모델 연결 시 검증; 현재 미연결
+S07,NIST,AI RMF 1.0 및 GenAI Profile,2023-01-26 / 2024-07-26,2026-10-29,https://www.nist.gov/itl/ai-risk-management-framework/ai-risk-management-framework-resources,높음·공식 자료목록,AI RMF 1.0과 NIST AI 600-1 프로필 확인; NIST는 1.0 개정 중이라고 별도 공지,문제정의·측정·관리 구조; 합격 인증 아님
+S08,금융규제 샌드박스,삼성화재 지능형 업무지식 챗봇 지정,2026-07-01,2026-10-29,https://sandbox.fintech.or.kr/business/enterprise_intro.do?lang=en&pageIndex=5&technologies=AI,높음·지정 목록,삼성화재 내부 업무지식 챗봇 지정 사실 확인; 지정과 실제 서비스 성과는 구별,문서 질의응답 수요 가설의 배경
+S09,DB손해보험,온톨로지 기반 AI 보상 자동화 MOU,2025-08-06,2026-10-29,https://www.idbins.com/mo/bizxpress/cmy/pr/news/FWCOMV1683_411.shtm?ct=2&tx=,높음·회사 보도자료,장기보상 청구 자동화 공동 PoC 계획,업무 맥락; CaseProof 구매 필요성 입증 아님
+S10,전자신문,현대해상 2Q-PASS 소개,2025-05-16,2026-10-29,https://www.etnews.com/20250516000039,중간·독립 언론이 회사 발표 인용,AI 기반 자동 인수심사 운영 보도; 2026 후속 현황은 별도 검증 필요,언더라이팅 사례. 실제 약관이나 차별성 근거 아님
+S11,KB손해보험,AI 위험관리 조직,미표기,2026-10-29,https://www.kbinsure.co.kr/CG618020001.ec,높음·회사 공식,"AI 서비스 부서와 위험관리 조직 분리, 위원회 운영 소개",역할 분리 설계의 현업 맥락
+S12,교보생명,AI 서포터/어시스턴트/AI Desk 개시,2025-09-04,2026-10-29,https://news.kyobo.com/%EA%B5%90%EB%B3%B4%EC%83%9D%EB%AA%85-%EC%84%A4%EA%B3%84%EC%82%AC%EB%8F%84-%EA%B3%A0%EA%B0%9D-%EC%83%81%EB%8B%B4-%EC%97%85%EB%AC%B4%EC%97%90-ai-%ED%99%9C%EC%9A%A9-%ED%99%95%EB%8C%80%ED%95%9C%EB%8B%A4/,높음·회사 보도자료,"보장분석, FP소장, 직원 AI 데스크 서비스 발표",생보 업무 흐름 예시; CaseProof 적용효과 미입증
+S13,삼성화재,인재채용 직무 소개,미표기,2026-10-29,https://www.samsungfire.com/v2/html/company/08/M_080_020_001.html,"높음·회사 직무 소개, 개별 공고 아님",디지털 서비스 기획/데이터/AI와 IT 기획·운영 업무,개발과 DX/IT 전략 전달을 분리
+S14,DB손해보험,2026 하반기 대졸신입 채용,2026-09-01~2026-10-02,2026-10-29,https://idbins.com/pc/bizxpress/cmy/adp/FWCOMV1733.shtm,높음·회사 채용 원문,경영지원 디지털/IT: 빅데이터·AI·플랫폼; R/SAS/Python 및 SQL 등 우대. 마감됨,직무 요구 연결; 현재 지원 가능 공고 아님
+S15,전북대 게시판,현대해상 2026 대졸신입 안내,"2026-09-15 게시, 2026-09-21 마감",2026-10-29,https://biomedical.jbnu.ac.kr/bbs/bie/1182/400899/artclView.do,중간·대학 공고 재게시,디지털/데이터 분석과 IT/정보보호의 업무를 분리해 기재,"회사 원문 미확인, 단순 직무 예시"
+S16,Langfuse,소스 저장소 및 라이선스,"조회 시점, 날짜 미표기",2026-10-29,https://github.com/langfuse/langfuse,높음·개발사 저장소,"코어 MIT, ee 디렉터리 별도 라이선스",트레이싱·평가 엔진 재사용 가능; 판별 기능별 확인
+S17,Langfuse,Cloud 가격,"조회 시점, 날짜 미표기",2026-10-29,https://langfuse.com/pricing,높음·개발사 가격표,"Hobby 무료·월 50k 유닛, Core 월 29달러·100k 포함 및 초과 과금; 가격 변동 가능",비용 비교에 플랫폼/모델/인력/인프라 포함
+S18,Arize Phoenix,소스 저장소,"조회 시점, 날짜 미표기",2026-10-29,https://github.com/Arize-ai/phoenix,높음·개발사 저장소,트레이싱/평가 기능과 Elastic License 2.0 명시,이식 전 라이선스와 제공 형태 검토
+S19,Elastic,Elastic License 2.0 원문,"조회 시점, 날짜 미표기",2026-10-29,https://www.elastic.co/licensing/elastic-license,높음·라이선스 원문,제3자에 중요 기능을 관리형 서비스로 제공하는 제한,Phoenix 통합/판매 구조별 법률 확인
+S20,Promptfoo,README 및 FAQ,"조회 시점, 날짜 미표기",2026-10-29,https://github.com/promptfoo/promptfoo,높음·개발사 저장소,MIT; CLI·평가·레드팀. 별도 FAQ는 클라우드 기능 사용 시 외부 전송 가능성 기재,공격 테스트 통합; 외부 전송/모델 호출 점검
+S21,Ragas,소스 및 라이선스,"조회 시점, 날짜 미표기",2026-10-29,https://github.com/vibrantlabsai/ragas,높음·개발사 저장소,"Apache-2.0, LLM 평가·데이터셋; 문서상 맞춤 지표 지원",지표 보조로 재사용; 전문가 정답 대체 불가
+S22,Langfuse,셀프호스팅 구성,"조회 시점, 날짜 미표기",2026-10-29,https://langfuse.com/self-hosting,높음·개발사 문서,"PostgreSQL, ClickHouse, Redis, blob 등 인프라 필요",셀프호스팅은 라이선스 무료여도 운영비는 별도
+S23,보험연구원,생성형 AI 보험업 활용 사례,2024,2026-10-29,https://www.kiri.or.kr/community/boardDownloadFile.do?bid=118294&seq=2,중간~높음·보험 전문 연구기관,"삼성화재 약관검색, 현대해상 업무지원 등 사례 열거. 보고서 시점의 사례",현대해상 등 사례의 보조 근거; 최신 운영 상태 증명 불가
+S24,Promptfoo,개인정보 및 외부 호출 FAQ,"조회 시점, 날짜 미표기",2026-10-29,https://www.promptfoo.dev/docs/faq/,높음·개발사 공식 FAQ,로컬 eval 기본이나 선택한 cloud-backed 기능 및 모델 제공자에 데이터가 나갈 수 있음,데이터 경계·비용·운영환경 사전 점검
+S25,Ragas,퀵스타트,"조회 시점, 날짜 미표기",2026-10-29,https://docs.ragas.io/en/stable/getstarted/quickstart/,높음·개발사 공식 문서,"평가 예제, 사용자 정의 지표, 모델 설정",사용자 데이터와 평가자 비용·신뢰성 검토

@@ -1,0 +1,7 @@
+ChangeCreate required= ['title', 'product', 'workflow', 'rule_key', 'dataset_hash', 'evaluator_hash', 'source_hash'] properties= ['dataset_hash', 'evaluator_hash', 'product', 'rule_key', 'source_hash', 'title', 'workflow']
+EvalRequest required= ['claim_days', 'basis_date', 'as_of_recorded'] properties= ['as_of_recorded', 'basis_date', 'claim_days', 'requested_policy_version', 'rider_codes']
+Decision required= ['expected_revision', 'decision'] properties= ['decision', 'expected_revision', 'reason']
+DECISION_NO_REASON: Value error, reason must contain at least 8 meaningful characters
+CLAIM_INPUT True bool => 1 int
+CLAIM_INPUT '30' str => 30 int
+CLAIM_INPUT 30 int => 30 int

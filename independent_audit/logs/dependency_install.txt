@@ -1,0 +1,8 @@
+Attempted in an isolated virtual environment:
+python -m pip install --disable-pip-version-check --no-input --retries 0 --timeout 5 -r requirements-dev.txt
+
+Collecting fastapi<1,>=0.115 (from requirements.txt)
+ERROR: Could not install packages due to an OSError: HTTPSConnectionPool(host='files.pythonhosted.org', port=443): Max retries exceeded while fetching fastapi wheel metadata (Caused by ProxyError('Cannot connect to proxy.', TimeoutError('timed out')))
+exit 1
+
+No project code or requirements file changed. Message is summarized to omit the long transient wheel URL.

@@ -1,0 +1,12 @@
+cwd=/workspace/scratch/f3c092e08075/audit_execution/current
+command=/opt/codex/runtimes/codex-primary-runtime/dependencies/python/bin/python -m scripts.smoke
+exit_code=1
+--- stdout ---
+
+--- stderr ---
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "/workspace/scratch/f3c092e08075/audit_execution/current/scripts/smoke.py", line 8, in <module>
+    from fastapi.testclient import TestClient
+ModuleNotFoundError: No module named 'fastapi'
