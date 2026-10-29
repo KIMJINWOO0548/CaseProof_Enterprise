@@ -1,5 +1,5 @@
 """Synthetic end-to-end integration smoke, isolated temp SQLite. No real PII or insurance data."""
-import json, os, tempfile
+import argparse, json, os, tempfile
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
@@ -23,7 +23,11 @@ def api(client,method,path,who,**kwargs):
         raise RuntimeError(f'{method} {path}: {resp.status_code} {resp.text}')
     return resp.json()
 
-def run():
+def run(output: str | Path | None = None):
+    run_id = datetime.now(timezone.utc).strftime('%Y%m%dT%H%M%SZ-') + uuid4().hex[:8]
+    target = Path(output) if output is not None else Path('reports')/'runs'/run_id/'integration_smoke.json'
+    if target.exists():
+        raise FileExistsError(f'Refusing to overwrite smoke evidence: {target}')
     report={'profile':'SYNTHETIC_DEMO_ONLY','real_llm':False,'real_insurance_decisions':False,
             'recorded_at':datetime.now(timezone.utc).isoformat(),'checks':[]}
     def check(name, condition):
@@ -78,10 +82,13 @@ def run():
             report['change_id']=cid
             report['result']='PASS'
         app.state.db_engine.dispose()
-    target=Path('reports')/'integration_smoke.json'
-    target.parent.mkdir(exist_ok=True)
-    target.write_text(json.dumps(report,indent=2,ensure_ascii=False),encoding='utf-8')
+    target.parent.mkdir(exist_ok=True, parents=True)
+    with target.open('x', encoding='utf-8') as stream:
+        stream.write(json.dumps(report,indent=2,ensure_ascii=False))
     print(f"Synthetic E2E smoke: {len(report['checks'])}/{len(report['checks'])} checks passed; report={target}")
     return report
 
-if __name__=='__main__':run()
+if __name__=='__main__':
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('--output', type=Path, help='New report path; existing files are preserved')
+    run(output=parser.parse_args().output)

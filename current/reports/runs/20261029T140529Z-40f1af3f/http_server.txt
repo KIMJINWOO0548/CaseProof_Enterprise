@@ -1,0 +1,49 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\uvicorn\__main__.py", line 4, in <module>
+    uvicorn.main()
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\click\core.py", line 1631, in __call__
+    return self.main(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\click\core.py", line 1552, in main
+    rv = self.invoke(ctx)
+         ^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\click\core.py", line 1415, in invoke
+    return ctx.invoke(self.callback, **ctx.params)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\click\core.py", line 910, in invoke
+    return callback(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\uvicorn\main.py", line 448, in main
+    run(
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\uvicorn\main.py", line 632, in run
+    server.run()
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\uvicorn\server.py", line 86, in run
+    return asyncio_run(self.serve(sockets=sockets), loop_factory=self.config.get_loop_factory())
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 194, in run
+    with Runner(debug=debug, loop_factory=loop_factory) as runner:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 58, in __enter__
+    self._lazy_init()
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\runners.py", line 144, in _lazy_init
+    self._loop = self._loop_factory()
+                 ^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\windows_events.py", line 316, in __init__
+    super().__init__(proactor)
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 640, in __init__
+    self._make_self_pipe()
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 787, in _make_self_pipe
+    self._ssock, self._csock = socket.socketpair()
+                               ^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\socket.py", line 616, in _fallback_socketpair
+    lsock.listen()
+OSError: [WinError 10014] 호출에 대한 포인터 인수를 사용하려는 동안 시스템에서 잘못된 포인터 주소를 감지했습니다
+sys:1: RuntimeWarning: coroutine 'Server.serve' was never awaited
+Exception ignored in: <function BaseEventLoop.__del__ at 0x000001E23341DDA0>
+Traceback (most recent call last):
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\base_events.py", line 732, in __del__
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 697, in close
+  File "C:\Users\김진우\AppData\Local\Programs\Python\Python312\Lib\asyncio\proactor_events.py", line 779, in _close_self_pipe
+AttributeError: 'ProactorEventLoop' object has no attribute '_ssock'

@@ -1,0 +1,61 @@
+FFF                                                                      [100%]
+================================== FAILURES ===================================
+___________ test_status_only_tamper_cannot_create_release_decision ____________
+
+fx = (<starlette.testclient.TestClient object at 0x0000028212C378F0>, <fastapi.applications.FastAPI object at 0x00000282130537D0>)
+
+    def test_status_only_tamper_cannot_create_release_decision(fx):
+        client, app = fx
+        c = ready_for_domain(client)
+        with app.state.session_factory() as db:
+            db.get(Change, c['id']).status = 'PENDING_RELEASE'
+            db.commit()
+            before = db.scalar(select(func.count()).select_from(AuditEvent))
+        response = decide(client, c)
+>       assert response.status_code == 409, response.text
+E       AssertionError: {"id":"857d7f44-395e-422b-ab5e-a5b4b90f4cca","title":"가상 약관 개정 적용일 회귀 검증","product":"AUTO-101","workflow":"AUTO_CLAIM_GUIDANCE","rule_key":"DOCUMENT_WINDOW_DAYS","status":"APPROVED_FOR_DEMO","revision":5,"requester_id":"aurora-analyst","owner_id":"aurora-analyst","domain_reviewer_id":null,"release_approver_id":"aurora-approver","created_at":"2026-10-29T14:09:31+00:00","updated_at":"2026-10-29T14:09:31+00:00","approved_evidence_hash":"6d0c0aeba9e895221648ce4e9b725e5462d9f3a098b76c578e7787cd1d302ebe"}
+E       assert 200 == 409
+E        +  where 200 = <Response [200 OK]>.status_code
+
+tests\test_transition_integrity.py:23: AssertionError
+__________ test_evaluation_is_requester_only_even_with_analyst_role ___________
+
+fx = (<starlette.testclient.TestClient object at 0x0000028213258500>, <fastapi.applications.FastAPI object at 0x00000282131AC080>)
+
+    def test_evaluation_is_requester_only_even_with_analyst_role(fx):
+        client, app = fx
+        c = create(client)
+        with app.state.session_factory() as db:
+            db.get(User, 'aurora-reviewer').roles_json = json.dumps(['ANALYST', 'DOMAIN_REVIEWER'])
+            db.commit()
+        response = evaluate(client, c, who='aurora-reviewer')
+>       assert response.status_code == 403, response.text
+E       AssertionError: {"id":"f9adee69-2e3e-4ac1-981a-674ce9085475","verdict":"PASS","result":{"verdict":"PASS","reason":"NUMERIC_POLICY_MATCH","resolved_rule_id":"AR-AUTO-2026-H1","expected_days":30,"ai_days_claim":30,"basis_date":"2026-06-30","source_clause":"A.1"},"reused":false,"revision":2}
+E       assert 201 == 403
+E        +  where 201 = <Response [201 Created]>.status_code
+
+tests\test_transition_integrity.py:37: AssertionError
+_______ test_manifest_freezes_preapproval_revision_and_domain_evidence ________
+
+fx = (<starlette.testclient.TestClient object at 0x00000282131F1D00>, <fastapi.applications.FastAPI object at 0x00000282133AFCE0>)
+
+    def test_manifest_freezes_preapproval_revision_and_domain_evidence(fx):
+        client, _ = fx
+        c = ready_for_release(client)
+        before = client.get(f"/api/changes/{c['id']}/evidence", headers=auth('aurora-analyst')).json()
+>       assert before['content']['pre_approval_revision'] == c['revision']
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'pre_approval_revision'
+
+tests\test_transition_integrity.py:46: KeyError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_transition_integrity.py::test_status_only_tamper_cannot_create_release_decision
+FAILED tests/test_transition_integrity.py::test_evaluation_is_requester_only_even_with_analyst_role
+FAILED tests/test_transition_integrity.py::test_manifest_freezes_preapproval_revision_and_domain_evidence
+3 failed, 1 warning in 1.75s

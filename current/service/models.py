@@ -60,6 +60,9 @@ class Change(Base):
     evaluator_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     source_hash: Mapped[str] = mapped_column(String(64), nullable=False)
     approved_evidence_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    assessment_revision: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    approval_envelope_json: Mapped[str | None] = mapped_column(Text, nullable=True)
+    approval_envelope_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
     created_at: Mapped[str] = mapped_column(String(40), nullable=False)
     updated_at: Mapped[str] = mapped_column(String(40), nullable=False)
 
@@ -84,6 +87,7 @@ class Evaluation(Base):
 class AuditEvent(Base):
     __tablename__ = 'audit_events'
     __table_args__ = (
+        UniqueConstraint('tenant_id','id'),
         UniqueConstraint('tenant_id','sequence'),
         ForeignKeyConstraint(['tenant_id','actor_id'],['users.tenant_id','users.id']),
     )
@@ -98,6 +102,7 @@ class AuditEvent(Base):
 class DecisionNote(Base):
     __tablename__ = 'decision_notes'
     __table_args__ = (
+        UniqueConstraint('tenant_id','change_id','id'),
         ForeignKeyConstraint(['tenant_id','change_id'],['changes.tenant_id','changes.id']),
         ForeignKeyConstraint(['tenant_id','actor_id'],['users.tenant_id','users.id']),
     )
@@ -109,3 +114,38 @@ class DecisionNote(Base):
     decision: Mapped[str] = mapped_column(String(20), nullable=False)
     reason: Mapped[str] = mapped_column(String(500), nullable=False)
     created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+
+class ChangeTransition(Base):
+    __tablename__ = 'change_transitions'
+    __table_args__ = (
+        UniqueConstraint('tenant_id', 'change_id', 'revision_to'),
+        UniqueConstraint('tenant_id', 'audit_event_id'),
+        ForeignKeyConstraint(['tenant_id','change_id'], ['changes.tenant_id','changes.id']),
+        ForeignKeyConstraint(['tenant_id','actor_id'], ['users.tenant_id','users.id']),
+        ForeignKeyConstraint(['tenant_id','change_id','decision_id'],
+                             ['decision_notes.tenant_id','decision_notes.change_id','decision_notes.id']),
+        ForeignKeyConstraint(['tenant_id','audit_event_id'], ['audit_events.tenant_id','audit_events.id']),
+        CheckConstraint('revision_from >= 0 AND revision_to = revision_from + 1'),
+        CheckConstraint("(kind = 'CHANGE_CREATED' AND from_state = 'NONE' AND to_state = 'DRAFT' AND revision_from = 0) OR "
+                        "(kind = 'EVALUATION_RECORDED' AND from_state = 'DRAFT' AND to_state = 'DRAFT') OR "
+                        "(kind = 'SUBMITTED_FOR_DOMAIN_REVIEW' AND from_state = 'DRAFT' AND to_state = 'PENDING_DOMAIN_REVIEW') OR "
+                        "(kind = 'DOMAIN_APPROVE' AND from_state = 'PENDING_DOMAIN_REVIEW' AND to_state = 'PENDING_RELEASE') OR "
+                        "(kind = 'DOMAIN_REJECT' AND from_state = 'PENDING_DOMAIN_REVIEW' AND to_state = 'REJECTED') OR "
+                        "(kind = 'APPROVED_FOR_DEMO' AND from_state = 'PENDING_RELEASE' AND to_state = 'APPROVED_FOR_DEMO') OR "
+                        "(kind = 'RELEASE_REJECT' AND from_state = 'PENDING_RELEASE' AND to_state = 'REJECTED')"),
+    )
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(80), nullable=False)
+    change_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    revision_from: Mapped[int] = mapped_column(Integer, nullable=False)
+    revision_to: Mapped[int] = mapped_column(Integer, nullable=False)
+    from_state: Mapped[str] = mapped_column(String(40), nullable=False)
+    to_state: Mapped[str] = mapped_column(String(40), nullable=False)
+    kind: Mapped[str] = mapped_column(String(40), nullable=False)
+    actor_id: Mapped[str] = mapped_column(String(80), nullable=False)
+    decision_id: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    evidence_hash: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    audit_event_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    occurred_at: Mapped[str] = mapped_column(String(40), nullable=False)
+    schema_version: Mapped[int] = mapped_column(Integer, nullable=False, default=1)

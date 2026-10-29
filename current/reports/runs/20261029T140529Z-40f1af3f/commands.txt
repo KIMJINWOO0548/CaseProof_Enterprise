@@ -1,0 +1,49 @@
+Working directory: CaseProof_Enterprise/current unless noted.
+Original collection aliases 20261029_g0 and 20261029_g1 were renamed to UTC-id folders after agents released write ownership. run_index.json records the mapping. Raw logs retain the paths that existed when their commands ran.
+
+1. At package root: python VERIFY_PACKAGE.py
+   exit 0; observed manifest_files=106 failures=0 before Git initialization.
+2. At package root: python -m venv current/.venv
+   exit 0; user approved project-only installation.
+3. .venv/Scripts/python.exe -m pip install -r requirements-dev.txt --disable-pip-version-check
+   completed; installed versions captured in G0 installed_requirements.txt. No global packages installed.
+4. CASEPROOF_DEMO_MODE=1 CASEPROOF_DATABASE_URL=sqlite:// .venv/Scripts/python.exe -m pytest -q tests/test_service.py tests/test_resolver.py tests/test_answer_check.py tests/test_release_impact.py tests/test_v4_controls.py
+   exit 1; baseline 85 passed, 5 Windows socketpair setup errors, 22 subtests passed. See G0 pytest.txt.
+5. Baseline scripts.smoke.run() invoked from a disposable temporary working directory with current/ on sys.path; output copied to G0 smoke.json.
+   exit 0; 12/12. Historical reports/integration_smoke.json unchanged.
+6. .venv/Scripts/python.exe -m pytest -q tests/test_api_contract.py
+   exit 1; 5 assertion failures, 4 passes, 10 Windows fixture errors.
+7. Process-local socket.listen default backlog=1 diagnostic, pytest tests/test_api_contract.py
+   exit 1; 5 assertion failures, 12 passes, 2 fixture errors. This diagnostic was not used in final code.
+8. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_api_contract.py
+   before schema fix: exit 1, 5 failed / 14 passed.
+   after schema fix: exit 0, 19 passed.
+9. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_transition_integrity.py
+   before integrity fix: exit 1, 3 genuine failures. Status-only attack returned HTTP 200 APPROVED_FOR_DEMO.
+10. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_transition_integrity.py tests/test_service.py
+    after implementation: exit 0, 69 passed. See transition_green.txt.
+11. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_smoke_output.py
+    before fix: exit 1, 3 failed; after fix: exit 0, 3 passed.
+12. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q
+    integration_initial.txt: exit 0, 115 passed + 22 subtests (before additional tests were added).
+13. Bundled node.exe --check reports/runs/20261029_g0/ui.js
+    exit 0. Extracted unmodified static HTML script; see G0 js_syntax.txt.
+14. .venv/Scripts/python.exe reports/runs/20261029_g1/verify_http.py
+    exit 1; uvicorn startup hit Windows socketpair WinError10014. Raw http_check.txt and http_server.txt preserved.
+15. .venv/Scripts/python.exe reports/runs/20261029T140529Z-40f1af3f/verify_http_wrapped.py
+    exit 0; uvicorn launched through windows_checks, real HTTP health/HTML/OpenAPI verified on 127.0.0.1:18768, one worker, in-memory SQLite. Child server terminated afterward. OpenAPI saved in openapi.json.
+16. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q tests/test_transition_integrity.py -k "malformed_approval_envelope or valid_but_changed_envelope"
+    before review fix: exit 1, 2 failed; after fix: exit 0, 2 passed / 28 deselected.
+17. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q
+    pytest_final.txt: exit 1, 141 passed, 1 Windows socketpair setup error, 22 subtests.
+    Added 10ms pause to the bounded initialization-only retry; no application/assertion retry.
+18. .venv/Scripts/python.exe -m scripts.windows_checks pytest -q
+    pytest_verified.txt: exit 0, 142 passed, 22 subtests passed, one deprecation warning, 77 socketpair initialization retries. This is the final full-suite result.
+19. .venv/Scripts/python.exe -m scripts.windows_checks scripts.smoke --output reports/runs/20261029T140529Z-40f1af3f/smoke_final.json
+    exit 0; 12/12 checks passed. Existing output paths refused by tested exclusive creation.
+20. At package root: git diff --check -- current/service current/scripts current/tests
+    exit 0. Raw evidence logs retain original whitespace and are excluded from this source check.
+21. Compared all 16 original datasets/reference/tests files with PACKAGE_MANIFEST_SHA256.json.
+    16 matches, zero mismatches. See preserved_inputs.json.
+
+CASEPROOF_* values above are synthetic local settings, never production URLs or tokens. Authentication values from synthetic fixtures are not written into these commands.

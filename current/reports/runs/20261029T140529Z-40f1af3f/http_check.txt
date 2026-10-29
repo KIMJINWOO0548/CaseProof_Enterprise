@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\current\reports\runs\20261029_g1\verify_http.py", line 10, in <module>
+    if proc.poll() is not None:raise RuntimeError('Local HTTP server exited before ready')
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+RuntimeError: Local HTTP server exited before ready
+exit_code=1

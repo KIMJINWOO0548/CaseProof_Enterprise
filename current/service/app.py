@@ -14,7 +14,8 @@ from fastapi.responses import FileResponse
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from .db import make_engine, session_factory, create_tables
-from .models import Tenant, User, PolicyRule, Change, Evaluation, AuditEvent, DecisionNote
+from .models import Tenant, User, PolicyRule, Change, Evaluation, AuditEvent, DecisionNote, ChangeTransition
+from .integrity import transitions, transition_data, projection_issues, approval_envelope
 from .schemas import ChangeCreate, EvalRequest, Transition, Decision
 from reference.verify_answer import verify_numeric_claim
 from reference.resolver import resolve
@@ -119,6 +120,7 @@ def record_integrity(db:Session, change:Change) -> tuple[bool,list[str]]:
             checks=False
         if not checks:
             issues.append('DECISION_RECORD_MISMATCH:'+note.id)
+    issues.extend(projection_issues(db,change))
     return not issues,issues
 
 
@@ -132,14 +134,36 @@ def require_integrity(db:Session, change:Change):
 def append_audit(db:Session, tenant_id:str, actor_id:str, kind:str, obj_id:str, details:dict|None=None):
     # PostgreSQL locks the tenant's audit head until commit; SQLite demo is 1-worker only.
     tenant=db.execute(select(Tenant).where(Tenant.id==tenant_id).with_for_update()).scalar_one()
+    db.flush()
+    c=db.execute(select(Change).where(Change.tenant_id==tenant_id, Change.id==obj_id)).scalar_one()
+    prior=transitions(db,c)
     seq=tenant.audit_seq+1
-    ev={'actor_id':actor_id,'at':utcnow(),'kind':kind,'subject_id':obj_id,'details':details or {}}
+    event_id=str(uuid4())
+    details=dict(details or {})
+    note=db.get(DecisionNote,details['decision_id']) if details.get('decision_id') else None
+    at=note.created_at if note else utcnow()
+    t=ChangeTransition(id=str(uuid4()),tenant_id=tenant_id,change_id=obj_id,
+        revision_from=prior[-1].revision_to if prior else 0, revision_to=c.revision,
+        from_state=prior[-1].to_state if prior else 'NONE',to_state=c.status,kind=kind,
+        actor_id=actor_id,decision_id=details.get('decision_id'),
+        evidence_hash=details.get('evidence_sha256'),audit_event_id=event_id,
+        occurred_at=at,schema_version=1)
+    details['transition']=transition_data(t)
+    ev={'actor_id':actor_id,'at':at,'kind':kind,'subject_id':obj_id,'details':details}
     envelope={'sequence':seq,'prev_hash':tenant.audit_head,'event':ev}
     hashed=digest(envelope)
-    db.add(AuditEvent(id=str(uuid4()),tenant_id=tenant_id,actor_id=actor_id,
+    db.add(AuditEvent(id=event_id,tenant_id=tenant_id,actor_id=actor_id,
                       sequence=seq,prev_hash=tenant.audit_head,event_json=canonical_json(ev).decode(),event_hash=hashed))
     tenant.audit_seq=seq
     tenant.audit_head=hashed
+    db.flush()
+    db.add(t)
+    if kind=='APPROVED_FOR_DEMO':
+        sealed=approval_envelope(t)
+        c.approval_envelope_json=canonical_json(sealed).decode()
+        c.approval_envelope_hash=digest(sealed)
+    db.flush()
+
 
 def payload(change:Change, db:Session, include_evals=False):
     data={k:getattr(change,k) for k in ('id','title','product','workflow','rule_key','status','revision','requester_id',
@@ -172,8 +196,18 @@ def evidence_content(db:Session, c:Change):
     evs=db.execute(select(Evaluation).where(Evaluation.tenant_id==c.tenant_id,
                            Evaluation.change_id==c.id).order_by(Evaluation.id)).scalars().all()
     rules=scope_rules(db,c.tenant_id,c.product,c.workflow,c.rule_key)
+    upper=c.assessment_revision if c.assessment_revision is not None else c.revision
+    history=[t for t in transitions(db,c) if t.revision_to<=upper]
+    domains=db.scalars(select(DecisionNote).where(DecisionNote.tenant_id==c.tenant_id,
+        DecisionNote.change_id==c.id,DecisionNote.stage=='DOMAIN').order_by(DecisionNote.id)).all()
+    events={e.id:e for e in db.scalars(select(AuditEvent).where(AuditEvent.tenant_id==c.tenant_id))}
     return {
-        'schema':'caseproof.mvp.v5.evidence.v1','tenant_id':c.tenant_id,'change_id':c.id,
+        'schema':'assessment_manifest_v1','pre_approval_revision':upper,
+        'model_hash':None,'prompt_hash':None,
+        'transitions':[transition_data(t) for t in history],
+        'events':[{'id':t.audit_event_id,'sha256':events[t.audit_event_id].event_hash if t.audit_event_id in events else None} for t in history],
+        'domain_decisions':[{'id':n.id,'actor_id':n.actor_id,'decision':n.decision,
+                             'reason':n.reason,'created_at':n.created_at} for n in domains],'tenant_id':c.tenant_id,'change_id':c.id,
         'created_at':c.created_at,'source_snapshot_hash':c.source_hash,
         'dataset_hash':c.dataset_hash,'evaluator_hash':c.evaluator_hash,
         'rule_source_hashes':sorted(h for _,h in rules),
@@ -181,8 +215,11 @@ def evidence_content(db:Session, c:Change):
                        for e in evs],
     }
 
-def get_change(db:Session, tenant_id:str, cid:str) -> Change:
-    c=db.execute(select(Change).where(Change.id==cid,Change.tenant_id==tenant_id)).scalar_one_or_none()
+def get_change(db:Session, tenant_id:str, cid:str, lock=False) -> Change:
+    if lock:
+        db.execute(select(Tenant).where(Tenant.id==tenant_id).with_for_update()).scalar_one()
+    query=select(Change).where(Change.id==cid,Change.tenant_id==tenant_id)
+    c=db.execute(query.with_for_update() if lock else query).scalar_one_or_none()
     if not c:
         error(404,'NOT_FOUND','해당 변경 요청이 존재하지 않습니다.')
     return c
@@ -320,6 +357,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
             error(422,'UNKNOWN_RULE_SCOPE','가상 업무팩에 등록되지 않은 상품/업무/규칙입니다.')
         if req.source_hash!=scope_hash(scope) or req.dataset_hash!=DATASET_HASH or req.evaluator_hash!=EVALUATOR_HASH:
             error(409,'SNAPSHOT_MISMATCH','서버에 고정된 데이터셋·평가자·출처 해시와 일치하지 않습니다.')
+        db.execute(select(Tenant).where(Tenant.id==actor.tenant_id).with_for_update()).scalar_one()
         now=utcnow()
         c=Change(id=str(uuid4()),tenant_id=actor.tenant_id,title=req.title,product=req.product,
                  workflow=req.workflow,rule_key=req.rule_key,requester_id=actor.id,owner_id=actor.id,
@@ -343,7 +381,10 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         require(actor,'ANALYST')
         if not 12 <= len(idempotency_key) <= 128:
             error(422,'INVALID_IDEMPOTENCY_KEY','Idempotency-Key는 12~128자여야 합니다.')
-        c=get_change(db,actor.tenant_id,cid)
+        c=get_change(db,actor.tenant_id,cid,lock=True)
+        if c.requester_id!=actor.id:
+            error(403,'REQUESTER_ONLY','최초 요청자만 평가할 수 있습니다.')
+        require_integrity(db,c)
         data=req.model_dump(mode='json')
         body_hash=digest(data)
         existing=db.execute(select(Evaluation).where(Evaluation.tenant_id==actor.tenant_id,
@@ -386,7 +427,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
     @app.post('/api/changes/{cid}/submit')
     def submit(cid:str,req:Transition,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'ANALYST')
-        c=get_change(db,actor.tenant_id,cid)
+        c=get_change(db,actor.tenant_id,cid,lock=True)
         if c.requester_id!=actor.id:
             error(403,'REQUESTER_ONLY','최초 요청자만 검토를 요청할 수 있습니다.')
         if c.status!='DRAFT':
@@ -411,7 +452,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
     @app.post('/api/changes/{cid}/domain-decision')
     def domain_review(cid:str,req:Decision,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'DOMAIN_REVIEWER')
-        c=get_change(db,actor.tenant_id,cid)
+        c=get_change(db,actor.tenant_id,cid,lock=True)
         if c.status!='PENDING_DOMAIN_REVIEW':
             error(409,'INVALID_STATUS','현업 검토 대기 상태가 아닙니다.')
         if actor.id in (c.requester_id,c.owner_id):
@@ -431,7 +472,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
     @app.post('/api/changes/{cid}/release-decision')
     def release_review(cid:str,req:Decision,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'RELEASE_APPROVER')
-        c=get_change(db,actor.tenant_id,cid)
+        c=get_change(db,actor.tenant_id,cid,lock=True)
         if c.status!='PENDING_RELEASE':
             error(409,'INVALID_STATUS','배포 승인 대기 상태가 아닙니다.')
         if actor.id in (c.requester_id,c.owner_id,c.domain_reviewer_id):
@@ -455,7 +496,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
                 error(409,'SNAPSHOT_MISMATCH','출시 승인 전 스냅샷 변경이 확인되었습니다.')
             manifest_hash=digest(evidence_content(db,c))
             revision_update(db,c,req.expected_revision,'APPROVED_FOR_DEMO',
-                            release_approver_id=actor.id,approved_evidence_hash=manifest_hash)
+                            release_approver_id=actor.id,approved_evidence_hash=manifest_hash,assessment_revision=c.revision)
             note=DecisionNote(id=str(uuid4()),tenant_id=actor.tenant_id,change_id=c.id,
                 actor_id=actor.id,stage='RELEASE',decision='APPROVE',reason=req.reason.strip(),created_at=utcnow())
             db.add(note)
@@ -473,8 +514,14 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         h=digest(content)
         verified, issues=record_integrity(db,c)
         audit_valid=audit_ok(db,actor.tenant_id)
-        return {'content':content,'manifest_sha256':h,'approved_evidence_sha256':c.approved_evidence_hash,
-                'matches_approval':c.approved_evidence_hash==h if c.approved_evidence_hash else None,
+        try:
+            envelope=json_obj(c.approval_envelope_json) if c.approval_envelope_json else None
+        except (ValueError, TypeError):
+            envelope=None
+        return {'approval_envelope':envelope,
+                'approval_envelope_sha256':c.approval_envelope_hash,
+                'content':content,'manifest_sha256':h,'approved_evidence_sha256':c.approved_evidence_hash,
+                'matches_approval':verified and audit_valid and c.approved_evidence_hash==h if c.approved_evidence_hash else None,
                 'audit_chain_verified':audit_valid,'record_integrity_verified':verified and audit_valid,
                 'integrity_issues':issues if audit_valid else ['AUDIT_INTEGRITY_FAILURE'],
                 'external_trust_anchor':False,'real_release':False}

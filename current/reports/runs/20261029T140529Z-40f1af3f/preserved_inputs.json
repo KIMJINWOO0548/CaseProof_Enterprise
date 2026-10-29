@@ -1,0 +1,22 @@
+{
+  "original_manifest_matches": 16,
+  "mismatches": [],
+  "original_files": [
+    "current/datasets/resolver_test_cases.json",
+    "current/datasets/synthetic_impact_graph.json",
+    "current/datasets/synthetic_rules.json",
+    "current/reference/__init__.py",
+    "current/reference/evidence_pack.py",
+    "current/reference/governance.py",
+    "current/reference/impact.py",
+    "current/reference/paired_benchmark.py",
+    "current/reference/release_gate.py",
+    "current/reference/resolver.py",
+    "current/reference/verify_answer.py",
+    "current/tests/test_answer_check.py",
+    "current/tests/test_release_impact.py",
+    "current/tests/test_resolver.py",
+    "current/tests/test_service.py",
+    "current/tests/test_v4_controls.py"
+  ]
+}

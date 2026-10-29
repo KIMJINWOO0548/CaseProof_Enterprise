@@ -7,6 +7,7 @@ This does not modify the installed Python runtime or the running service.
 import runpy
 import socket
 import sys
+import time
 
 
 def main():
@@ -24,6 +25,7 @@ def main():
                 if getattr(exc, 'winerror', None) != 10014 or attempt == 63:
                     raise
                 retries += 1
+                time.sleep(0.01)
 
     if sys.platform == 'win32':
         socket.socketpair = socketpair
