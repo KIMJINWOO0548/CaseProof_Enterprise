@@ -8,15 +8,17 @@ import hashlib, json, os, secrets
 from datetime import datetime, timezone
 from pathlib import Path
 from uuid import uuid4
-from fastapi import FastAPI, Depends, HTTPException, Header, Security
+from fastapi import FastAPI, Depends, HTTPException, Header, Security, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
+from sqlalchemy.exc import OperationalError
 from .db import make_engine, session_factory, create_tables
 from .models import Tenant, User, PolicyRule, Change, Evaluation, AuditEvent, DecisionNote, ChangeTransition
 from .integrity import transitions, transition_data, projection_issues, approval_envelope
 from .schemas import ChangeCreate, EvalRequest, Transition, Decision
+from .idempotency import fingerprint, replay, finish
 from reference.verify_answer import verify_numeric_claim
 from reference.resolver import resolve
 from reference.evidence_pack import canonical_json, digest
@@ -255,9 +257,27 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
     app.state.session_factory=SessionLocal
     app.state.demo_mode=demo
 
-    def get_db():
+    def get_db(request:Request):
         with SessionLocal() as db:
-            yield db
+            try:
+                # SQLite has no row locks: reserve its writer before any auth/state reads.
+                mutation_routes={'/api/changes','/api/changes/{cid}/evaluations',
+                    '/api/changes/{cid}/submit','/api/changes/{cid}/domain-decision',
+                    '/api/changes/{cid}/release-decision'}
+                if (engine.dialect.name=='sqlite' and request.method=='POST'
+                    and request.scope['route'].path in mutation_routes):
+                    db.connection().exec_driver_sql('BEGIN IMMEDIATE')
+                yield db
+            except OperationalError as exc:
+                db.rollback()
+                if engine.dialect.name=='sqlite' and getattr(exc.orig,'sqlite_errorcode',0) & 255 in (5,6):
+                    raise HTTPException(409,detail={'code':'RETRYABLE_CONFLICT',
+                        'message':'동시 요청 처리 중입니다. 같은 키로 재시도하세요.','retryable':True},
+                        headers={'Retry-After':'1'}) from exc
+                raise
+            except Exception:
+                db.rollback()
+                raise
 
     def get_actor(auth:HTTPAuthorizationCredentials|None=Security(security),db:Session=Depends(get_db)):
         if not auth or auth.scheme.lower()!='bearer' or not auth.credentials:
@@ -349,15 +369,21 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         return [payload(c,db) for c in items]
 
     @app.post('/api/changes',status_code=201)
-    def new_change(req:ChangeCreate,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
+    def new_change(req:ChangeCreate,
+                   idempotency_key:str=Header(...,alias='Idempotency-Key',min_length=12,max_length=128),
+                   actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'ANALYST')
+        db.execute(select(Tenant).where(Tenant.id==actor.tenant_id).with_for_update()).scalar_one()
+        request_hash=fingerprint('create',None,req.model_dump(mode='json'),None)
+        previous=replay(db,actor,idempotency_key,'create',request_hash)
+        if previous is not None:
+            return previous
         # Scope the rule to the authenticated user's tenant; never accept a tenant ID from the client.
         scope=scope_rules(db,actor.tenant_id,req.product,req.workflow,req.rule_key)
         if not scope:
             error(422,'UNKNOWN_RULE_SCOPE','가상 업무팩에 등록되지 않은 상품/업무/규칙입니다.')
         if req.source_hash!=scope_hash(scope) or req.dataset_hash!=DATASET_HASH or req.evaluator_hash!=EVALUATOR_HASH:
             error(409,'SNAPSHOT_MISMATCH','서버에 고정된 데이터셋·평가자·출처 해시와 일치하지 않습니다.')
-        db.execute(select(Tenant).where(Tenant.id==actor.tenant_id).with_for_update()).scalar_one()
         now=utcnow()
         c=Change(id=str(uuid4()),tenant_id=actor.tenant_id,title=req.title,product=req.product,
                  workflow=req.workflow,rule_key=req.rule_key,requester_id=actor.id,owner_id=actor.id,
@@ -367,8 +393,9 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         append_audit(db,actor.tenant_id,actor.id,'CHANGE_CREATED',c.id,
                      {'snapshot':{k:getattr(c,k) for k in ('tenant_id','title','product','workflow','rule_key',
                        'requester_id','owner_id','dataset_hash','evaluator_hash','source_hash','created_at')}})
+        response=finish(db,actor,idempotency_key,'create',request_hash,c,payload(c,db),201)
         safe_commit(db)
-        return payload(c,db)
+        return response
 
     @app.get('/api/changes/{cid}')
     def detail(cid:str,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
@@ -376,24 +403,19 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
 
     @app.post('/api/changes/{cid}/evaluations',status_code=201)
     def evaluate(cid:str,req:EvalRequest,expected_revision:int=Header(...,alias='X-Expected-Revision'),
-                 idempotency_key:str=Header(...,alias='Idempotency-Key'),
+                 idempotency_key:str=Header(...,alias='Idempotency-Key',min_length=12,max_length=128),
                  actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'ANALYST')
-        if not 12 <= len(idempotency_key) <= 128:
-            error(422,'INVALID_IDEMPOTENCY_KEY','Idempotency-Key는 12~128자여야 합니다.')
         c=get_change(db,actor.tenant_id,cid,lock=True)
         if c.requester_id!=actor.id:
             error(403,'REQUESTER_ONLY','최초 요청자만 평가할 수 있습니다.')
-        require_integrity(db,c)
         data=req.model_dump(mode='json')
         body_hash=digest(data)
-        existing=db.execute(select(Evaluation).where(Evaluation.tenant_id==actor.tenant_id,
-                   Evaluation.change_id==cid,Evaluation.idempotency_key==idempotency_key)).scalar_one_or_none()
-        if existing:
-            if existing.request_hash!=body_hash:
-                error(409,'IDEMPOTENCY_CONFLICT','동일한 키로 다른 요청을 보낼 수 없습니다.')
-            return {'id':existing.id,'verdict':existing.verdict,'result':json_obj(existing.result_json),
-                    'reused':True,'revision':c.revision}
+        request_hash=fingerprint('evaluations',cid,data,expected_revision)
+        previous=replay(db,actor,idempotency_key,'evaluations',request_hash)
+        if previous is not None:
+            return previous
+        require_integrity(db,c)
         if c.status!='DRAFT':
             error(409,'INVALID_STATUS','DRAFT에서만 새 검증을 실행할 수 있습니다.')
         # In this narrow working slice, exactly one date basis is supported per scope.
@@ -421,15 +443,23 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         append_audit(db,actor.tenant_id,actor.id,'EVALUATION_RECORDED',c.id,
                      {'evaluation_id':e.id,'verdict':e.verdict,'revision_from':rev,
                       'request_sha256':e.request_hash,'result_sha256':digest(result)})
+        response=finish(db,actor,idempotency_key,'evaluations',request_hash,c,
+            {'id':e.id,'verdict':result['verdict'],'result':result,'reused':False,'revision':c.revision},201)
         safe_commit(db)
-        return {'id':e.id,'verdict':result['verdict'],'result':result,'reused':False,'revision':c.revision}
+        return response
 
     @app.post('/api/changes/{cid}/submit')
-    def submit(cid:str,req:Transition,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
+    def submit(cid:str,req:Transition,
+               idempotency_key:str=Header(...,alias='Idempotency-Key',min_length=12,max_length=128),
+               actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'ANALYST')
         c=get_change(db,actor.tenant_id,cid,lock=True)
         if c.requester_id!=actor.id:
             error(403,'REQUESTER_ONLY','최초 요청자만 검토를 요청할 수 있습니다.')
+        request_hash=fingerprint('submit',cid,req.model_dump(mode='json'),req.expected_revision)
+        previous=replay(db,actor,idempotency_key,'submit',request_hash)
+        if previous is not None:
+            return previous
         if c.status!='DRAFT':
             error(409,'INVALID_STATUS','검토 요청 가능한 상태가 아닙니다.')
         if (scope_hash(scope_rules(db,c.tenant_id,c.product,c.workflow,c.rule_key))!=c.source_hash
@@ -446,17 +476,24 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         require_integrity(db,c)
         revision_update(db,c,req.expected_revision,'PENDING_DOMAIN_REVIEW')
         append_audit(db,actor.tenant_id,actor.id,'SUBMITTED_FOR_DOMAIN_REVIEW',c.id)
+        response=finish(db,actor,idempotency_key,'submit',request_hash,c,payload(c,db),200)
         safe_commit(db)
-        return payload(c,db)
+        return response
 
     @app.post('/api/changes/{cid}/domain-decision')
-    def domain_review(cid:str,req:Decision,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
+    def domain_review(cid:str,req:Decision,
+                      idempotency_key:str=Header(...,alias='Idempotency-Key',min_length=12,max_length=128),
+                      actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'DOMAIN_REVIEWER')
         c=get_change(db,actor.tenant_id,cid,lock=True)
-        if c.status!='PENDING_DOMAIN_REVIEW':
-            error(409,'INVALID_STATUS','현업 검토 대기 상태가 아닙니다.')
         if actor.id in (c.requester_id,c.owner_id):
             error(403,'SEPARATION_OF_DUTIES','요청자는 자신의 변경을 검토할 수 없습니다.')
+        request_hash=fingerprint('domain-decision',cid,req.model_dump(mode='json'),req.expected_revision)
+        previous=replay(db,actor,idempotency_key,'domain-decision',request_hash)
+        if previous is not None:
+            return previous
+        if c.status!='PENDING_DOMAIN_REVIEW':
+            error(409,'INVALID_STATUS','현업 검토 대기 상태가 아닙니다.')
         require_integrity(db,c)
         state='REJECTED' if req.decision=='REJECT' else 'PENDING_RELEASE'
         revision_update(db,c,req.expected_revision,state,domain_reviewer_id=actor.id)
@@ -466,17 +503,24 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         append_audit(db,actor.tenant_id,actor.id,'DOMAIN_'+req.decision,c.id,
                      {'decision_id':note.id,'stage':'DOMAIN','decision':req.decision,
                       'reason_sha256':hashlib.sha256(note.reason.encode()).hexdigest()})
+        response=finish(db,actor,idempotency_key,'domain-decision',request_hash,c,payload(c,db),200)
         safe_commit(db)
-        return payload(c,db)
+        return response
 
     @app.post('/api/changes/{cid}/release-decision')
-    def release_review(cid:str,req:Decision,actor:User=Depends(get_actor),db:Session=Depends(get_db)):
+    def release_review(cid:str,req:Decision,
+                       idempotency_key:str=Header(...,alias='Idempotency-Key',min_length=12,max_length=128),
+                       actor:User=Depends(get_actor),db:Session=Depends(get_db)):
         require(actor,'RELEASE_APPROVER')
         c=get_change(db,actor.tenant_id,cid,lock=True)
-        if c.status!='PENDING_RELEASE':
-            error(409,'INVALID_STATUS','배포 승인 대기 상태가 아닙니다.')
         if actor.id in (c.requester_id,c.owner_id,c.domain_reviewer_id):
             error(403,'SEPARATION_OF_DUTIES','요청·검토 담당자와 승인자를 분리해야 합니다.')
+        request_hash=fingerprint('release-decision',cid,req.model_dump(mode='json'),req.expected_revision)
+        previous=replay(db,actor,idempotency_key,'release-decision',request_hash)
+        if previous is not None:
+            return previous
+        if c.status!='PENDING_RELEASE':
+            error(409,'INVALID_STATUS','배포 승인 대기 상태가 아닙니다.')
         require_integrity(db,c)
         if req.decision=='REJECT':
             revision_update(db,c,req.expected_revision,'REJECTED',release_approver_id=actor.id)
@@ -504,8 +548,9 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
                          {'decision_id':note.id,'stage':'RELEASE','decision':'APPROVE',
                           'reason_sha256':hashlib.sha256(note.reason.encode()).hexdigest(),
                           'evidence_sha256':manifest_hash})
+        response=finish(db,actor,idempotency_key,'release-decision',request_hash,c,payload(c,db),200)
         safe_commit(db)
-        return payload(c,db)
+        return response
 
     @app.get('/api/changes/{cid}/evidence')
     def get_evidence(cid:str,actor:User=Depends(get_actor),db:Session=Depends(get_db)):

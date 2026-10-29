@@ -1,0 +1,30 @@
+Base commit: 4772757 (previous G1 milestone).
+Working directory: CaseProof_Enterprise/current. CASEPROOF_DEMO_MODE=1 and CASEPROOF_DATABASE_URL=sqlite:// for Python API checks.
+Python: .venv/Scripts/python.exe. Node: bundled Node executable; no new packages installed.
+
+1. python -m scripts.windows_checks pytest -q tests/test_idempotency.py
+   Before implementation: 9 failed, exit 1. idempotency_red.txt.
+   Initial combined run: focused tests passed, old callers lacked new required headers; raw idempotency_green.txt retained.
+   After common auth helper update: focused suite 15 passed, exit 0. idempotency_focused.txt.
+2. python -m scripts.windows_checks pytest -q tests/test_idempotency.py tests/test_service.py tests/test_transition_integrity.py
+   86 passed, exit 0. idempotency_acceptance.txt.
+   Independent read-only reviewer repeated the same scope: 86 passed, no actionable findings.
+3. node scripts/check_ui_retries.cjs
+   Before UI integration: missing mutation key assertion failed, exit 1. ui_retries_red.txt.
+   After initial integration: exit 0. ui_retries_green.txt.
+   Additional revision-change regression: exit 1. ui_retries_revision_red.txt.
+   After fixing signature and incomplete-success handling: exit 0. ui_retries_verified.txt.
+   The actual inline request function is exercised; fetch responses are controlled, no remote service is contacted.
+4. python -m scripts.windows_checks pytest -q
+   157 passed, 22 subtests passed, one existing deprecation warning, exit 0. pytest_full.txt / pytest_full_exit.txt.
+   This full Python run preceded the final JavaScript-only revision/partial-response adjustment; final JS verified separately afterward.
+5. python -m scripts.windows_checks scripts.smoke --output reports/runs/20261029T142554Z-0b8c51e9/smoke.json
+   12/12 checks passed, exit 0. smoke.txt / smoke_exit.txt.
+6. node --check reports/runs/20261029T142554Z-0b8c51e9/ui.js
+   Final inline JavaScript syntax: exit 0. ui_syntax.txt.
+7. python reports/runs/20261029T142554Z-0b8c51e9/verify_http.py
+   Real localhost server launched using scripts.windows_checks uvicorn, 127.0.0.1:18768, one worker, in-memory SQLite. Health/HTML/OpenAPI required key bounds checked, exit 0. Server terminated afterward.
+8. At package root: git diff --check -- current/service current/scripts current/tests
+   exit 0. Raw stdout logs preserve their original whitespace.
+
+Synthetic fixtures only. Original test assertions were preserved; test_service.auth and smoke.head now provide a unique key to callers. Authentication device codes and credentials are deliberately absent from this record.

@@ -1,0 +1,507 @@
+FFFFFFFFF                                                                [100%]
+================================== FAILURES ===================================
+_______ test_all_operations_replay_original_result_after_state_advanced _______
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B320C7410>, <fastapi.applications.FastAPI object at 0x0000023B320EE240>)
+
+    def test_all_operations_replay_original_result_after_state_advanced(fx):
+        client,app=fx
+        calls=workflow(client)
+        for path,body,h,original in calls:
+            retry=client.post(path,headers=h,json=body)
+            assert retry.status_code==original.status_code
+            expected={**original.json(),'replayed':True}
+            if 'reused' in expected:
+                expected['reused']=True
+>           assert retry.json()==expected
+E           AssertionError: assert {'id': 'aca8c...UIDANCE', ...} == {'id': '9f47c...UIDANCE', ...}
+E             
+E             Omitting 13 identical items, use -vv to show
+E             Differing items:
+E             {'id': 'aca8cd22-3a71-44a9-a41f-56e0f54d4311'} != {'id': '9f47c27e-db29-4380-b518-1bb85a5dca65'}
+E             Right contains 1 more item:
+E             {'replayed': True}
+E             Use -v to get more diff
+
+tests\test_idempotency.py:51: AssertionError
+______________ test_all_operations_require_bounded_header[None] _______________
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B321BD5B0>, <fastapi.applications.FastAPI object at 0x0000023B32108CB0>)
+length = None
+
+    @pytest.mark.parametrize('length',[None,11,129])
+    def test_all_operations_require_bounded_header(fx,length):
+        client,_=fx
+        for path,body,h,_ in workflow(client):
+            h=dict(h)
+            h.pop('Idempotency-Key')
+            if length is not None:
+                h['Idempotency-Key']='k'*length
+>           assert client.post(path,headers=h,json=body).status_code==422
+E           AssertionError: assert 201 == 422
+E            +  where 201 = <Response [201 Created]>.status_code
+E            +    where <Response [201 Created]> = post('/api/changes', headers={'Authorization': 'Bearer integration_test_only_aurora-analyst'}, json={'title': '가상 약관 개정 적용일 회귀 검증', 'product': 'AUTO-101', 'workflow': 'AUTO_CLAIM_GUIDANCE', 'rule_key': 'DOCUMENT_WINDOW_DAYS', ...})
+E            +      where post = <starlette.testclient.TestClient object at 0x0000023B321BD5B0>.post
+
+tests\test_idempotency.py:64: AssertionError
+_______________ test_all_operations_require_bounded_header[11] ________________
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B32323980>, <fastapi.applications.FastAPI object at 0x0000023B3234DC70>)
+length = 11
+
+    @pytest.mark.parametrize('length',[None,11,129])
+    def test_all_operations_require_bounded_header(fx,length):
+        client,_=fx
+        for path,body,h,_ in workflow(client):
+            h=dict(h)
+            h.pop('Idempotency-Key')
+            if length is not None:
+                h['Idempotency-Key']='k'*length
+>           assert client.post(path,headers=h,json=body).status_code==422
+E           AssertionError: assert 201 == 422
+E            +  where 201 = <Response [201 Created]>.status_code
+E            +    where <Response [201 Created]> = post('/api/changes', headers={'Authorization': 'Bearer integration_test_only_aurora-analyst', 'Idempotency-Key': 'kkkkkkkkkkk'}, json={'title': '가상 약관 개정 적용일 회귀 검증', 'product': 'AUTO-101', 'workflow': 'AUTO_CLAIM_GUIDANCE', 'rule_key': 'DOCUMENT_WINDOW_DAYS', ...})
+E            +      where post = <starlette.testclient.TestClient object at 0x0000023B32323980>.post
+
+tests\test_idempotency.py:64: AssertionError
+_______________ test_all_operations_require_bounded_header[129] _______________
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B324059D0>, <fastapi.applications.FastAPI object at 0x0000023B32406FC0>)
+length = 129
+
+    @pytest.mark.parametrize('length',[None,11,129])
+    def test_all_operations_require_bounded_header(fx,length):
+        client,_=fx
+        for path,body,h,_ in workflow(client):
+            h=dict(h)
+            h.pop('Idempotency-Key')
+            if length is not None:
+                h['Idempotency-Key']='k'*length
+>           assert client.post(path,headers=h,json=body).status_code==422
+E           AssertionError: assert 201 == 422
+E            +  where 201 = <Response [201 Created]>.status_code
+E            +    where <Response [201 Created]> = post('/api/changes', headers={'Authorization': 'Bearer integration_test_only_aurora-analyst', 'Idempotency-Key': 'kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk'}, json={'title': '가상 약관 개정 적용일 회귀 검증', 'product': 'AUTO-101', 'workflow': 'AUTO_CLAIM_GUIDANCE', 'rule_key': 'DOCUMENT_WINDOW_DAYS', ...})
+E            +      where post = <starlette.testclient.TestClient object at 0x0000023B324059D0>.post
+
+tests\test_idempotency.py:64: AssertionError
+_______ test_fingerprint_body_revision_resource_and_operation_conflicts _______
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B32404E00>, <fastapi.applications.FastAPI object at 0x0000023B32339610>)
+
+    def test_fingerprint_body_revision_resource_and_operation_conflicts(fx):
+        client,_=fx
+        calls=workflow(client)
+        for path,body,h,_ in calls:
+            changed=dict(body)
+            field='title' if path=='/api/changes' else 'claim_days' if path.endswith('evaluations') else 'expected_revision'
+            changed[field]='Another synthetic title' if field=='title' else body[field]+1
+>           assert client.post(path,headers=h,json=changed).status_code==409
+E           AssertionError: assert 201 == 409
+E            +  where 201 = <Response [201 Created]>.status_code
+E            +    where <Response [201 Created]> = post('/api/changes', headers={'Authorization': 'Bearer integration_test_only_aurora-analyst', 'Idempotency-Key': '6d673254b139417fb3006c4c081777e8'}, json={'title': 'Another synthetic title', 'product': 'AUTO-101', 'workflow': 'AUTO_CLAIM_GUIDANCE', 'rule_key': 'DOCUMENT_WINDOW_DAYS', ...})
+E            +      where post = <starlette.testclient.TestClient object at 0x0000023B32404E00>.post
+
+tests\test_idempotency.py:78: AssertionError
+____ test_authorization_precedes_replay_and_current_integrity_is_separate _____
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B325921E0>, <fastapi.applications.FastAPI object at 0x0000023B325B0920>)
+
+    def test_authorization_precedes_replay_and_current_integrity_is_separate(fx):
+        client,app=fx
+        calls=workflow(client)
+        path,body,h,result=calls[1]
+        assert client.post(path,headers={**h,'Authorization':'Bearer invalid'},json=body).status_code==401
+        assert client.post(path,headers=headers('horizon-analyst',h['Idempotency-Key'],1),json=body).status_code==404
+        assert client.post(path,headers=headers('aurora-reviewer',h['Idempotency-Key'],1),json=body).status_code==403
+        with app.state.session_factory() as db:
+            reviewer=db.get(User,'aurora-reviewer')
+            reviewer.roles_json='["ANALYST","DOMAIN_REVIEWER"]'
+            c=db.scalars(select(Change)).one()
+            c.title='Tampered current projection'
+            db.commit()
+        assert client.post(path,headers=headers('aurora-reviewer',h['Idempotency-Key'],1),json=body).status_code==403
+        retry=client.post(path,headers=h,json=body)
+>       assert retry.json()['revision']==result.json()['revision'] and retry.json()['replayed']
+               ^^^^^^^^^^^^^^^^^^^^^^^^
+E       KeyError: 'revision'
+
+tests\test_idempotency.py:101: KeyError
+____________ test_independent_actor_and_tenant_keys_do_not_replay _____________
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B326D7380>, <fastapi.applications.FastAPI object at 0x0000023B3257D7C0>)
+
+    def test_independent_actor_and_tenant_keys_do_not_replay(fx):
+        client,app=fx
+        key=uuid4().hex
+        first=client.post('/api/changes',headers=headers(key=key),json=good_request(client))
+        with app.state.session_factory() as db:
+            db.get(User,'aurora-reviewer').roles_json='["ANALYST","DOMAIN_REVIEWER"]'
+            db.commit()
+        second=client.post('/api/changes',headers=headers('aurora-reviewer',key),json=good_request(client))
+        third=client.post('/api/changes',headers=headers('horizon-analyst',key),json=good_request(client,'horizon-analyst'))
+>       assert all(r.status_code==201 and r.json()['replayed'] is False for r in [first,second,third])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_idempotency.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+.0 = <tuple_iterator object at 0x0000023B32706CE0>
+
+>   assert all(r.status_code==201 and r.json()['replayed'] is False for r in [first,second,third])
+                                      ^^^^^^^^^^^^^^^^^^^^
+E   KeyError: 'replayed'
+
+tests\test_idempotency.py:119: KeyError
+___________________ test_concurrent_same_key_has_one_effect ___________________
+
+self = <sqlalchemy.engine.base.Connection object at 0x0000023B327B3170>
+dialect = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000023B326F5BB0>
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000023B3279D040>
+statement = <sqlalchemy.dialects.sqlite.base.SQLiteCompiler object at 0x0000023B327C5310>
+parameters = [('d6c648b2-855e-4040-94c7-9d6e0e4abe1a', 'AURORA_NONLIFE', 'aurora-analyst', 1, '000000000000000000000000000000000000...RORA_NONLIFE","to_state":"DRAFT"}},"kind":"CHANGE_CREATED","subject_id":"5c0325c6-dbe9-4ea4-8bf4-744883d9efe2"}', ...)]
+
+    def _exec_single_context(
+        self,
+        dialect: Dialect,
+        context: ExecutionContext,
+        statement: Union[str, Compiled],
+        parameters: Optional[_AnyMultiExecuteParams],
+    ) -> CursorResult[Unpack[TupleAny]]:
+        """continue the _execute_context() method for a single DBAPI
+        cursor.execute() or cursor.executemany() call.
+    
+        """
+        if dialect.bind_typing is BindTyping.SETINPUTSIZES:
+            generic_setinputsizes = context._prepare_set_input_sizes()
+    
+            if generic_setinputsizes:
+                try:
+                    dialect.do_set_input_sizes(
+                        context.cursor, generic_setinputsizes, context
+                    )
+                except BaseException as e:
+                    self._handle_dbapi_exception(
+                        e, str(statement), parameters, None, context
+                    )
+    
+        cursor, str_statement, parameters = (
+            context.cursor,
+            context.statement,
+            context.parameters,
+        )
+    
+        effective_parameters: Optional[_AnyExecuteParams]
+    
+        if not context.executemany:
+            effective_parameters = parameters[0]
+        else:
+            effective_parameters = parameters
+    
+        evt_handled: bool = False
+        try:
+            if self._has_events or self.engine._has_events:
+                for fn in self.dispatch.before_cursor_execute:
+                    str_statement, effective_parameters = fn(
+                        self,
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                        context.executemany,
+                    )
+    
+            if self._echo:
+                self._log_info(str_statement)
+    
+                stats = context._get_cache_stats()
+    
+                if not self.engine.hide_parameters:
+                    self._log_info(
+                        "[%s] %r",
+                        stats,
+                        sql_util._repr_params(
+                            effective_parameters,
+                            batches=10,
+                            ismulti=context.executemany,
+                        ),
+                    )
+                else:
+                    self._log_info(
+                        "[%s] [SQL parameters hidden due to "
+                        "hide_parameters=True]",
+                        stats,
+                    )
+            if context.execute_style is ExecuteStyle.EXECUTEMANY:
+                effective_parameters = cast(
+                    "_CoreMultiExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_executemany:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_executemany(
+                        cursor,
+                        str_statement,
+                        effective_parameters,
+                        context,
+                    )
+            elif not effective_parameters and context.no_parameters:
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute_no_params:
+                        if fn(cursor, str_statement, context):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+                    self.dialect.do_execute_no_params(
+                        cursor, str_statement, context
+                    )
+            else:
+                effective_parameters = cast(
+                    "_CoreSingleExecuteParams", effective_parameters
+                )
+                if self.dialect._has_events:
+                    for fn in self.dialect.dispatch.do_execute:
+                        if fn(
+                            cursor,
+                            str_statement,
+                            effective_parameters,
+                            context,
+                        ):
+                            evt_handled = True
+                            break
+                if not evt_handled:
+>                   self.dialect.do_execute(
+                        cursor, str_statement, effective_parameters, context
+                    )
+
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1958: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000023B326F5BB0>
+cursor = <sqlite3.Cursor object at 0x0000023B32786240>
+statement = 'INSERT INTO audit_events (id, tenant_id, actor_id, sequence, prev_hash, event_json, event_hash) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('d6c648b2-855e-4040-94c7-9d6e0e4abe1a', 'AURORA_NONLIFE', 'aurora-analyst', 1, '0000000000000000000000000000000000000...URORA_NONLIFE","to_state":"DRAFT"}},"kind":"CHANGE_CREATED","subject_id":"5c0325c6-dbe9-4ea4-8bf4-744883d9efe2"}', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000023B3279D040>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlite3.IntegrityError: UNIQUE constraint failed: audit_events.tenant_id, audit_events.sequence
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:1192: IntegrityError
+
+The above exception was the direct cause of the following exception:
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B32793D70>, <fastapi.applications.FastAPI object at 0x0000023B326F6C30>)
+
+    def test_concurrent_same_key_has_one_effect(fx):
+        client,app=fx
+        body=good_request(client)
+        h=headers()
+        with ThreadPoolExecutor(max_workers=4) as pool:
+>           responses=list(pool.map(lambda _:client.post('/api/changes',headers=h,json=body),range(4)))
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\test_idempotency.py:128: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:619: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:317: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:456: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\_base.py:401: in __get_result
+    raise self._exception
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\concurrent\futures\thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+tests\test_idempotency.py:128: in <lambda>
+    responses=list(pool.map(lambda _:client.post('/api/changes',headers=h,json=body),range(4)))
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx\_client.py:1144: in post
+    return self.request(
+.venv\Lib\site-packages\starlette\testclient.py:518: in request
+    return super().request(
+.venv\Lib\site-packages\httpx\_client.py:825: in request
+    return self.send(request, auth=auth, follow_redirects=follow_redirects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx\_client.py:928: in send
+    raise exc
+.venv\Lib\site-packages\httpx\_client.py:922: in send
+    response.read()
+.venv\Lib\site-packages\httpx\_models.py:881: in read
+    self._content = b"".join(self.iter_bytes())
+                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx\_models.py:897: in iter_bytes
+    for raw_bytes in self.iter_raw():
+                     ^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\httpx\_models.py:951: in iter_raw
+    for raw_stream_bytes in self.stream:
+                            ^^^^^^^^^^^
+.venv\Lib\site-packages\httpx\_client.py:153: in __iter__
+    for chunk in self._stream:
+                 ^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:384: in iter_body
+    exit_stack.close()
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:618: in close
+    self.__exit__(None, None, None)
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:610: in __exit__
+    raise exc_details[1]
+..\..\..\AppData\Local\Programs\Python\Python312\Lib\contextlib.py:595: in __exit__
+    if cb(*exc_details):
+       ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:399: in close_app
+    raise exception
+.venv\Lib\site-packages\anyio\from_thread.py:265: in _call_func
+    retval = await retval_or_awaitable
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\starlette\testclient.py:366: in run_app
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\applications.py:1194: in __call__
+    await super().__call__(scope, receive, send)
+.venv\Lib\site-packages\starlette\applications.py:96: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\errors.py:186: in __call__
+    raise exc
+.venv\Lib\site-packages\starlette\middleware\errors.py:164: in __call__
+    await self.app(scope, receive, _send)
+.venv\Lib\site-packages\fastapi\telemetry\_asgi.py:151: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\middleware\exceptions.py:63: in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py:18: in __call__
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:683: in __call__
+    await self.middleware_stack(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:2811: in app
+    await route.handle(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:1330: in handle
+    await super().handle(scope, receive, send)
+.venv\Lib\site-packages\starlette\routing.py:289: in handle
+    await self.app(scope, receive, send)
+.venv\Lib\site-packages\fastapi\routing.py:166: in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+.venv\Lib\site-packages\starlette\_exception_handler.py:53: in wrapped_app
+    raise exc
+.venv\Lib\site-packages\starlette\_exception_handler.py:42: in wrapped_app
+    await app(scope, receive, sender)
+.venv\Lib\site-packages\fastapi\routing.py:152: in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\routing.py:745: in app
+    raw_response = await run_endpoint_function(
+.venv\Lib\site-packages\fastapi\routing.py:374: in run_endpoint_function
+    return await run_in_threadpool(
+.venv\Lib\site-packages\starlette\concurrency.py:34: in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\to_thread.py:65: in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:2706: in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+.venv\Lib\site-packages\anyio\_backends\_asyncio.py:1100: in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\fastapi\telemetry\_api.py:244: in _run_sync_endpoint
+    return function(**arguments)
+           ^^^^^^^^^^^^^^^^^^^^^
+service\app.py:367: in new_change
+    append_audit(db,actor.tenant_id,actor.id,'CHANGE_CREATED',c.id,
+service\app.py:159: in append_audit
+    db.flush()
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:4543: in flush
+    self._flush(objects)
+<sqlalchemy generated warned() wrapper for sqlalchemy.orm.session.Session._flush>:2: in _flush
+    return target(fn, self, objects=objects)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\deprecations.py:281: in warned
+    return fn(*args, **kwargs)  # type: ignore[no-any-return]
+           ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:4686: in _flush
+    with util.safe_reraise():
+         ^^^^^^^^^^^^^^^^^^^
+.venv\Lib\site-packages\sqlalchemy\util\langhelpers.py:166: in __exit__
+    raise exc_value.with_traceback(exc_tb)
+.venv\Lib\site-packages\sqlalchemy\orm\session.py:4647: in _flush
+    flush_context.execute()
+.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:467: in execute
+    rec.execute(self)
+.venv\Lib\site-packages\sqlalchemy\orm\unitofwork.py:643: in execute
+    util.preloaded.orm_persistence._save_obj(
+.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:92: in _save_obj
+    _emit_insert_statements(
+.venv\Lib\site-packages\sqlalchemy\orm\persistence.py:1052: in _emit_insert_statements
+    result = connection.execute(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1463: in execute
+    return meth(
+.venv\Lib\site-packages\sqlalchemy\sql\elements.py:533: in _execute_on_connection
+    return connection._execute_clauseelement(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1683: in _execute_clauseelement
+    ret = self._execute_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1837: in _execute_context
+    return self._exec_single_context(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1977: in _exec_single_context
+    self._handle_dbapi_exception(
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:2347: in _handle_dbapi_exception
+    raise sqlalchemy_exception.with_traceback(exc_info[2]) from e
+.venv\Lib\site-packages\sqlalchemy\engine\base.py:1958: in _exec_single_context
+    self.dialect.do_execute(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <sqlalchemy.dialects.sqlite.pysqlite.SQLiteDialect_pysqlite object at 0x0000023B326F5BB0>
+cursor = <sqlite3.Cursor object at 0x0000023B32786240>
+statement = 'INSERT INTO audit_events (id, tenant_id, actor_id, sequence, prev_hash, event_json, event_hash) VALUES (?, ?, ?, ?, ?, ?, ?)'
+parameters = ('d6c648b2-855e-4040-94c7-9d6e0e4abe1a', 'AURORA_NONLIFE', 'aurora-analyst', 1, '0000000000000000000000000000000000000...URORA_NONLIFE","to_state":"DRAFT"}},"kind":"CHANGE_CREATED","subject_id":"5c0325c6-dbe9-4ea4-8bf4-744883d9efe2"}', ...)
+context = <sqlalchemy.dialects.sqlite.base.SQLiteExecutionContext object at 0x0000023B3279D040>
+
+    def do_execute(self, cursor, statement, parameters, context=None):
+>       cursor.execute(statement, parameters)
+E       sqlalchemy.exc.IntegrityError: (sqlite3.IntegrityError) UNIQUE constraint failed: audit_events.tenant_id, audit_events.sequence
+E       [SQL: INSERT INTO audit_events (id, tenant_id, actor_id, sequence, prev_hash, event_json, event_hash) VALUES (?, ?, ?, ?, ?, ?, ?)]
+E       [parameters: ('d6c648b2-855e-4040-94c7-9d6e0e4abe1a', 'AURORA_NONLIFE', 'aurora-analyst', 1, '0000000000000000000000000000000000000000000000000000000000000000', '{"actor_id":"aurora-analyst","at":"2026-10-29T14:25:58+00:00","details":{"snapshot":{"created_at":"2026-10-29T14:25:58+00:00","dataset_hash":"8d3f72d ... (780 characters truncated) ... ":1,"schema_version":1,"tenant_id":"AURORA_NONLIFE","to_state":"DRAFT"}},"kind":"CHANGE_CREATED","subject_id":"5c0325c6-dbe9-4ea4-8bf4-744883d9efe2"}', 'b633d9a38ddb5bd119e5e684c164b5654cc1e78a5604c1feb83599957d238525')]
+E       (Background on this error at: https://sqlalche.me/e/21/gkpj)
+
+.venv\Lib\site-packages\sqlalchemy\engine\default.py:1192: IntegrityError
+_______ test_failure_before_commit_rolls_back_idempotency_and_mutation ________
+
+fx = (<starlette.testclient.TestClient object at 0x0000023B3279DDF0>, <fastapi.applications.FastAPI object at 0x0000023B32404D10>)
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000023B335EC590>
+
+    def test_failure_before_commit_rolls_back_idempotency_and_mutation(fx,monkeypatch):
+        client,app=fx
+>       from service.models import IdempotencyRecord
+E       ImportError: cannot import name 'IdempotencyRecord' from 'service.models' (C:\Users\김진우\Desktop\CaseProof_Enterprise\current\service\models.py)
+
+tests\test_idempotency.py:139: ImportError
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\current\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/test_idempotency.py::test_all_operations_replay_original_result_after_state_advanced
+FAILED tests/test_idempotency.py::test_all_operations_require_bounded_header[None]
+FAILED tests/test_idempotency.py::test_all_operations_require_bounded_header[11]
+FAILED tests/test_idempotency.py::test_all_operations_require_bounded_header[129]
+FAILED tests/test_idempotency.py::test_fingerprint_body_revision_resource_and_operation_conflicts
+FAILED tests/test_idempotency.py::test_authorization_precedes_replay_and_current_integrity_is_separate
+FAILED tests/test_idempotency.py::test_independent_actor_and_tenant_keys_do_not_replay
+FAILED tests/test_idempotency.py::test_concurrent_same_key_has_one_effect - s...
+FAILED tests/test_idempotency.py::test_failure_before_commit_rolls_back_idempotency_and_mutation
+9 failed, 1 warning in 4.04s
+Windows socketpair initialization retries: 38

@@ -27,7 +27,8 @@ def fx(tmp_path):
         yield client,app
     app.state.db_engine.dispose()
 
-def auth(uid): return {'Authorization':'Bearer '+TOKENS[uid]}
+def auth(uid):
+    return {'Authorization':'Bearer '+TOKENS[uid], 'Idempotency-Key':'integration-'+uuid4().hex}
 
 def good_request(client,who='aurora-analyst',scope_idx=0):
     scopes=client.get('/api/scopes',headers=auth(who)).json()

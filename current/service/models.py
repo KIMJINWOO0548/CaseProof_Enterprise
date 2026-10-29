@@ -71,7 +71,7 @@ class Evaluation(Base):
     __table_args__ = (
         ForeignKeyConstraint(['tenant_id','change_id'],['changes.tenant_id','changes.id']),
         ForeignKeyConstraint(['tenant_id','actor_id'],['users.tenant_id','users.id']),
-        UniqueConstraint('tenant_id','change_id','idempotency_key',name='uq_eval_idempotency'),
+        UniqueConstraint('tenant_id','actor_id','change_id','idempotency_key',name='uq_eval_idempotency'),
     )
     id: Mapped[str] = mapped_column(String(50), primary_key=True)
     tenant_id: Mapped[str] = mapped_column(String(80), ForeignKey('tenants.id'), nullable=False)
@@ -83,6 +83,30 @@ class Evaluation(Base):
     result_json: Mapped[str] = mapped_column(Text, nullable=False)
     verdict: Mapped[str] = mapped_column(String(24), nullable=False)
     created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+
+class IdempotencyRecord(Base):
+    __tablename__ = 'idempotency_records'
+    __table_args__ = (
+        UniqueConstraint('tenant_id','actor_id','key',name='uq_actor_idempotency'),
+        ForeignKeyConstraint(['tenant_id','actor_id'],['users.tenant_id','users.id']),
+        ForeignKeyConstraint(['tenant_id','change_id'],['changes.tenant_id','changes.id']),
+        CheckConstraint('length(key) >= 12 AND length(key) <= 128'),
+        CheckConstraint('response_status >= 200 AND response_status < 300'),
+        CheckConstraint('revision >= 1 AND completed = true'),
+    )
+    id: Mapped[str] = mapped_column(String(50), primary_key=True)
+    tenant_id: Mapped[str] = mapped_column(String(80), nullable=False)
+    actor_id: Mapped[str] = mapped_column(String(80), nullable=False)
+    key: Mapped[str] = mapped_column(String(128), nullable=False)
+    operation: Mapped[str] = mapped_column(String(40), nullable=False)
+    fingerprint: Mapped[str] = mapped_column(String(64), nullable=False)
+    change_id: Mapped[str] = mapped_column(String(50), nullable=False)
+    response_status: Mapped[int] = mapped_column(Integer, nullable=False)
+    response_json: Mapped[str] = mapped_column(Text, nullable=False)
+    revision: Mapped[int] = mapped_column(Integer, nullable=False)
+    created_at: Mapped[str] = mapped_column(String(40), nullable=False)
+    completed: Mapped[bool] = mapped_column(Boolean, nullable=False)
+
 
 class AuditEvent(Base):
     __tablename__ = 'audit_events'

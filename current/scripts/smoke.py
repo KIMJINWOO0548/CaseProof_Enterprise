@@ -15,7 +15,7 @@ TOKENS = {name: 'smoke_only_' + name for name in (
     'horizon-analyst', 'horizon-reviewer', 'horizon-approver')}
 
 def head(who):
-    return {'Authorization':'Bearer '+TOKENS[who]}
+    return {'Authorization':'Bearer '+TOKENS[who], 'Idempotency-Key':'smoke-'+uuid4().hex}
 
 def api(client,method,path,who,**kwargs):
     resp=client.request(method,path,headers={**head(who),**kwargs.pop('headers',{})},**kwargs)

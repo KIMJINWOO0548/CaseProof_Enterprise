@@ -1,0 +1,10 @@
+AssertionError [ERR_ASSERTION]: changed revision must use a new key
+    at C:\Users\김진우\Desktop\CaseProof_Enterprise\current\scripts\check_ui_retries.cjs:67:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: '7a1bd785-fb7a-448b-95bf-c222f8225082',
+  expected: '7a1bd785-fb7a-448b-95bf-c222f8225082',
+  operator: 'notStrictEqual',
+  diff: 'simple'
+}
+exit_code=1
