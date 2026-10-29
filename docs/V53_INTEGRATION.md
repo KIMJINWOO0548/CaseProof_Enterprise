@@ -26,4 +26,6 @@
 
 이번 실행 폴더는 [reports/runs/20261029T151200Z-a53be001](../reports/runs/20261029T151200Z-a53be001/)입니다. raw 로그와 원본 입력 manifest를 보존합니다. 입력 패키지의 221개/Linux 결과는 과거 입력 증거이며 이번 Windows 실행 결과와 합산하지 않습니다.
 
+병합 및 후속 canonical 구현은 `c7d3d29`, Git LF 정규화와 manifest 정합성 수정은 `8eba9de`에 보존했다. `8eba9de`의 [실제 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/40902657873)는 7개 적용 job이 모두 성공했다. source manifest의 204개 항목을 working tree와 해당 Git blob 양쪽에서 대조했으며, 사용자 제공 원본 187개도 다시 검증했다. 기존 테스트 9개와 합성 JSON 3개는 이전 커밋의 바이트를 보존했다.
+
 다음 순서는 `prebuild/02`의 새 G1.1 계약 기반 모듈 → 불변 schema → 공통 executor → v1 HTTP → full-suite run → target 증거 봉인입니다. 기존 `/api`의 유사 기능만으로 target 완료 체크를 하지 않습니다. PostgreSQL/RLS는 그 뒤 실제 disposable DB와 non-owner 역할에서 검증합니다.

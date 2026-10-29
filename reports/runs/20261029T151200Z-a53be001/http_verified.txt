@@ -1,0 +1,2 @@
+HTTP health, HTML and OpenAPI: PASS (127.0.0.1, one worker, in-memory SQLite)
+exit_code=0

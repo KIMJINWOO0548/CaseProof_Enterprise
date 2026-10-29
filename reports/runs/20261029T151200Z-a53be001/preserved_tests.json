@@ -1,0 +1,11 @@
+{
+  "tests/test_answer_check.py": "e61247ff527dbbe601c5098ce75068513e2309c2659a80e1f25a076f23a59521",
+  "tests/test_api_contract.py": "b8baba1f2383804656bb7af7e69a17a77f0bd49a67d366a7c6025faa6bb8fae3",
+  "tests/test_idempotency.py": "d9da66987ea24a5aa86b51d510d526b4cc3a720eb5354a0591b36087cd70d770",
+  "tests/test_release_impact.py": "45fe5a7dffd6fd63ed09e51cccfd49baecf09a7c2a5e1d626ad9bc414768f55e",
+  "tests/test_resolver.py": "014df118a48a544e0849c32b846ff35e05732f9c97a92a348ff44b7c650b4b55",
+  "tests/test_service.py": "21ee599c55f9c1e60dbe64ecfd578ef8cfad4bd45ce556b4d457860eee7816dd",
+  "tests/test_smoke_output.py": "e5187c30ab2f19eb0bea68c9542d21441e2d74423121a9e8fa5d9ca8be24078d",
+  "tests/test_transition_integrity.py": "81438bdcda0eb842b9f3d81449428297a4382d47028457f2ff303731bcf34796",
+  "tests/test_v4_controls.py": "f23d6d689d598c9568a36502fc1a811b9ec6a5754425eb1982efb51522b05885"
+}

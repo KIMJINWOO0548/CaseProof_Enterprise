@@ -19,11 +19,15 @@
 | 새 환경에 wheel 설치 후 체크아웃 밖 실행 | PASS, 임시 seed·HTML·health·canonical import, exit 0 |
 | package contracts | 12 schemas / 62 examples / 14 vectors 구조 검사 PASS |
 
+### 실제 GitHub CI
+
+코드 커밋 `8eba9de12d7279c2784b50cc97c97dbca072c7a8`의 [CI 실행](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/40902657873)이 **success**로 완료됐다. Linux Python 3.11·3.12·3.13, Windows Python 3.12, 배포물 빌드/체크아웃 밖 설치, JS 문법, OSV dependency audit의 7개 job이 성공했다. `Pull request dependency changes`는 push 이벤트에 적용되지 않아 skipped이며 실패를 숨긴 결과가 아니다. 이 결과는 해당 커밋의 합성 테스트 범위이며 PostgreSQL·브라우저·운영 인증 근거가 아니다.
+
 `scripts.windows_checks`는 WinError10014 소켓 초기화만 제한적으로 재시도한다. 서비스 요청/assertion을 재실행하지 않으며, Windows 기본 서버 실행 안정성이나 PG 운영 성능을 증명하지 않는다. 로그는 최초 실패를 포함해 보존했다. 초기 배포물 검사는 이전 dev0와 dev1을 같은 dist에서 세어 실패했고, 버전별 두 파일을 격리해 정상 통과했다. 최초 설치 검사는 기능 assertion 통과 뒤 검증 wrapper가 임시 cwd 안에서 정리하려다 Windows 파일 잠금 오류가 발생했다. cwd를 먼저 복구한 재실행은 exit 0이었다.
 
 서비스 병합 red 기록은 실행 당시 콘솔 관찰을 옮긴 요약이며 원본 stdout으로 가장하지 않는다. reference·감사 ID·canonical red/green과 전체 suite는 실제 raw 출력 파일이다.
 
-브라우저 E2E, PostgreSQL/RLS, 외부 리뷰·실보험·운영 인증·외부 모델·새 OSV 조회는 이번에 수행하지 않았다. CI 설정이 존재하는 것과 원격 CI 통과는 구분하며 원격 결과는 별도로 확인한다.
+브라우저 E2E, PostgreSQL/RLS, 외부 리뷰·실보험·운영 인증·외부 모델은 이번에 수행하지 않았다. OSV 검사는 위 실제 원격 CI에서 수행됐으며 로컬 실행과 구분한다.
 
 ---
 

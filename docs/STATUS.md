@@ -12,7 +12,7 @@
 | 선택한 미승인 특약 보류 | 이번 baseline 보강 | 승인 이력·소급·등록시점·unknown 사실 모델 |
 | 비교 기준선/후보 미완료 처리 | INVALID, 확정 통계 미출력으로 보강 | target paired CI/metadata/gold 분리 |
 | smoke/browser/CLI 안전한 임시 상태 | 보강, 검증 범위는 VALIDATION | 실제 브라우저 설치·클릭 시험 |
-| package/lock/CI/license/docs | hash lock 설치·wheel/sdist·체크아웃 밖 설치 확인, 공개 owner 연결 | 실제 원격 CI 결과 확인·각 플랫폼 검증 |
+| package/lock/CI/license/docs | hash lock·wheel/sdist·설치·공개 owner, Linux 3.11/3.12/3.13 및 Windows 3.12 실제 CI 성공 | 후속 커밋의 CI 지속 확인, 운영·브라우저 검증 별도 |
 | 세부 계약·schema/examples/hash vectors | 제공, 구조 검증 | 미래 서버 enforcement |
 | full-suite immutable run / 실패 뒤 재평가 | PLANNED | G1.5 |
 | preapproval assessment / approval envelope | baseline에서 승인 직전 revision·DOMAIN 결정·감사 참조 고정 | G1.6 target payload refs·source eligibility·snapshot 계약 |

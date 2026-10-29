@@ -56,3 +56,7 @@ Python: .venv/Scripts/python.exe. Node: bundled Node executable. Synthetic tempo
 
 Not run: PostgreSQL/RLS, rendered browser E2E, new external dependency advisory query, actual LLM, real insurance data, independent human review.
 GitHub device codes and authentication credentials are not part of this record.
+
+23. Fresh localhost health/HTML/OpenAPI check: exit0, http_verified.txt. Original9testfiles matched4b8e67c bytes; preserved_tests.json.
+24. Final commit source manifest:204matchesagainstworkingtreeandGitblob. Originalv53:187matches.
+25. GitHub CI run40902657873 at8eba9de: success,7applicablejobs passed,PR-onlydependencyreview skipped. Rawmetadata ci_8eba9de.json. New remote OSV audit succeeded; earlier Not run line refers to local-only phase.
