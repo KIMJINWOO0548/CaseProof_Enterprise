@@ -6,7 +6,7 @@ from pathlib import Path
 
 MANIFEST = 'PACKAGE_MANIFEST_SHA256.json'
 IGNORED_DIRS = {'.git', '.venv', 'venv', '__pycache__', '.pytest_cache', '.ruff_cache',
-                '.mypy_cache', 'reports', 'build', 'dist', 'node_modules', 'archive', '.serena', '.runtime', 'current'}
+                '.mypy_cache', 'reports', 'build', 'dist', 'node_modules', 'archive', '.serena', '.runtime', '.playwright-mcp', 'current'}
 
 
 def source_files(root: Path):

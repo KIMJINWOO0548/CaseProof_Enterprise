@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Script ran on page and returned:\n```json\n{\"check\":\"three distinct actors complete approval, dropped success recovered using exact key/body/revision\",\"passed\":true,\"requests\":[{\"path\":\"/api/changes/d90c9f9e-1ed1-4145-81ea-878fb3f8db72/release-decision\",\"body\":\"{\\\"expected_revision\\\":5,\\\"decision\\\":\\\"APPROVE\\\",\\\"reason\\\":\\\"현업 결정과 두 규정 검증 및 감사 증거의 일치를 확인했습니다.\\\"}\",\"key\":\"31ffa0ef-c486-4bf2-99d9-f196aa4a6a17\",\"status\":200},{\"path\":\"/api/changes/d90c9f9e-1ed1-4145-81ea-878fb3f8db72/release-decision\",\"body\":\"{\\\"expected_revision\\\":5,\\\"decision\\\":\\\"APPROVE\\\",\\\"reason\\\":\\\"현업 결정과 두 규정 검증 및 감사 증거의 일치를 확인했습니다.\\\"}\",\"key\":\"31ffa0ef-c486-4bf2-99d9-f196aa4a6a17\",\"status\":200}],\"change_id\":\"d90c9f9e-1ed1-4145-81ea-878fb3f8db72\",\"record_integrity\":true,\"audit_chain\":true,\"approval_match\":true,\"real_release\":false,\"userAgent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36\"}\n```"
+    }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "Script ran on page and returned:\n```json\n{\"passed\":11,\"checks\":[\"visible controls have accessible labels\",\"status and error containers have live-region semantics\",\"tokens and recovery are absent from persistent browser storage\",\"search empty state\",\"status filter contains only selected state\",\"disposable fixture has at least two changes\",\"late detail cannot overwrite newer selection\",\"late evidence cannot overwrite newer selection\",\"evidence request failure clears previously displayed payload\",\"disconnect invalidates pending list response\",\"role switch focuses token input\"],\"userAgent\":\"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.0.0 Safari/537.36\",\"viewport\":{\"width\":1440,\"height\":1000},\"note\":\"403 was a controlled browser response; other reads used the temporary real server. No production data.\"}\n```"
+    }
+  ]
+}

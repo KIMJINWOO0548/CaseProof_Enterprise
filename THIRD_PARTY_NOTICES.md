@@ -18,6 +18,23 @@ Referenced public standards and research are citations, not a claim that their t
 
 ## Dependencies
 
+### Vendored user-interface assets
+
+`service/static/vendor/tabler-1.7.3/tabler.min.css` is the unmodified core CSS
+from **@tabler/core 1.7.3**, copyright 2018–2026 The Tabler Authors, under MIT.
+Source: [tagged release](https://github.com/tabler/tabler/releases/tag/%40tabler/core%401.7.3)
+and [component documentation](https://docs.tabler.io/ui/components).
+The npm tarball's published SHA-512 integrity was verified before copying the
+stylesheet. `PROVENANCE.json` beside the asset records its origin and file SHA-256.
+The complete MIT notice is retained in `LICENSE.txt` and the CSS banner is intact.
+
+Tabler includes Bootstrap-derived SCSS. `BOOTSTRAP-LICENSE.txt` retains the
+upstream Bootstrap MIT notice; the exact fork baseline is not asserted as a
+resolved package version. No optional Tabler plugins, charts, JavaScript,
+fonts, or third-party network resources are bundled or loaded. Application
+markup adapts documented table, form, card, badge, step and modal structures;
+native browser dialogs supply focus and Escape behavior.
+
 Python dependencies are obtained separately from package indexes; they are not vendored into the project's wheel or source tree. `requirements.lock` and `requirements-dev.lock` record the selected versions and distribution hashes. Each dependency and its transitive dependencies retains its own license. The project's Apache-2.0 license does not relicense them.
 
 Direct runtime projects are [FastAPI](https://github.com/fastapi/fastapi), [Pydantic](https://github.com/pydantic/pydantic), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), and [Uvicorn](https://github.com/encode/uvicorn). Development tooling includes pytest, HTTPX, jsonschema, PyPA build, setuptools, and wheel. Optional browser testing uses Playwright and a separately installed browser. Review the `LICENSE`/`NOTICE` files for the exact resolved distributions, including their transitive components, before redistributing an environment or image. This list is an inventory starting point, not a completed license audit or SBOM.

@@ -1,0 +1,49 @@
+{
+  "passed": true,
+  "minimum": 4.5,
+  "theme": "light, white surface",
+  "results": [
+    {
+      "color": "green",
+      "foreground": [
+        22,
+        101,
+        52
+      ],
+      "background": [
+        234,
+        247,
+        236
+      ],
+      "contrast": 6.4559920751347315
+    },
+    {
+      "color": "red",
+      "foreground": [
+        153,
+        27,
+        27
+      ],
+      "background": [
+        251,
+        235,
+        235
+      ],
+      "contrast": 7.196032792299563
+    },
+    {
+      "color": "yellow",
+      "foreground": [
+        133,
+        77,
+        14
+      ],
+      "background": [
+        254,
+        245,
+        229
+      ],
+      "contrast": 6.331250883192483
+    }
+  ]
+}

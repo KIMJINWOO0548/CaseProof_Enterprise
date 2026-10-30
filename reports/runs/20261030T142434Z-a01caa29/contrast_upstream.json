@@ -1,0 +1,50 @@
+{
+  "mode": "upstream core only; temporary application styles disabled",
+  "passed": false,
+  "minimum": 4.5,
+  "theme": "light, white surface",
+  "results": [
+    {
+      "color": "green",
+      "foreground": [
+        47,
+        179,
+        68
+      ],
+      "background": [
+        234,
+        247,
+        236
+      ],
+      "contrast": 2.4847198514928457
+    },
+    {
+      "color": "red",
+      "foreground": [
+        214,
+        57,
+        57
+      ],
+      "background": [
+        251,
+        235,
+        235
+      ],
+      "contrast": 4.037873730378496
+    },
+    {
+      "color": "yellow",
+      "foreground": [
+        245,
+        159,
+        0
+      ],
+      "background": [
+        254,
+        245,
+        229
+      ],
+      "contrast": 1.9718604142795917
+    }
+  ]
+}

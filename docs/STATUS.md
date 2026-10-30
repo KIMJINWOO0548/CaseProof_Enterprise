@@ -1,4 +1,4 @@
-# 구현 상태 — 5.3.0.dev2
+# 구현 상태 — 5.3.0.dev3
 
 2026-10-30. 사용자 제공 v5.3을 이 저장소의 추가 G1 구현과 병합했다. 아래 ‘현재’는 baseline `/api`를 뜻하며 미래 `/api/v1` route는 아직 없다. [병합 기록](V53_INTEGRATION.md), [VALIDATION](VALIDATION.md)을 함께 읽는다. 입력 패키지 당시 상태는 [보존 기록](evidence/v5.3/input_status.txt)이다.
 
@@ -11,13 +11,13 @@
 | requester-only evaluation / replay | 모든 mutation의 actor 범위 키, 원래 응답 재생, 현재 권한 재검사 | target HTTP 응답·키 형식·mutation 조회 계약 |
 | 선택한 미승인 특약 보류 | 이번 baseline 보강 | 승인 이력·소급·등록시점·unknown 사실 모델 |
 | 비교 기준선/후보 미완료 처리 | INVALID, 확정 통계 미출력으로 보강 | target paired CI/metadata/gold 분리 |
-| smoke/browser/CLI 안전한 임시 상태 | 보강, 검증 범위는 VALIDATION | 실제 브라우저 설치·클릭 시험 |
+| smoke/browser/CLI 안전한 임시 상태 | Chrome MCP에서 실제 3인 승인·응답 유실 복구·DB 확인, 임시 합성 상태만 사용 | 독립 Playwright CLI·사용자 관찰 시험 |
 | package/lock/CI/license/docs | hash lock·wheel/sdist·설치·공개 owner, Linux 3.11/3.12/3.13 및 Windows 3.12 실제 CI 성공 | 후속 커밋의 CI 지속 확인, 운영·브라우저 검증 별도 |
 | 세부 계약·schema/examples/hash vectors | 제공, 구조 검증; G1.1 입력·레코드 DTO와 순수 상태 전이 검증 | 미래 서버 enforcement |
 | full-suite immutable run / 실패 뒤 재평가 | PLANNED | G1.5 |
 | preapproval assessment / approval envelope | baseline에서 승인 직전 revision·DOMAIN 결정·감사 참조 고정 | G1.6 target payload refs·source eligibility·snapshot 계약 |
 | PostgreSQL/RLS/migration/경합 | PLANNED | G2 |
-| linked correction UI/완전 접근성 | PLANNED | G4 |
+| 검토 UI / linked correction / 접근성 | Tabler 1.7.3 표·폼·승인창·증거 요약, 라벨/초점/상태 대비 검사 | G4의 linked correction·완전 접근성·사용자 관찰 시험 |
 | 실제 LLM/RAG/parser/agent | PLANNED, 외부 호출 없음 | G5 |
 | 160/80/120 독립 검수·비노출 실험 | PLANNED; 공개 20 사례와 다름 | G5 + 실제 검수자/holdout |
 | SSO/MFA, 외부 WORM/signing, backup drill | PLANNED | G6 및 별도 운영 검증 |
@@ -26,7 +26,7 @@
 
 G1.1의 canonical·DTO·순수 상태기계 체크리스트를 구현·검증했다. strict command/header 및 case context, ChangeRevision·DecisionNote·EvaluationRun 타입, 불변 command context, 안전한 오류 형식과 7종 전이를 추가했다. 입력 날짜·사유·기본값을 정규화하고, 저장 레코드는 정규형 그대로인지 검사한다. 고정 14개 canonical vector와 기존 `digest()`는 보존한다. [모듈 경계](V1_FOUNDATION.md)를 함께 읽는다.
 
-이번 전체 실행은 **455개 테스트와 하위 검사 22개 통과**, 스모크 **12/12**다. 새 DTO·전이 검사는 150개다. Windows의 소켓 초기화만 재시도하는 실행기를 사용했고 기존 Starlette 경고 1개가 남아 있다. 원본 v5.3의 Linux 221개 결과와 합산하지 않는다.
+이번 전체 실행은 **456개 테스트와 하위 검사 22개 통과**, 스모크 **12/12**다. 새 DTO·전이 검사는 150개다. UI의 실제 Tabler asset 경로·라이선스·패키지 포함 여부도 검사한다. [화면 범위](UI_WORKSPACE.md)를 참고한다. Windows의 소켓 초기화만 재시도하는 실행기를 사용했고 기존 Starlette 경고 1개가 남아 있다. 원본 v5.3의 Linux 221개 결과와 합산하지 않는다.
 
 다음은 G1.2의 불변 테이블과 신규 DB migration이다. 현재 v1 상태기계는 DB를 쓰지 않으며, 전달받은 내부 검증 결과를 현재 snapshot/run hash에 결합한다. 이 결과의 실제 이력 재구성·full-suite gate 계산은 G1.3/G1.5에서 구현해야 한다. `/api/v1` HTTP enforcement는 G1.4의 별도 검증 대상이다.
 

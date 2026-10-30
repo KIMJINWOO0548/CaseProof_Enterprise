@@ -26,6 +26,10 @@ RUNTIME_FILES = {
     "service/api/schemas_v1.py",
     "service/api/errors.py",
     "service/static/index.html",
+    "service/static/vendor/tabler-1.7.3/tabler.min.css",
+    "service/static/vendor/tabler-1.7.3/LICENSE.txt",
+    "service/static/vendor/tabler-1.7.3/BOOTSTRAP-LICENSE.txt",
+    "service/static/vendor/tabler-1.7.3/PROVENANCE.json",
     "reference/__init__.py",
     "reference/resolver.py",
     "reference/verify_answer.py",
@@ -139,18 +143,20 @@ def check_installed() -> None:
                 await app(scope, receive, send)
                 return messages
 
-            for path in ("/", "/api/health"):
+            for path in ("/", "/api/health", "/static/vendor/tabler-1.7.3/tabler.min.css"):
                 messages = asyncio.run(request(path))
                 require(any(m["type"] == "http.response.start" and m["status"] == 200 for m in messages),
                         f"Installed application did not serve {path}")
                 body = b"".join(m.get("body", b"") for m in messages if m["type"] == "http.response.body")
                 if path == "/":
                     require(b"CaseProof" in body, "Installed static HTML was not served.")
-                else:
+                elif path == "/api/health":
                     health = json.loads(body)
                     require(health.get("llm_connected") is False and
                             health.get("real_insurance_decisions") is False,
                             "Unexpected demo health claims.")
+                else:
+                    require(b"Tabler v1.7.3" in body, "Installed open-source UI stylesheet was not served.")
             require(len(DATASET_HASH) == len(EVALUATOR_HASH) == 64,
                     "Installed source/dataset hashing failed.")
         finally:

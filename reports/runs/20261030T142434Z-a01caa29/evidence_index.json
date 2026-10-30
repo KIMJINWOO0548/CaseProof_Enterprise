@@ -1,0 +1,129 @@
+{
+  "notice": "Actual command/browser outputs, with LF line endings. Optional Playwright Python CLI failed on missing package; MCP browser checks are separate. No credentials included.",
+  "files": {
+    "artifacts.json": {
+      "bytes": 318,
+      "sha256": "07375cc9f3614fcbb673338ff6a261f72258d5173a8306d746f6a8d132abd702"
+    },
+    "browser_approval.json": {
+      "bytes": 1206,
+      "sha256": "f561ec60fac69df70ca832e5b22c715bdea8579d01b12089f6bfbf5323c5d863"
+    },
+    "browser_database_assertions.json": {
+      "bytes": 385,
+      "sha256": "e888aaad47b4ab0070df2a29fd28ea6b69df923d82c115df77beacfc795d3816"
+    },
+    "browser_probes.json": {
+      "bytes": 980,
+      "sha256": "ea9f6002675667c168f1075095f31ab87de68e693594fa4165e0bf553bfeaeee"
+    },
+    "browser_xss.json": {
+      "bytes": 191,
+      "sha256": "faf22a300ba79293d90f8d16f3746badaf4ef052d3837b5e72eed0479a54e2a6"
+    },
+    "build_dev3.txt": {
+      "bytes": 38799,
+      "sha256": "90f47bd5b1801f66f3dbdb20b435240b0273f5305bd59d70e6d6b8ba6ed8ab79"
+    },
+    "contrast_corrected.json": {
+      "bytes": 720,
+      "sha256": "66c87f61d9539ae5aa30779d9350172c86052f8b0e3c1fc2380309adc465ad8c"
+    },
+    "contrast_upstream.json": {
+      "bytes": 793,
+      "sha256": "89b20f39eb47999fe8a5fe276f8d17da46a6f494ed29821296ebb8a9d5ea153d"
+    },
+    "distribution_dev3.txt": {
+      "bytes": 133,
+      "sha256": "e6bd28dd2cb55f4cd8b8972c6f1a7621c38257acdce400228a62e64a29fdf388"
+    },
+    "installed_dev3.txt": {
+      "bytes": 125,
+      "sha256": "e715f6b70cf8fa1eba8b2766443cf6b9115c0fa52bb4b76137f98b8554f591dc"
+    },
+    "integration_smoke.json": {
+      "bytes": 1178,
+      "sha256": "515be0a27fe1f0de3c02b862124bc2a458e5e1676fb17a0802a9b6e3b69b6b8b"
+    },
+    "manifest_final.txt": {
+      "bytes": 86,
+      "sha256": "2804f02009fc37effdd7d36e018fa8a57c7cfbc826b3b3a691274150de9f00e9"
+    },
+    "optional_playwright.txt": {
+      "bytes": 466,
+      "sha256": "bbfa11414504abe203a0f84601c016c6a2a869ec3338588943e5b40ae8fc5434"
+    },
+    "package_final.txt": {
+      "bytes": 197,
+      "sha256": "f6d3393416f4c15cf58cdd5dc571bbeaefee1e3bb120ef551096239504502de9"
+    },
+    "pytest.txt": {
+      "bytes": 1123,
+      "sha256": "1613c366c142d34392bdfebfc7ecb4d5f755f2a8ca4934a0e9f0cce8ac676a5e"
+    },
+    "pytest_final.txt": {
+      "bytes": 1133,
+      "sha256": "032f37ca6ef673a6f3382bc9517c6f408d1f6d7ecafbe69ead3364d2dbc0cec6"
+    },
+    "pytest_tabler.txt": {
+      "bytes": 1133,
+      "sha256": "a48e673acba45c98e611108a51bb93e980e6552fa3794922a3767efbafc4687a"
+    },
+    "responsive_final.json": {
+      "bytes": 517,
+      "sha256": "4dbd4382bc8a3b9c4939f08ad2a0b32ed65156ee01c6fc8bf439475d00256222"
+    },
+    "smoke.txt": {
+      "bytes": 446,
+      "sha256": "2ad1b5c6f99a88d67007f3acea35a25578a0a4d04e71c18a61beddcde774dae5"
+    },
+    "tabler_browser_checks.json": {
+      "bytes": 913,
+      "sha256": "8a7e7946a351625e21ca46366904cfe9dab121e66659d643336ab82f051076ed"
+    },
+    "tabler_database_assertions.json": {
+      "bytes": 275,
+      "sha256": "0ab0ad318168373cc04d8d099ba886b87897a3d339a5c99f0ee1a4f74fea4ebd"
+    },
+    "tabler_green.txt": {
+      "bytes": 648,
+      "sha256": "7d011352e790d29be92f8507d14f7523cb98e03d2b4a23cfa3f1bdb06e67141e"
+    },
+    "tabler_red.txt": {
+      "bytes": 2250,
+      "sha256": "24af31adaece863c02a591f3d52c44e8ebfad865f145fab11f7d5e829e894094"
+    },
+    "tabler_workflow.json": {
+      "bytes": 1653,
+      "sha256": "b89617a34e988f4e1e70d99236561c580445f3de0ed2947f1ca106a224b49252"
+    },
+    "tabler_workflow_first_attempt.json": {
+      "bytes": 646,
+      "sha256": "3e593f7b6ccf12ebfe00f27b3045544e3afd6dc53d0b48a9287b4f30d74b2f20"
+    },
+    "ui_request_green.txt": {
+      "bytes": 118,
+      "sha256": "48a33b4202f954c0fa561d6e89b4e71c657cb5aca7c8c80d491d677c6e703161"
+    },
+    "ui_request_red.txt": {
+      "bytes": 319,
+      "sha256": "cdded27fb8a16079bf218db8de661c690edf72623c62de0656643ec842dcb9de"
+    },
+    "ui_retry_final.txt": {
+      "bytes": 119,
+      "sha256": "8ed6c42608db0b250a66cd1643b42ee762677fdc51f98202a530c75a1b00e402"
+    },
+    "ui_syntax.txt": {
+      "bytes": 83,
+      "sha256": "3e28e92a86f87fc15896274bc82348ffc8fdc895ff172052542477ae6bb34b88"
+    },
+    "ui_syntax_final.txt": {
+      "bytes": 83,
+      "sha256": "3e28e92a86f87fc15896274bc82348ffc8fdc895ff172052542477ae6bb34b88"
+    },
+    "wheel_install_dev3.txt": {
+      "bytes": 470,
+      "sha256": "0a0d2c9bd4f06ff3dcd699bdf2924eb15abdc456cec7f99acdfb3ab794a19312"
+    }
+  }
+}

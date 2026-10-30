@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.3.0.dev3 — 2026-10-30
+
+- Adopt the actual Tabler 1.7.3 MIT stylesheet and standard tables, forms, cards, badges, steps and modal markup; serve assets locally with retained notices and published integrity metadata.
+- Add request search/status filtering, decision reason dialogs and separate evidence checks. Guard selection/session races and provide actor-scoped in-memory recovery of the exact original mutation after response loss.
+- Preserve baseline API behavior and verify the three-person workflow in a real Chrome session, including committed-response loss, role switching and one release note in the disposable database.
+- Test the vendor route, distribution assets, accessible form labels, focus, small-label contrast, and narrow-screen overflow. Browser CLI and full G4/user-study gates remain separate.
+
 ## 5.3.0.dev2 — 2026-10-30
 
 - Add isolated strict v1 command/header, case-context, revision, note and run DTOs, canonical defaults, UTC normalization and safe error payloads.

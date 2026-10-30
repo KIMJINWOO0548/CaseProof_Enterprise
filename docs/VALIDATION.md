@@ -1,5 +1,30 @@
 # 검증 결과 — 5.3.0.dev0
 
+## 5.3.0.dev3 — Tabler 검토 화면
+
+Windows / Python 3.12.10 / Chrome 156 / 임시 합성 SQLite. [새 로그](../reports/runs/20261030T142434Z-a01caa29/)와 [화면 범위](UI_WORKSPACE.md)를 함께 읽는다. UI 자체와 승인 기록을 실제 브라우저에서 조작했고, DB에서도 결과를 확인했다.
+
+| 검사 | 실제 결과 |
+| --- | --- |
+| 최종 전체 pytest | **456 passed + 22 subtests passed**, exit 0; 기존 deprecation 경고 1개 |
+| 새 UI asset 회귀 | 페이지의 stylesheet 부재로 1 failed → 실제 경로·원본 SHA-256·라이선스·경로 탈출 차단 1 passed |
+| Node 실제 요청 함수 | 중복 클릭 때 2회 전송하는 실패 관찰 → 동시 전송 공유·actor 범위·원래 키 재시도·세션 무효화 PASS |
+| 실제 브라우저 승인 시나리오 | **12개 assertion PASS**: 생성→서로 다른 규정 2개→현업 검토→다른 최종 승인자→증거 |
+| 응답 유실 | 실제 commit 뒤 성공 응답만 폐기; 역할 전환 후 원래 actor가 동일 key/body/revision으로 복구 |
+| DB 교차 확인 | 최종 revision 6, 전이 1–6, 서로 다른 담당자 3명, 결정 2개, RELEASE note 1개 |
+| 브라우저 보조 검사 | **11개 assertion PASS**: 검색·필터·라벨·live region·세션/상세/증거 응답 순서·실패 시 payload 제거 |
+| XSS / 잘못된 입력 | 저장된 markup 제목을 text로 렌더링; 실제 서버 422를 표시하고 입력 폼 유지 |
+| 반응형 | Tabler 최종 화면 375/768/1024/1440 viewport에서 `scrollWidth <= clientWidth` 확인; 이미지도 실제 캡처 |
+| 상태 글자 대비 | upstream 작은 badge 1.97–4.04:1 관찰 → 앱 색 보정 후 녹색 6.46 / 적색 7.20 / 황색 6.33:1 |
+| 외부 UI 리소스 | 해당 Chrome 실행의 외부 origin 리소스 0개; Tabler CSS는 local route에서 제공 |
+| 빌드 / 배포물 내용 / 격리 설치 | 5.3.0.dev3 wheel·sdist PASS, vendor CSS·MIT notices 포함; 체크아웃 밖 seed·HTML·health·stylesheet 응답 PASS |
+
+전체 suite는 `scripts.windows_checks`를 사용했고 최종 소켓 초기화 재시도는 366회였다. HTTP/assertion을 재시도한 것은 아니다. UI probe 첫 시도는 이전 mutation 완료 전에 disabled 역할 전환 버튼을 눌러 실패했다. probe가 작업 완료를 기다리도록 수정한 재실행은 통과했다. CSS 없는 `about:blank`에서 나온 대비 값은 유효 검증으로 집계하지 않았고, probe에 stylesheet 부재 거부를 추가했다. 모바일 4px overflow는 Tabler `row-cards` 배치로 수정했다.
+
+Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwright MCP로 화면 크기 검사·실제 캡처를 수행했다. 별도 Python `scripts.browser_e2e`는 Playwright 패키지 부재로 exit 1이며 **미실행**으로 취급한다. MCP 브라우저 실행과 이 CLI를 구별한다. 새 Python/npm 패키지 설치나 전역 변경은 없었다. 기본 favicon 404 및 입력 오류 시험의 422는 관찰했으며 콘솔 전체가 무오류였다고 주장하지 않는다.
+
+이는 baseline `/api`의 UI 검증이다. 신규 v1 HTTP/DB, PostgreSQL/RLS, 완전 접근성 인증, 독립 사용자 관찰·외부 전문가 검수 및 운영 검증은 미완료다. 내부 AI 검토는 외부 검수로 집계하지 않는다. 페이지 새로고침 시 메모리의 토큰·미확인 요청 복구 정보가 사라지는 제약이 남는다.
+
 ## 5.3.0.dev2 G1.1 — 2026-10-30 KST
 
 실행은 Windows / Python 3.12.10 / 프로젝트 가상환경이다. [이번 run](../reports/runs/20261029T154037Z-4b5b5b75/)은 10월 29일 UTC에 시작해 30일 UTC에 이어서 수행했다. v1 테스트는 DB 없이 실행하며 기존 HTTP 회귀는 임시 합성 SQLite를 사용했다.
@@ -23,7 +48,7 @@
 
 아직 하지 않은 검사: 실제 v1 HTTP/DB integration, PostgreSQL/RLS, 브라우저 E2E, 실제 모델·운영 환경. 이 구현은 내부 `TransitionChecks` 값 자체를 증거로 인증하지 않는다. 검증된 DB 이력과 gate를 생성하는 executor가 필요하며 [범위와 호출 계약](V1_FOUNDATION.md)에 명시했다. 기존 14개 canonical vector는 전체 suite에 포함된다.
 
-코드 검증 후 변경한 README·평가표·상태/검증 문서는 기능 검사를 재실행한 것으로 보고하지 않는다. 패키지 구조와 source manifest는 최종 문서에서 별도로 재검사한다. 이번 CI 결과는 확인 후 추가한다.
+코드 커밋 `0678bfa`의 [CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41070957936)는 7개 job success, PR 전용 dependency review는 skipped였다. 후속 UI 커밋과 구분한다. 코드 검증 후 변경한 README·평가표·상태/검증 문서는 기능 검사를 재실행한 것으로 보고하지 않는다.
 
 ## 5.3.0.dev1 통합 — 2026-10-30 KST
 

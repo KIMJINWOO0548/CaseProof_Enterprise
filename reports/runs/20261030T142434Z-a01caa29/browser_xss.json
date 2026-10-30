@@ -1,0 +1,6 @@
+{
+  "check": "server-stored markup title renders as text; evaluation labels associated",
+  "passed": true,
+  "persistedTitle": "<img src=x onerror=window.__titleXss=1>",
+  "liveRegions": 8
+}

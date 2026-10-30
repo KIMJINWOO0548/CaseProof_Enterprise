@@ -1,0 +1,20 @@
+{
+  "change_id": "d90c9f9e-1ed1-4145-81ea-878fb3f8db72",
+  "status": "APPROVED_FOR_DEMO",
+  "revision": 6,
+  "requester": "aurora-analyst",
+  "reviewer": "aurora-reviewer",
+  "approver": "aurora-approver",
+  "decision_count": 2,
+  "transition_count": 6,
+  "transition_revisions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "release_note_count": 1,
+  "temporary_database": true
+}

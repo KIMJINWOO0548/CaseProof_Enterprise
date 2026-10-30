@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "caseproof-local-demo"
-version = "5.3.0.dev2"
+version = "5.3.0.dev3"
 description = "Synthetic insurance-rule verification and human-review research prototype"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
@@ -45,7 +45,7 @@ include-package-data = false
 dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.package-data]
-service = ["static/*.html", "static/*.css", "static/*.js"]
+service = ["static/*.html", "static/*.css", "static/*.js", "static/vendor/tabler-1.7.3/*"]
 datasets = ["*.json"]
 
 [tool.pytest.ini_options]

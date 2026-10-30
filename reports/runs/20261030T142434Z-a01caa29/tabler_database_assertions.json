@@ -1,0 +1,17 @@
+{
+  "change_id": "a23f1cf3-a978-424d-926c-8e056ec64399",
+  "status": "APPROVED_FOR_DEMO",
+  "revision": 6,
+  "decisions": 2,
+  "transition_revisions": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
+  ],
+  "distinct_actors": 3,
+  "release_notes": 1,
+  "disposable_sqlite": true
+}

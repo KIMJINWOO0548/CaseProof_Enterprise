@@ -1,0 +1,4 @@
+{
+  "raw": "Error: Tabler-styled native decision dialog focuses reason\nassert (pptr:evaluateHandle;performEvaluation%20(file%3A%2F%2F%2FC%3A%2FUsers%2F%25EA%25B9%2580%25EC%25A7%2584%25EC%259A%25B0%2F.codex%2Ftools%2Fnpm-mcp-cache%2F_npx%2Ff8965a27fe43dc9b%2Fnode_modules%2Fchrome-devtools-mcp%2Fbuild%2Fsrc%2Ftools%2Fscript.js%3A233%3A73):7:54)\nscenario (pptr:evaluateHandle;performEvaluation%20(file%3A%2F%2F%2FC%3A%2FUsers%2F%25EA%25B9%2580%25EC%25A7%2584%25EC%259A%25B0%2F.codex%2Ftools%2Fnpm-mcp-cache%2F_npx%2Ff8965a27fe43dc9b%2Fnode_modules%2Fchrome-devtools-mcp%2Fbuild%2Fsrc%2Ftools%2Fscript.js%3A233%3A73):24:30)",
+  "isError": true
+}

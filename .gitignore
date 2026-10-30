@@ -57,4 +57,5 @@ Thumbs.db
 # Preserved local tools/runtime, not source distributions.
 .serena/
 .runtime/
+.playwright-mcp/
 current/

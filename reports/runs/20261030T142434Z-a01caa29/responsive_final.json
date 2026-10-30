@@ -1,0 +1,30 @@
+[
+  {
+    "viewport": 375,
+    "clientWidth": 360,
+    "scrollWidth": 360,
+    "workspaceVisible": true,
+    "passed": true
+  },
+  {
+    "viewport": 768,
+    "clientWidth": 753,
+    "scrollWidth": 753,
+    "workspaceVisible": true,
+    "passed": true
+  },
+  {
+    "viewport": 1024,
+    "clientWidth": 1009,
+    "scrollWidth": 1009,
+    "workspaceVisible": true,
+    "passed": true
+  },
+  {
+    "viewport": 1440,
+    "clientWidth": 1425,
+    "scrollWidth": 1425,
+    "workspaceVisible": true,
+    "passed": true
+  }
+]

@@ -14,3 +14,6 @@
 *.pdf binary
 *.docx binary
 *.zip binary
+
+# Preserve upstream asset bytes and recorded SHA-256 across checkout platforms.
+service/static/vendor/** -text

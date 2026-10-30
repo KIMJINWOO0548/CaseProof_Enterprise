@@ -12,6 +12,7 @@ from typing import Annotated
 from fastapi import FastAPI, Depends, HTTPException, Header, Security, Request
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.responses import FileResponse
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select, update
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import OperationalError
@@ -326,6 +327,8 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         except Exception:
             db.rollback()
             raise
+
+    app.mount('/static', StaticFiles(directory=ROOT/'service'/'static'), name='static')
 
     @app.get('/')
     def dashboard():

@@ -4,7 +4,7 @@
 
 CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
 
-**Release: `5.3.0.dev2` — local prototype + v1 domain foundation.** The `/api` demo runs today. Strict DTOs and a pure state machine begin the future `/api/v1` system specified in [prebuild](prebuild/01_TARGET_DESIGN.md); its HTTP routes and persistence are not implemented yet. “Enterprise” in the original package name is an ambition, not a support or compliance claim.
+**Release: `5.3.0.dev3` — review workspace + v1 domain foundation.** The `/api` demo runs today. Strict DTOs and a pure state machine begin the future `/api/v1` system specified in [prebuild](prebuild/01_TARGET_DESIGN.md); its HTTP routes and persistence are not implemented yet. “Enterprise” in the original package name is an ambition, not a support or compliance claim.
 
 합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
 
@@ -15,6 +15,14 @@ CaseProof checks a numeric claim against versioned synthetic rules, records the 
 - `PASS` means the tested numeric claim matched a synthetic rule. `APPROVED_FOR_DEMO` never deploys software or authorizes a real claim.
 
 한국어 시작 안내: [START_HERE.md](START_HERE.md). Codex 구현 진입점: [AGENTS.md](AGENTS.md), [실행 프롬프트](prebuild/05_CODEX_KICKOFF.md).
+
+## Review workspace
+
+The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), with the MIT stylesheet and notices included locally. Searchable request tables, evaluation results, decision forms and evidence checks use its standard components. No CDN or external font is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. See [UI scope and validation](docs/UI_WORKSPACE.md).
+
+![CaseProof review workspace with a filtered synthetic change and verified evidence](docs/images/review-workspace.jpg)
+
+[Narrow-screen capture](docs/images/review-mobile.jpg). Screenshots show an actual temporary synthetic workflow; counts and approvals are recorded test data.
 
 ## Quick start
 

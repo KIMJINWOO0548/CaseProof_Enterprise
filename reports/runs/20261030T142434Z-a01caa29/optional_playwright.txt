@@ -1,0 +1,9 @@
+Traceback (most recent call last):
+  File "<frozen runpy>", line 198, in _run_module_as_main
+  File "<frozen runpy>", line 88, in _run_code
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\scripts\browser_e2e.py", line 131, in <module>
+    main()
+  File "C:\Users\김진우\Desktop\CaseProof_Enterprise\scripts\browser_e2e.py", line 23, in main
+    from playwright.sync_api import sync_playwright
+ModuleNotFoundError: No module named 'playwright'
+exit_code=1

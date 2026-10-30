@@ -1,0 +1,13 @@
+AssertionError [ERR_ASSERTION]: double submit must share one in-flight request
+
+2 !== 1
+
+    at C:\Users\김진우\Desktop\CaseProof_Enterprise\scripts\check_ui_retries.cjs:88:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: 2,
+  expected: 1,
+  operator: 'strictEqual',
+  diff: 'simple'
+}
+exit_code=1

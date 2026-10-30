@@ -12,6 +12,8 @@ const prefix = script.slice(script.indexOf("'use strict';"), script.indexOf('\nf
 function client(fetch) {
   const context = vm.createContext({fetch, crypto:{randomUUID}});
   vm.runInContext(prefix + '\ntoken="synthetic-test-token";globalThis.request=api;', context);
+  context.request.setActor=actor=>vm.runInContext('me='+JSON.stringify(actor),context);
+  context.request.nextSession=()=>vm.runInContext('sessionGeneration++',context);
   return context.request;
 }
 function response(status=200, data={replayed:false}) {
@@ -74,5 +76,39 @@ function response(status=200, data={replayed:false}) {
   await assert.rejects(partial('/api/changes', {method:'POST',body:{title:'partial'}}));
   await partial('/api/changes', {method:'POST',body:{title:'partial'}});
   assert.equal(incomplete[0],incomplete[1],'incomplete success body must preserve the key');
+
+  let resolveResponse;
+  const concurrentSends=[];
+  const concurrent=client(async (_url,options)=>{
+    concurrentSends.push(options);
+    return await new Promise(resolve=>{resolveResponse=resolve;});
+  });
+  const first=concurrent('/api/changes',{method:'POST',body:{title:'concurrent'}});
+  const second=concurrent('/api/changes',{method:'POST',body:{title:'concurrent'}});
+  assert.equal(concurrentSends.length,1,'double submit must share one in-flight request');
+  resolveResponse(response());
+  await Promise.all([first,second]);
+
+  const scopedKeys=[];
+  const scoped=client(async (_url,options)=>{
+    scopedKeys.push(options.headers['Idempotency-Key']);
+    throw new TypeError('synthetic response loss');
+  });
+  scoped.setActor({id:'analyst-a',tenant_id:'tenant-a'});
+  await assert.rejects(scoped('/api/changes',options));
+  scoped.setActor({id:'analyst-b',tenant_id:'tenant-a'});
+  await assert.rejects(scoped('/api/changes',options));
+  scoped.setActor({id:'analyst-a',tenant_id:'tenant-a'});
+  await assert.rejects(scoped('/api/changes',options));
+  assert.notEqual(scopedKeys[0],scopedKeys[1],'pending keys belong to one authenticated actor');
+  assert.equal(scopedKeys[0],scopedKeys[2],'returning actor retains the original recovery key');
+
+  let finishLate;
+  const late=client(async ()=>await new Promise(resolve=>{finishLate=resolve;}));
+  const delayed=late('/api/changes');
+  const rejected=assert.rejects(delayed,error=>error.sessionChanged===true);
+  late.nextSession();
+  finishLate(response(200,[{id:'old-session-record'}]));
+  await rejected;
   console.log('UI request retry contract: PASS (lost response, completed request, GET, retryable conflict, changed body)');
 })().catch(error=>{console.error(error);process.exitCode=1;});
