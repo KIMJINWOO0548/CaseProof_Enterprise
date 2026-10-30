@@ -1,0 +1,506 @@
+* Getting build dependencies for sdist...
+running egg_info
+writing caseproof_local_demo.egg-info\PKG-INFO
+writing dependency_links to caseproof_local_demo.egg-info\dependency_links.txt
+writing entry points to caseproof_local_demo.egg-info\entry_points.txt
+writing requirements to caseproof_local_demo.egg-info\requires.txt
+writing top-level names to caseproof_local_demo.egg-info\top_level.txt
+reading manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.css' under directory 'service'
+warning: no files found matching '*.js' under directory 'service'
+warning: no files found matching '*.yaml' under directory 'docs'
+warning: no files found matching '*.yml' under directory 'docs'
+warning: no files found matching '*.json' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory 'prebuild'
+warning: no files found matching '*.yml' under directory 'prebuild'
+warning: no files found matching '*.csv' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory '.github'
+warning: no previously-included files matching '__pycache__' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '*.sqlite*' found anywhere in distribution
+warning: no previously-included files matching '*.db' found anywhere in distribution
+warning: no previously-included files matching '.env' found anywhere in distribution
+warning: no previously-included files matching '.env.*' found anywhere in distribution
+no previously-included directories found matching 'reports'
+no previously-included directories found matching 'evidence'
+no previously-included directories found matching '.venv'
+no previously-included directories found matching '.git'
+no previously-included directories found matching 'archive'
+no previously-included directories found matching '.serena'
+no previously-included directories found matching '.runtime'
+no previously-included directories found matching 'current'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'THIRD_PARTY_NOTICES.md'
+writing manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+* Building sdist...
+running sdist
+running egg_info
+writing caseproof_local_demo.egg-info\PKG-INFO
+writing dependency_links to caseproof_local_demo.egg-info\dependency_links.txt
+writing entry points to caseproof_local_demo.egg-info\entry_points.txt
+writing requirements to caseproof_local_demo.egg-info\requires.txt
+writing top-level names to caseproof_local_demo.egg-info\top_level.txt
+reading manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.css' under directory 'service'
+warning: no files found matching '*.js' under directory 'service'
+warning: no files found matching '*.yaml' under directory 'docs'
+warning: no files found matching '*.yml' under directory 'docs'
+warning: no files found matching '*.json' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory 'prebuild'
+warning: no files found matching '*.yml' under directory 'prebuild'
+warning: no files found matching '*.csv' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory '.github'
+warning: no previously-included files matching '__pycache__' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '*.sqlite*' found anywhere in distribution
+warning: no previously-included files matching '*.db' found anywhere in distribution
+warning: no previously-included files matching '.env' found anywhere in distribution
+warning: no previously-included files matching '.env.*' found anywhere in distribution
+no previously-included directories found matching 'reports'
+no previously-included directories found matching 'evidence'
+no previously-included directories found matching '.venv'
+no previously-included directories found matching '.git'
+no previously-included directories found matching 'archive'
+no previously-included directories found matching '.serena'
+no previously-included directories found matching '.runtime'
+no previously-included directories found matching 'current'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'THIRD_PARTY_NOTICES.md'
+writing manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+running check
+creating caseproof_local_demo-5.3.0.dev2
+creating caseproof_local_demo-5.3.0.dev2\.github
+creating caseproof_local_demo-5.3.0.dev2\.github\ISSUE_TEMPLATE
+creating caseproof_local_demo-5.3.0.dev2\.github\workflows
+creating caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+creating caseproof_local_demo-5.3.0.dev2\contracts
+creating caseproof_local_demo-5.3.0.dev2\contracts\examples
+creating caseproof_local_demo-5.3.0.dev2\datasets
+creating caseproof_local_demo-5.3.0.dev2\docs
+creating caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+creating caseproof_local_demo-5.3.0.dev2\docs\provenance
+creating caseproof_local_demo-5.3.0.dev2\prebuild
+creating caseproof_local_demo-5.3.0.dev2\reference
+creating caseproof_local_demo-5.3.0.dev2\scripts
+creating caseproof_local_demo-5.3.0.dev2\service
+creating caseproof_local_demo-5.3.0.dev2\service\api
+creating caseproof_local_demo-5.3.0.dev2\service\domain
+creating caseproof_local_demo-5.3.0.dev2\service\static
+creating caseproof_local_demo-5.3.0.dev2\tests
+creating caseproof_local_demo-5.3.0.dev2\tests\fixtures
+creating caseproof_local_demo-5.3.0.dev2\tests\v1
+copying files to caseproof_local_demo-5.3.0.dev2...
+copying .dockerignore -> caseproof_local_demo-5.3.0.dev2
+copying .editorconfig -> caseproof_local_demo-5.3.0.dev2
+copying .gitattributes -> caseproof_local_demo-5.3.0.dev2
+copying .gitignore -> caseproof_local_demo-5.3.0.dev2
+copying AGENTS.md -> caseproof_local_demo-5.3.0.dev2
+copying CHANGELOG.md -> caseproof_local_demo-5.3.0.dev2
+copying CODE_OF_CONDUCT.md -> caseproof_local_demo-5.3.0.dev2
+copying CONTRIBUTING.md -> caseproof_local_demo-5.3.0.dev2
+copying Dockerfile -> caseproof_local_demo-5.3.0.dev2
+copying LICENSE -> caseproof_local_demo-5.3.0.dev2
+copying MANIFEST.in -> caseproof_local_demo-5.3.0.dev2
+copying NOTICE -> caseproof_local_demo-5.3.0.dev2
+copying README.md -> caseproof_local_demo-5.3.0.dev2
+copying SECURITY.md -> caseproof_local_demo-5.3.0.dev2
+copying START_HERE.md -> caseproof_local_demo-5.3.0.dev2
+copying THIRD_PARTY_NOTICES.md -> caseproof_local_demo-5.3.0.dev2
+copying VERIFY_PACKAGE.py -> caseproof_local_demo-5.3.0.dev2
+copying compose.yaml -> caseproof_local_demo-5.3.0.dev2
+copying pyproject.toml -> caseproof_local_demo-5.3.0.dev2
+copying requirements-browser.lock -> caseproof_local_demo-5.3.0.dev2
+copying requirements-browser.txt -> caseproof_local_demo-5.3.0.dev2
+copying requirements-dev.lock -> caseproof_local_demo-5.3.0.dev2
+copying requirements-dev.txt -> caseproof_local_demo-5.3.0.dev2
+copying requirements.lock -> caseproof_local_demo-5.3.0.dev2
+copying requirements.txt -> caseproof_local_demo-5.3.0.dev2
+copying .github\dependabot.yml -> caseproof_local_demo-5.3.0.dev2\.github
+copying .github\pull_request_template.md -> caseproof_local_demo-5.3.0.dev2\.github
+copying .github\ISSUE_TEMPLATE\bug_report.yml -> caseproof_local_demo-5.3.0.dev2\.github\ISSUE_TEMPLATE
+copying .github\ISSUE_TEMPLATE\feature_request.yml -> caseproof_local_demo-5.3.0.dev2\.github\ISSUE_TEMPLATE
+copying .github\workflows\ci.yml -> caseproof_local_demo-5.3.0.dev2\.github\workflows
+copying caseproof_local_demo.egg-info\PKG-INFO -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying caseproof_local_demo.egg-info\SOURCES.txt -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying caseproof_local_demo.egg-info\dependency_links.txt -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying caseproof_local_demo.egg-info\entry_points.txt -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying caseproof_local_demo.egg-info\requires.txt -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying caseproof_local_demo.egg-info\top_level.txt -> caseproof_local_demo-5.3.0.dev2\caseproof_local_demo.egg-info
+copying contracts\README.md -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\approval-envelope.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\assessment-manifest.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\audit-event.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\case-context.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\change-revision.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\change-transition.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\commands.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\common.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\decision-note.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\error.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\evaluation-run.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\http-negative-cases.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\mutation-fingerprint.schema.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\requirements-traceability.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\state-machine.json -> caseproof_local_demo-5.3.0.dev2\contracts
+copying contracts\examples\assessment-self-hash.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\assessment-structural.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\audit-genesis.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\audit-invalid-genesis-hash.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-forbidden-actor_id.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-forbidden-expected_revision.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-forbidden-owner_id.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-forbidden-roles.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-forbidden-tenant_id.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-invalid-id-newline.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-invalid-uuid.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-minimal.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-parent-unpaired.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\create-parent.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-approve.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-blank.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-missing-reason.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-note-domain-assessment.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-note-domain.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-note-release.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-reject.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-short-reason.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-trim-short.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\decision-unknown-property.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\envelope-self-hash.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\envelope-structural.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\error-private-detail.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\error-stale.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-boolean.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-forbidden-answer.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-fractional.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-integral-float.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-negative.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-string.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-too-large.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-unknown-context.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\evaluation-valid.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\fingerprint-create-revision.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\fingerprint-create.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-create-revision.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-create-valid.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-key-newline.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-leading-zero.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-missing-key.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-missing-revision.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\headers-mutation-valid.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\index.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\run-complete.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\run-incomplete-false-pass.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\run-incomplete.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\snapshot-envelope-cycle.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\snapshot-genesis.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\snapshot-missing-null.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\submit-empty.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\submit-forbidden-revision.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-approved_for_demo.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-change_created.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-domain_approve.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-domain_reject.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-evaluation_recorded.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-invalid-genesis-run.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-release_reject.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying contracts\examples\transition-submitted_for_domain_review.json -> caseproof_local_demo-5.3.0.dev2\contracts\examples
+copying datasets\resolver_test_cases.json -> caseproof_local_demo-5.3.0.dev2\datasets
+copying datasets\synthetic_impact_graph.json -> caseproof_local_demo-5.3.0.dev2\datasets
+copying datasets\synthetic_rules.json -> caseproof_local_demo-5.3.0.dev2\datasets
+copying docs\FINAL_REVIEW.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\OSS_RELEASE_CHECKLIST.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\PROVENANCE.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\PUBLISHING.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\SCORECARD_105.csv -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\SOURCES.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\STATUS.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\V53_INTEGRATION.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\VALIDATION.md -> caseproof_local_demo-5.3.0.dev2\docs
+copying docs\evidence\v5.3\baseline_hardening_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\benchmark_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\browser_install.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\cli_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\dependency-audit.json -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\input_provenance.txt -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\input_status.txt -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\input_validation.txt -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\original-baseline-run.json -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\original-baseline.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\package-check.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\pip-check.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\pytest.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\rider_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\run.json -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\safe_tools_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\smoke.json -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\smoke.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\submit_red.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\evidence\v5.3\ui-syntax.log -> caseproof_local_demo-5.3.0.dev2\docs\evidence\v5.3
+copying docs\provenance\input_manifest.json -> caseproof_local_demo-5.3.0.dev2\docs\provenance
+copying docs\provenance\v5_3_input_manifest.json -> caseproof_local_demo-5.3.0.dev2\docs\provenance
+copying prebuild\01_TARGET_DESIGN.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\02_IMPLEMENTATION_PLAN.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\03_INSURANCE_AND_EXPERIMENT.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\04_ACCEPTANCE_AND_EVIDENCE.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\05_CODEX_KICKOFF.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\06_DESIGN_REVIEW.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\07_PACKAGE_VALIDATION.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying prebuild\08_IMPLEMENTATION_CONTRACTS.md -> caseproof_local_demo-5.3.0.dev2\prebuild
+copying reference\__init__.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\evidence_pack.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\governance.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\impact.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\paired_benchmark.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\release_gate.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\resolver.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying reference\verify_answer.py -> caseproof_local_demo-5.3.0.dev2\reference
+copying scripts\__init__.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\browser_acceptance.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\browser_e2e.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\check_distribution.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\check_package.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\check_ui_syntax.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\check_ui_syntax.sh -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\release_package.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\run_demo_windows.ps1 -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\smoke.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying scripts\windows_checks.py -> caseproof_local_demo-5.3.0.dev2\scripts
+copying service\__init__.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\app.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\cli.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\db.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\idempotency.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\integrity.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\models.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\schemas.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\seed.py -> caseproof_local_demo-5.3.0.dev2\service
+copying service\api\__init__.py -> caseproof_local_demo-5.3.0.dev2\service\api
+copying service\api\errors.py -> caseproof_local_demo-5.3.0.dev2\service\api
+copying service\api\schemas_v1.py -> caseproof_local_demo-5.3.0.dev2\service\api
+copying service\domain\__init__.py -> caseproof_local_demo-5.3.0.dev2\service\domain
+copying service\domain\canonical.py -> caseproof_local_demo-5.3.0.dev2\service\domain
+copying service\domain\state_machine.py -> caseproof_local_demo-5.3.0.dev2\service\domain
+copying service\domain\types.py -> caseproof_local_demo-5.3.0.dev2\service\domain
+copying service\static\index.html -> caseproof_local_demo-5.3.0.dev2\service\static
+copying tests\conftest.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_answer_check.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_api_contract.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_benchmark_completeness.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_cli_database.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_corrupt_audit_ids.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_idempotency.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_release_impact.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_resolver.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_safe_tools.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_service.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_smoke_output.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_submit_integrity.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_transition_integrity.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_unapproved_rider.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_v4_controls.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\test_v53_hardening.py -> caseproof_local_demo-5.3.0.dev2\tests
+copying tests\fixtures\canonical_vectors_v1.json -> caseproof_local_demo-5.3.0.dev2\tests\fixtures
+copying tests\v1\test_canonical.py -> caseproof_local_demo-5.3.0.dev2\tests\v1
+copying tests\v1\test_contracts.py -> caseproof_local_demo-5.3.0.dev2\tests\v1
+copying tests\v1\test_state_machine.py -> caseproof_local_demo-5.3.0.dev2\tests\v1
+Writing caseproof_local_demo-5.3.0.dev2\setup.cfg
+Creating tar archive
+removing 'caseproof_local_demo-5.3.0.dev2' (and everything under it)
+* Building wheel from sdist
+* Getting build dependencies for wheel...
+running egg_info
+writing caseproof_local_demo.egg-info\PKG-INFO
+writing dependency_links to caseproof_local_demo.egg-info\dependency_links.txt
+writing entry points to caseproof_local_demo.egg-info\entry_points.txt
+writing requirements to caseproof_local_demo.egg-info\requires.txt
+writing top-level names to caseproof_local_demo.egg-info\top_level.txt
+reading manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.css' under directory 'service'
+warning: no files found matching '*.js' under directory 'service'
+warning: no files found matching '*.yaml' under directory 'docs'
+warning: no files found matching '*.yml' under directory 'docs'
+warning: no files found matching '*.json' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory 'prebuild'
+warning: no files found matching '*.yml' under directory 'prebuild'
+warning: no files found matching '*.csv' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory '.github'
+warning: no previously-included files matching '__pycache__' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '*.sqlite*' found anywhere in distribution
+warning: no previously-included files matching '*.db' found anywhere in distribution
+warning: no previously-included files matching '.env' found anywhere in distribution
+warning: no previously-included files matching '.env.*' found anywhere in distribution
+no previously-included directories found matching 'reports'
+no previously-included directories found matching 'evidence'
+no previously-included directories found matching '.venv'
+no previously-included directories found matching '.git'
+no previously-included directories found matching 'archive'
+no previously-included directories found matching '.serena'
+no previously-included directories found matching '.runtime'
+no previously-included directories found matching 'current'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'THIRD_PARTY_NOTICES.md'
+writing manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+* Building wheel...
+running bdist_wheel
+running build
+running build_py
+creating build\lib\service
+copying service\app.py -> build\lib\service
+copying service\cli.py -> build\lib\service
+copying service\db.py -> build\lib\service
+copying service\idempotency.py -> build\lib\service
+copying service\integrity.py -> build\lib\service
+copying service\models.py -> build\lib\service
+copying service\schemas.py -> build\lib\service
+copying service\seed.py -> build\lib\service
+copying service\__init__.py -> build\lib\service
+creating build\lib\service\api
+copying service\api\errors.py -> build\lib\service\api
+copying service\api\schemas_v1.py -> build\lib\service\api
+copying service\api\__init__.py -> build\lib\service\api
+creating build\lib\service\domain
+copying service\domain\canonical.py -> build\lib\service\domain
+copying service\domain\state_machine.py -> build\lib\service\domain
+copying service\domain\types.py -> build\lib\service\domain
+copying service\domain\__init__.py -> build\lib\service\domain
+creating build\lib\reference
+copying reference\evidence_pack.py -> build\lib\reference
+copying reference\governance.py -> build\lib\reference
+copying reference\impact.py -> build\lib\reference
+copying reference\paired_benchmark.py -> build\lib\reference
+copying reference\release_gate.py -> build\lib\reference
+copying reference\resolver.py -> build\lib\reference
+copying reference\verify_answer.py -> build\lib\reference
+copying reference\__init__.py -> build\lib\reference
+creating build\lib\service\static
+copying service\static\index.html -> build\lib\service\static
+creating build\lib\datasets
+copying datasets\resolver_test_cases.json -> build\lib\datasets
+copying datasets\synthetic_impact_graph.json -> build\lib\datasets
+copying datasets\synthetic_rules.json -> build\lib\datasets
+installing to build\bdist.win-amd64\wheel
+running install
+running install_lib
+creating build\bdist.win-amd64\wheel
+creating build\bdist.win-amd64\wheel\datasets
+copying build\lib\datasets\resolver_test_cases.json -> build\bdist.win-amd64\wheel\.\datasets
+copying build\lib\datasets\synthetic_impact_graph.json -> build\bdist.win-amd64\wheel\.\datasets
+copying build\lib\datasets\synthetic_rules.json -> build\bdist.win-amd64\wheel\.\datasets
+creating build\bdist.win-amd64\wheel\reference
+copying build\lib\reference\evidence_pack.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\governance.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\impact.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\paired_benchmark.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\release_gate.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\resolver.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\verify_answer.py -> build\bdist.win-amd64\wheel\.\reference
+copying build\lib\reference\__init__.py -> build\bdist.win-amd64\wheel\.\reference
+creating build\bdist.win-amd64\wheel\service
+creating build\bdist.win-amd64\wheel\service\api
+copying build\lib\service\api\errors.py -> build\bdist.win-amd64\wheel\.\service\api
+copying build\lib\service\api\schemas_v1.py -> build\bdist.win-amd64\wheel\.\service\api
+copying build\lib\service\api\__init__.py -> build\bdist.win-amd64\wheel\.\service\api
+copying build\lib\service\app.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\cli.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\db.py -> build\bdist.win-amd64\wheel\.\service
+creating build\bdist.win-amd64\wheel\service\domain
+copying build\lib\service\domain\canonical.py -> build\bdist.win-amd64\wheel\.\service\domain
+copying build\lib\service\domain\state_machine.py -> build\bdist.win-amd64\wheel\.\service\domain
+copying build\lib\service\domain\types.py -> build\bdist.win-amd64\wheel\.\service\domain
+copying build\lib\service\domain\__init__.py -> build\bdist.win-amd64\wheel\.\service\domain
+copying build\lib\service\idempotency.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\integrity.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\models.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\schemas.py -> build\bdist.win-amd64\wheel\.\service
+copying build\lib\service\seed.py -> build\bdist.win-amd64\wheel\.\service
+creating build\bdist.win-amd64\wheel\service\static
+copying build\lib\service\static\index.html -> build\bdist.win-amd64\wheel\.\service\static
+copying build\lib\service\__init__.py -> build\bdist.win-amd64\wheel\.\service
+running install_egg_info
+running egg_info
+writing caseproof_local_demo.egg-info\PKG-INFO
+writing dependency_links to caseproof_local_demo.egg-info\dependency_links.txt
+writing entry points to caseproof_local_demo.egg-info\entry_points.txt
+writing requirements to caseproof_local_demo.egg-info\requires.txt
+writing top-level names to caseproof_local_demo.egg-info\top_level.txt
+reading manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+reading manifest template 'MANIFEST.in'
+warning: no files found matching '*.css' under directory 'service'
+warning: no files found matching '*.js' under directory 'service'
+warning: no files found matching '*.yaml' under directory 'docs'
+warning: no files found matching '*.yml' under directory 'docs'
+warning: no files found matching '*.json' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory 'prebuild'
+warning: no files found matching '*.yml' under directory 'prebuild'
+warning: no files found matching '*.csv' under directory 'prebuild'
+warning: no files found matching '*.yaml' under directory '.github'
+warning: no previously-included files matching '__pycache__' found anywhere in distribution
+warning: no previously-included files matching '*.py[cod]' found anywhere in distribution
+warning: no previously-included files matching '*.sqlite*' found anywhere in distribution
+warning: no previously-included files matching '*.db' found anywhere in distribution
+warning: no previously-included files matching '.env' found anywhere in distribution
+warning: no previously-included files matching '.env.*' found anywhere in distribution
+no previously-included directories found matching 'reports'
+no previously-included directories found matching 'evidence'
+no previously-included directories found matching '.venv'
+no previously-included directories found matching '.git'
+no previously-included directories found matching 'archive'
+no previously-included directories found matching '.serena'
+no previously-included directories found matching '.runtime'
+no previously-included directories found matching 'current'
+adding license file 'LICENSE'
+adding license file 'NOTICE'
+adding license file 'THIRD_PARTY_NOTICES.md'
+writing manifest file 'caseproof_local_demo.egg-info\SOURCES.txt'
+Copying caseproof_local_demo.egg-info to build\bdist.win-amd64\wheel\.\caseproof_local_demo-5.3.0.dev2-py3.12.egg-info
+running install_scripts
+creating build\bdist.win-amd64\wheel\caseproof_local_demo-5.3.0.dev2.dist-info\WHEEL
+creating 'C:\\Users\\김진우\\Desktop\\CaseProof_Enterprise\\dist\\verified-dev2\\.tmp-pwn8x7ss\\caseproof_local_demo-5.3.0.dev2-py3-none-any.whl' and adding 'build\\bdist.win-amd64\\wheel' to it
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/licenses/LICENSE'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/licenses/NOTICE'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/licenses/THIRD_PARTY_NOTICES.md'
+adding 'datasets/resolver_test_cases.json'
+adding 'datasets/synthetic_impact_graph.json'
+adding 'datasets/synthetic_rules.json'
+adding 'reference/__init__.py'
+adding 'reference/evidence_pack.py'
+adding 'reference/governance.py'
+adding 'reference/impact.py'
+adding 'reference/paired_benchmark.py'
+adding 'reference/release_gate.py'
+adding 'reference/resolver.py'
+adding 'reference/verify_answer.py'
+adding 'service/__init__.py'
+adding 'service/app.py'
+adding 'service/cli.py'
+adding 'service/db.py'
+adding 'service/idempotency.py'
+adding 'service/integrity.py'
+adding 'service/models.py'
+adding 'service/schemas.py'
+adding 'service/seed.py'
+adding 'service/api/__init__.py'
+adding 'service/api/errors.py'
+adding 'service/api/schemas_v1.py'
+adding 'service/domain/__init__.py'
+adding 'service/domain/canonical.py'
+adding 'service/domain/state_machine.py'
+adding 'service/domain/types.py'
+adding 'service/static/index.html'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/METADATA'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/WHEEL'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/entry_points.txt'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/top_level.txt'
+adding 'caseproof_local_demo-5.3.0.dev2.dist-info/RECORD'
+removing build\bdist.win-amd64\wheel
+Successfully built caseproof_local_demo-5.3.0.dev2.tar.gz and caseproof_local_demo-5.3.0.dev2-py3-none-any.whl
+
+exit_code=0

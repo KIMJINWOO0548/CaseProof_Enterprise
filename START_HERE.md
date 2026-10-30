@@ -1,6 +1,6 @@
 # CaseProof v5.3 — Codex 구현·오픈소스 공개 준비 패키지
 
-> **2026-10-30 통합 업데이트:** 이 저장소에는 사용자 제공 v5.3 패키지를 검토·병합한 `5.3.0.dev1`이 있습니다. 기존 전이 원장·승인 봉인·전체 요청 재시도 기능을 보존했으므로 아래 원본 패키지의 미구현 설명과 차이가 있습니다. [통합 기록](docs/V53_INTEGRATION.md), [현재 상태](docs/STATUS.md), [이번 검증](docs/VALIDATION.md)을 먼저 확인하세요. 공개 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)입니다.
+> **2026-10-30 업데이트:** 현재 `5.3.0.dev2`는 v5.3 병합에 이어 v1 DTO·순수 상태기계를 추가했습니다. 기존 전이 원장·승인 봉인·전체 요청 재시도 기능을 보존했으며 `/api/v1` HTTP·DB 연결은 후속 작업입니다. [통합 기록](docs/V53_INTEGRATION.md), [현재 상태](docs/STATUS.md), [이번 검증](docs/VALIDATION.md)을 먼저 확인하세요. 공개 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)입니다.
 
 이 폴더 자체가 Git 저장소 루트입니다. 이전 `current/`, `legacy/`, 중복 ZIP 중심 구조를 없애고 **실행 코드와 앞으로 구현할 계약을 구분**했습니다. 새 원격 저장소를 만들거나 GitHub에 게시한 상태는 아닙니다.
 

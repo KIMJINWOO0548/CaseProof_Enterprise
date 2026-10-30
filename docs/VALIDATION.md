@@ -1,5 +1,30 @@
 # 검증 결과 — 5.3.0.dev0
 
+## 5.3.0.dev2 G1.1 — 2026-10-30 KST
+
+실행은 Windows / Python 3.12.10 / 프로젝트 가상환경이다. [이번 run](../reports/runs/20261029T154037Z-4b5b5b75/)은 10월 29일 UTC에 시작해 30일 UTC에 이어서 수행했다. v1 테스트는 DB 없이 실행하며 기존 HTTP 회귀는 임시 합성 SQLite를 사용했다.
+
+| 검사 | 실제 결과 |
+| --- | --- |
+| 변경 전 manifest | 콘솔에서 204개 PASS 관찰; 원본 stdout 보존본으로 가장하지 않음 |
+| 새 DTO·상태 전이 RED | 모듈 부재로 collection 오류 2개, exit 2 |
+| 최초 구현 | 122 passed / 1 failed; float 거부가 TypeError로 새어 나오던 validation 경계 수정 |
+| 최종 관련 검사 | **150 passed**, exit 0; 정규화 결과를 frozen JSON Schema와 대조, 44개 기존 예제 포함 |
+| 최종 전체 pytest | **455 passed + 22 subtests passed**, exit 0, 기존 경고 1개 |
+| baseline 보존 | 기존 코드·테스트·합성 데이터 41개 byte 일치, 변경 0개 |
+| smoke | **12/12**, exit 0; 원본 JSON은 `reports/runs/20261030T140952Z-1229374d/` |
+| JS 문법 / 요청 함수 재시도 / pip check | 모두 exit 0 |
+| wheel/sdist build 및 내용 검사 | **5.3.0.dev2 PASS**; v1 모듈 포함 |
+| 프로젝트 격리 환경에 wheel 설치, 체크아웃 밖 실행 | **PASS**, exit 0; v1 import/DTO parse, 기존 seed·HTML·health |
+
+전체 pytest의 `scripts.windows_checks`는 소켓 초기화 오류만 1,995회 재시도했다. 개별 초기화의 최대 횟수는 64이며 HTTP 요청·assertion은 재실행하지 않았다. 설치 검사는 초기화 1회, smoke는 0회 재시도했다. 이 환경 문제를 수정했다고 주장하지 않는다.
+
+신규 Pydantic API는 Context7의 공식 문서 조회로 확인했다. 라우터가 선택한 구현 에이전트와 읽기 검토 에이전트는 사용량 제한으로 실패했으며 코드 변경을 남기지 않았다. 구현·검증은 주 에이전트가 수행했다. 독립 외부 검수로 집계하지 않는다.
+
+아직 하지 않은 검사: 실제 v1 HTTP/DB integration, PostgreSQL/RLS, 브라우저 E2E, 실제 모델·운영 환경. 이 구현은 내부 `TransitionChecks` 값 자체를 증거로 인증하지 않는다. 검증된 DB 이력과 gate를 생성하는 executor가 필요하며 [범위와 호출 계약](V1_FOUNDATION.md)에 명시했다. 기존 14개 canonical vector는 전체 suite에 포함된다.
+
+코드 검증 후 변경한 README·평가표·상태/검증 문서는 기능 검사를 재실행한 것으로 보고하지 않는다. 패키지 구조와 source manifest는 최종 문서에서 별도로 재검사한다. 이번 CI 결과는 확인 후 추가한다.
+
 ## 5.3.0.dev1 통합 — 2026-10-30 KST
 
 이번 결과는 Windows / Python 3.12.10 / 신규 임시 SQLite / hash lock 환경이다. 실행 로그는 [이번 run](../reports/runs/20261029T151200Z-a53be001/)에 있다. 아래 v5.3 원본의 Linux 기록은 별도 이력이다.

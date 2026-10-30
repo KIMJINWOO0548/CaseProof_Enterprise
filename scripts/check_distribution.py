@@ -20,6 +20,11 @@ RUNTIME_FILES = {
     "service/app.py",
     "service/cli.py",
     "service/domain/canonical.py",
+    "service/domain/types.py",
+    "service/domain/state_machine.py",
+    "service/api/__init__.py",
+    "service/api/schemas_v1.py",
+    "service/api/errors.py",
     "service/static/index.html",
     "reference/__init__.py",
     "reference/resolver.py",
@@ -90,6 +95,11 @@ def check_installed() -> None:
             "service and reference were loaded from different locations.")
     for name in RUNTIME_FILES:
         require((runtime / name).is_file(), f"Installed runtime asset is missing: {name}")
+    from service.api.schemas_v1 import Decision, parse_body
+    from service.domain.state_machine import apply_transition
+
+    require(parse_body(Decision, b'{"decision":"APPROVE","reason":"Synthetic review complete."}').decision == 'APPROVE'
+            and callable(apply_transition), "Installed v1 foundation could not be imported.")
     for name in ("synthetic_rules.json", "resolver_test_cases.json", "synthetic_impact_graph.json"):
         json.loads((runtime / "datasets" / name).read_text(encoding="utf-8"))
 

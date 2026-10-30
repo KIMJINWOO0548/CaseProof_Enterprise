@@ -1,4 +1,4 @@
-# 구현 상태 — 5.3.0.dev1
+# 구현 상태 — 5.3.0.dev2
 
 2026-10-30. 사용자 제공 v5.3을 이 저장소의 추가 G1 구현과 병합했다. 아래 ‘현재’는 baseline `/api`를 뜻하며 미래 `/api/v1` route는 아직 없다. [병합 기록](V53_INTEGRATION.md), [VALIDATION](VALIDATION.md)을 함께 읽는다. 입력 패키지 당시 상태는 [보존 기록](evidence/v5.3/input_status.txt)이다.
 
@@ -13,7 +13,7 @@
 | 비교 기준선/후보 미완료 처리 | INVALID, 확정 통계 미출력으로 보강 | target paired CI/metadata/gold 분리 |
 | smoke/browser/CLI 안전한 임시 상태 | 보강, 검증 범위는 VALIDATION | 실제 브라우저 설치·클릭 시험 |
 | package/lock/CI/license/docs | hash lock·wheel/sdist·설치·공개 owner, Linux 3.11/3.12/3.13 및 Windows 3.12 실제 CI 성공 | 후속 커밋의 CI 지속 확인, 운영·브라우저 검증 별도 |
-| 세부 계약·schema/examples/hash vectors | 제공, 구조 검증 | 미래 서버 enforcement |
+| 세부 계약·schema/examples/hash vectors | 제공, 구조 검증; G1.1 입력·레코드 DTO와 순수 상태 전이 검증 | 미래 서버 enforcement |
 | full-suite immutable run / 실패 뒤 재평가 | PLANNED | G1.5 |
 | preapproval assessment / approval envelope | baseline에서 승인 직전 revision·DOMAIN 결정·감사 참조 고정 | G1.6 target payload refs·source eligibility·snapshot 계약 |
 | PostgreSQL/RLS/migration/경합 | PLANNED | G2 |
@@ -24,9 +24,11 @@
 
 `/api`의 생성·평가·제출·현업 결정·최종 결정은 모두 12–128자 Idempotency-Key를 요구한다. `(tenant,actor,key)`는 operation을 포함해 재사용 충돌을 검사한다. 인증·역할·담당자 분리 검사 후 과거 결과를 replay하며 최신 무결성은 GET evidence로 별도 확인한다. DRAFT에 실패 결과가 남으면 새 change로 시작한다. target full-suite run과 parent relation은 미구현이다.
 
-G1.1의 첫 조각인 `service.domain.canonical`을 추가했다. 고정 14개 vector의 bytes/hash와 strict JSON parser의 중복 키·float·unsafe integer·surrogate·UTF-8 거부를 검사했다. baseline `digest()`는 유지한다. DTO·순수 상태기계·HTTP enforcement를 구현한 것은 아니므로 G1.1 전체 완료로 표시하지 않는다.
+G1.1의 canonical·DTO·순수 상태기계 체크리스트를 구현·검증했다. strict command/header 및 case context, ChangeRevision·DecisionNote·EvaluationRun 타입, 불변 command context, 안전한 오류 형식과 7종 전이를 추가했다. 입력 날짜·사유·기본값을 정규화하고, 저장 레코드는 정규형 그대로인지 검사한다. 고정 14개 canonical vector와 기존 `digest()`는 보존한다. [모듈 경계](V1_FOUNDATION.md)를 함께 읽는다.
 
-이번 전체 실행은 **305개 테스트와 하위 검사 22개 통과**, 스모크 **12/12**다. Windows 검증용 초기화 재시도 실행기를 사용했고 기존 Starlette 경고 1개가 남아 있다. 원본 v5.3의 Linux 221개 결과와 합산하지 않는다.
+이번 전체 실행은 **455개 테스트와 하위 검사 22개 통과**, 스모크 **12/12**다. 새 DTO·전이 검사는 150개다. Windows의 소켓 초기화만 재시도하는 실행기를 사용했고 기존 Starlette 경고 1개가 남아 있다. 원본 v5.3의 Linux 221개 결과와 합산하지 않는다.
+
+다음은 G1.2의 불변 테이블과 신규 DB migration이다. 현재 v1 상태기계는 DB를 쓰지 않으며, 전달받은 내부 검증 결과를 현재 snapshot/run hash에 결합한다. 이 결과의 실제 이력 재구성·full-suite gate 계산은 G1.3/G1.5에서 구현해야 한다. `/api/v1` HTTP enforcement는 G1.4의 별도 검증 대상이다.
 
 현재 bearer 토큰은 고엔트로피로 생성하고 DB에 hash만 저장하지만 expiration/rotation/revocation UI가 없다. 서버에 공유 인터넷으로 접속시키지 않는다. 기본 UI 토큰은 메모리에만 보관한다. `CASEPROOF_DEMO_MODE=1`을 명시한 로컬 데모만 허용한다.
 

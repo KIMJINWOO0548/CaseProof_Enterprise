@@ -1,0 +1,81 @@
+{
+  "notice": "Captured stdout with Git-normalized LF line endings; original trailing whitespace retained.",
+  "files": {
+    "baseline_preservation.json": {
+      "bytes": 6304,
+      "sha256": "40253954aeec70dc9994f82e1552ff73debf54215f132605c14f55da1be00997"
+    },
+    "build.txt": {
+      "bytes": 36041,
+      "sha256": "f5823851d2e31cfb017a799f54872cc1e5ab055623e161c316fbd5c2d96002ed"
+    },
+    "commands.json": {
+      "bytes": 799,
+      "sha256": "67f3ec5553414c6a688970439024cc8449a992063a661f8c2396143e3e90ebc3"
+    },
+    "distribution.txt": {
+      "bytes": 133,
+      "sha256": "93435ec17ed44015576e3a55f70e4e1dbda4cbc2d618808bdcc5f7323c8d0ae6"
+    },
+    "environment.json": {
+      "bytes": 662,
+      "sha256": "283dea4293894d82e5c24dfa3fcffa98d8493cddff383980f0d437d28750efbe"
+    },
+    "focused_01.txt": {
+      "bytes": 2461,
+      "sha256": "5a65bc3bbf33258b5e9dc74a6ccb516932ba076dba775ab1315748208fc705f5"
+    },
+    "focused_02.txt": {
+      "bytes": 237,
+      "sha256": "e91b91da712a18165262478544837afbbdea19110feb46e4db454e10ffcbed8e"
+    },
+    "focused_03.txt": {
+      "bytes": 317,
+      "sha256": "5226c044f23195b1e54e4e725dd8312206b1aca22ceedfaf745f675c3ab691c0"
+    },
+    "focused_final.txt": {
+      "bytes": 318,
+      "sha256": "9f163f87d5486208eaec5a12fba97b7333a23f17207dea2e47bcbf57daa78be6"
+    },
+    "installed_wheel.txt": {
+      "bytes": 125,
+      "sha256": "13f003cef0c51cf61c6490ccaea8db0f33b68c28ffc9b859e660d5ac6dba59fa"
+    },
+    "manifest.txt": {
+      "bytes": 86,
+      "sha256": "00d8fb36fd26a13a05866b9c9836fc3346ea175fa1538d532edc2ebdd0a9efb4"
+    },
+    "package.txt": {
+      "bytes": 197,
+      "sha256": "39df2a8dae5c11d1ed5ae0880e1dbcf706f1d61d448e17832d9d147fec0af95c"
+    },
+    "pip_check.txt": {
+      "bytes": 43,
+      "sha256": "14935efd43cb47ef4e711b2492c7aee9b908694d6af597c5d8c21772f3a44daf"
+    },
+    "pytest.txt": {
+      "bytes": 1134,
+      "sha256": "4810c392157bb79881b4c242afb9dc976b878c8fe738e506ead66581920c6216"
+    },
+    "red.txt": {
+      "bytes": 1677,
+      "sha256": "03bfee874b923d0265dce7e0ec70d3086c6080c0ba98fb90f40f49031172d8b9"
+    },
+    "smoke.txt": {
+      "bytes": 446,
+      "sha256": "93ef5159386cb8f46e872b8c4c5d9c62da7e6b3049f9aca3bc797fa344c94988"
+    },
+    "ui_retry.txt": {
+      "bytes": 119,
+      "sha256": "8ed6c42608db0b250a66cd1643b42ee762677fdc51f98202a530c75a1b00e402"
+    },
+    "ui_syntax.txt": {
+      "bytes": 83,
+      "sha256": "3e28e92a86f87fc15896274bc82348ffc8fdc895ff172052542477ae6bb34b88"
+    },
+    "wheel_install.txt": {
+      "bytes": 470,
+      "sha256": "91c473b2a7bbe0b67e17784180d9bacd09321c130f0b2dd08404965d1ab42301"
+    }
+  }
+}

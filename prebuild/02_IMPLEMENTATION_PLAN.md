@@ -63,11 +63,11 @@
 **Create:** `service/domain/{types,canonical,state_machine}.py`, `service/api/{schemas_v1,errors}.py`; `tests/v1/test_contracts.py`, `tests/v1/test_state_machine.py`.
 **Consumes:** `contracts/` and 08 §§1–4,8–10. **Produces:** shared types/functions in the map.
 
-- [ ] Write `test_canonical_vectors` using stored canonical UTF-8 hex/hash literals; reject float, int outside ±9007199254740991, duplicate raw JSON keys, lone surrogate, malformed UTF-8.
-- [ ] Write `test_revision_and_actor_rules`: genesis=1; allowed commands increment once; all illegal state/kind combinations, missing note, requester=reviewer and reviewer=approver reject.
-- [ ] Run `python -m pytest tests/v1/test_contracts.py tests/v1/test_state_machine.py -q`; confirm genuine failures before implementation.
-- [ ] Implement typed normalization and the pure state table. Inject ID/time through command input; state machine does not call uuid/clock itself. Validate field combinations and preserve null vs empty arrays.
-- [ ] Run targeted tests then entire suite. Commit `feat: define versioned command and evidence contracts`.
+- [x] Write `test_canonical_vectors` using stored canonical UTF-8 hex/hash literals; reject float, int outside ±9007199254740991, duplicate raw JSON keys, lone surrogate, malformed UTF-8.
+- [x] Write `test_revision_and_actor_rules`: genesis=1; allowed commands increment once; all illegal state/kind combinations, missing note, requester=reviewer and reviewer=approver reject.
+- [x] Run `python -m pytest tests/v1/test_contracts.py tests/v1/test_state_machine.py -q`; confirm genuine failures before implementation.
+- [x] Implement typed normalization and the pure state table. Inject ID/time through command input; state machine does not call uuid/clock itself. Validate field combinations and preserve null vs empty arrays.
+- [x] Run targeted tests then entire suite. Commit `feat: define versioned command and evidence contracts`.
 
 **Done:** target data shapes/golden vectors are deterministic; `/api` behavior unchanged. Test vectors are not proof the future HTTP route enforces raw JSON policy—test that again in G1.4.
 

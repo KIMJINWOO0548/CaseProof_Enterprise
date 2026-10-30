@@ -1,0 +1,4 @@
+PACKAGE_CHECK_PASS {"canonical_vectors": 14, "examples": 62, "schemas": 12, "source_files": 212}
+Target schemas are PLANNED; this check does not implement /api/v1 or certify security.
+
+exit_code=0

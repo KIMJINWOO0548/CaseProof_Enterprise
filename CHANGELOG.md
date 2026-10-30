@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.3.0.dev2 — 2026-10-30
+
+- Add isolated strict v1 command/header, case-context, revision, note and run DTOs, canonical defaults, UTC normalization and safe error payloads.
+- Add immutable command contexts and the seven-edge pure state machine with injected IDs/time, revision and actor separation checks, and required record bindings.
+- Bind internal executor-supplied checks to the snapshot/run; full history verification, gate computation, DB writes and `/api/v1` routes remain later tasks. Preserve all baseline `/api` code and legacy digest bytes.
+- Include the new modules in distribution and installed-wheel checks; no new dependency.
+
 ## 5.3.0.dev1 — 2026-10-30
 
 - Merge the supplied v5.3 package into the existing Git repository with runtime sources at the root; retain prior source/evidence in Git and `archive/`, outside distribution manifests.

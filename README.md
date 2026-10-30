@@ -4,9 +4,9 @@
 
 CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
 
-**Release: `5.3.0.dev1` — merged local prototype + implementation handoff.** The `/api` demo runs today. The future `/api/v1` system is specified in [prebuild](prebuild/01_TARGET_DESIGN.md), and is not implemented yet. “Enterprise” in the original package name is an ambition, not a support or compliance claim.
+**Release: `5.3.0.dev2` — local prototype + v1 domain foundation.** The `/api` demo runs today. Strict DTOs and a pure state machine begin the future `/api/v1` system specified in [prebuild](prebuild/01_TARGET_DESIGN.md); its HTTP routes and persistence are not implemented yet. “Enterprise” in the original package name is an ambition, not a support or compliance claim.
 
-공개 포트폴리오: [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise). 사용자 제공 v5.3 패키지의 입력·특약·비교실험·안전 도구를 병합하면서, 이 저장소에서 추가한 전이 원장·고정 승인 증거·전체 쓰기 재시도 처리를 유지했습니다. 활성 코드는 루트 `service/`에 있으며 과거 코드와 증거는 Git 이력 및 `archive/`에 보존합니다. 새 검증과 미완료 계약은 [상태](docs/STATUS.md)와 [병합 기록](docs/V53_INTEGRATION.md)을 참고하세요.
+합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
 
 - Synthetic fixtures only; no real customer information or insurance decisions.
 - FastAPI, SQLAlchemy, SQLite, static HTML/JavaScript; one local server worker.

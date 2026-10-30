@@ -1,0 +1,9 @@
+Processing c:\users\김진우\desktop\caseproof_enterprise\dist\verified-dev2\caseproof_local_demo-5.3.0.dev2-py3-none-any.whl
+Installing collected packages: caseproof-local-demo
+  Attempting uninstall: caseproof-local-demo
+    Found existing installation: caseproof-local-demo 5.3.0.dev1
+    Uninstalling caseproof-local-demo-5.3.0.dev1:
+      Successfully uninstalled caseproof-local-demo-5.3.0.dev1
+Successfully installed caseproof-local-demo-5.3.0.dev2
+
+exit_code=0

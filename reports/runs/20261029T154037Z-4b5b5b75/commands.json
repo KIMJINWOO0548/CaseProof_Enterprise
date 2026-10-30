@@ -1,0 +1,39 @@
+[
+  {
+    "name": "smoke",
+    "command": [
+      "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+      "-m",
+      "scripts.windows_checks",
+      "scripts.smoke"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "ui_syntax",
+    "command": [
+      "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+      "-m",
+      "scripts.check_ui_syntax"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "ui_retry",
+    "command": [
+      "node",
+      "scripts/check_ui_retries.cjs"
+    ],
+    "exit_code": 0
+  },
+  {
+    "name": "pip_check",
+    "command": [
+      "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+      "-m",
+      "pip",
+      "check"
+    ],
+    "exit_code": 0
+  }
+]

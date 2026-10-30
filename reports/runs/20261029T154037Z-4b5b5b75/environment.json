@@ -1,0 +1,18 @@
+{
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "sqlite": "3.49.1",
+  "database": "temporary synthetic SQLite; pure v1 tests use no database",
+  "versions": {
+    "pydantic": "2.14.1",
+    "pytest": "9.2.0",
+    "fastapi": "0.162.0",
+    "SQLAlchemy": "2.1.6",
+    "jsonschema": "4.26.0",
+    "build": "1.6.1",
+    "setuptools": "84.2.1",
+    "wheel": "0.48.0"
+  },
+  "baseline_source_manifest_observed_before_changes": "PACKAGE_VERIFY_PASS: 204 files (console observation, not preserved raw stdout)",
+  "baseline_head": "92059ab52d80daaa46f0d7bdad88d5d8da6d91a5"
+}
