@@ -18,6 +18,7 @@ Windows / Python 3.12.10 / Chrome 156 / 임시 합성 SQLite. [새 로그](../re
 | 상태 글자 대비 | upstream 작은 badge 1.97–4.04:1 관찰 → 앱 색 보정 후 녹색 6.46 / 적색 7.20 / 황색 6.33:1 |
 | 외부 UI 리소스 | 해당 Chrome 실행의 외부 origin 리소스 0개; Tabler CSS는 local route에서 제공 |
 | 빌드 / 배포물 내용 / 격리 설치 | 5.3.0.dev3 wheel·sdist PASS, vendor CSS·MIT notices 포함; 체크아웃 밖 seed·HTML·health·stylesheet 응답 PASS |
+| 실제 GitHub CI | 코드 `e328d01`의 [실행](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41078723763) success; Linux 3.11/3.12/3.13·Windows 3.12·빌드/설치·JS·OSV의 7개 job 성공, push에서 PR 전용 검사 1개 skipped |
 
 전체 suite는 `scripts.windows_checks`를 사용했고 최종 소켓 초기화 재시도는 366회였다. HTTP/assertion을 재시도한 것은 아니다. UI probe 첫 시도는 이전 mutation 완료 전에 disabled 역할 전환 버튼을 눌러 실패했다. probe가 작업 완료를 기다리도록 수정한 재실행은 통과했다. CSS 없는 `about:blank`에서 나온 대비 값은 유효 검증으로 집계하지 않았고, probe에 stylesheet 부재 거부를 추가했다. 모바일 4px overflow는 Tabler `row-cards` 배치로 수정했다.
 

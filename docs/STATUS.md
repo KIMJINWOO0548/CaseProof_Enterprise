@@ -12,7 +12,7 @@
 | 선택한 미승인 특약 보류 | 이번 baseline 보강 | 승인 이력·소급·등록시점·unknown 사실 모델 |
 | 비교 기준선/후보 미완료 처리 | INVALID, 확정 통계 미출력으로 보강 | target paired CI/metadata/gold 분리 |
 | smoke/browser/CLI 안전한 임시 상태 | Chrome MCP에서 실제 3인 승인·응답 유실 복구·DB 확인, 임시 합성 상태만 사용 | 독립 Playwright CLI·사용자 관찰 시험 |
-| package/lock/CI/license/docs | hash lock·wheel/sdist·설치·공개 owner, Linux 3.11/3.12/3.13 및 Windows 3.12 실제 CI 성공 | 후속 커밋의 CI 지속 확인, 운영·브라우저 검증 별도 |
+| package/lock/CI/license/docs | hash lock·vendor MIT notices·wheel/sdist 설치, `e328d01`에서 Linux 3.11/3.12/3.13·Windows 3.12 포함 CI 7개 job 성공 | 후속 커밋의 CI 지속 확인, 운영 검증 별도 |
 | 세부 계약·schema/examples/hash vectors | 제공, 구조 검증; G1.1 입력·레코드 DTO와 순수 상태 전이 검증 | 미래 서버 enforcement |
 | full-suite immutable run / 실패 뒤 재평가 | PLANNED | G1.5 |
 | preapproval assessment / approval envelope | baseline에서 승인 직전 revision·DOMAIN 결정·감사 참조 고정 | G1.6 target payload refs·source eligibility·snapshot 계약 |
