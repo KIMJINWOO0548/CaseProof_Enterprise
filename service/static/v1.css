@@ -109,11 +109,10 @@ body { color: var(--cp-text); font-family: SUIT, "Apple SD Gothic Neo", "Malgun 
 .queue-meta > span { overflow-wrap: anywhere; }
 
 .review-stages { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; padding: 0; margin: 0 0 22px; list-style: none; }
-.review-stages li { position: relative; min-width: 0; padding: 12px 10px 11px 15px; border-top: 2px solid #dedde8; color: #77788a; font-size: 12px; font-weight: 650; }
+.review-stages li { position: relative; min-width: 0; padding: 12px 10px 11px 15px; border-top: 2px solid #dedde8; color: var(--cp-muted); font-size: 12px; font-weight: 650; }
 .review-stages li::before { position: absolute; top: -5px; left: 0; width: 8px; height: 8px; border-radius: 50%; background: #c9c8d5; content: ""; }
 .review-stages li[data-state="current"] { border-top-color: var(--cp-accent); color: var(--cp-ink); }
 .review-stages li[data-state="current"]::before { width: 10px; height: 10px; top: -6px; background: var(--cp-peach); box-shadow: 0 0 0 3px rgb(255 189 157 / 24%); }
-.review-stages li[data-state="next"] { color: #858595; }
 
 .evidence-result { display: grid; grid-template-columns: minmax(110px, .35fr) minmax(0, 1fr); gap: 10px 16px; padding: 15px 16px; border: 1px solid var(--cp-line); border-radius: 8px; background: #fff; }
 dl { display: grid; grid-template-columns: 110px minmax(0, 1fr); gap: 10px 16px; }

@@ -1,0 +1,159 @@
+{
+  "status": "PASS",
+  "source_ref": "b0c3d64b8617de3ccbaa272354f63bd7feac6920",
+  "remote_url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "service_runtime_file_count": 48,
+  "required_runtime_source_wheel_sdist_installed_bytes_equal": true,
+  "runtime_sha256": {
+    "service/app.py": "021291869b700236397da55db5e1d405530fadef9c126566addab68ff3e26ce4",
+    "service/auth.py": "1c87049d37e59132e5d53bd2714ac0161eb97c146a42e0704465cc658f51fb6b",
+    "service/cli.py": "52da200c70f48f467fa243e8697321e72be6695ef0dad310140abe642b71073c",
+    "service/commands.py": "8093f363cdf55fefe5522ac1b9b53b7d118c9aad1ad83f0919bd29675add09c3",
+    "service/db.py": "c9ec6796f11964958ffc5f22e995c3d30a963fc10a3ad227b6e8c269e1a73419",
+    "service/idempotency.py": "b97774fafdad39b60df51329297fa6770fcf75d75133cf065f5346ae19574cc1",
+    "service/idempotency_v1.py": "04caf0df6e6d43ee64cefea81387ea63add78c0a5244c2e12291f12c17f5abc6",
+    "service/integrity.py": "a101b68dfe279efd93a6ec822346349b9a4101534377464171ccb1f01edc8de6",
+    "service/models.py": "d898a80243d65bb56527508f4677ff0c151a74812ecc4093b46ce42366062926",
+    "service/models_v1.py": "889b0b899757fa8c3227fa053e8e5e57c9ff5a59b036ff88bf5726865cbabca4",
+    "service/recovery.py": "445ce395c70edeb640837175031cdd5ff2c9c24a66807eb3643c12a70301e3c6",
+    "service/repositories.py": "1950faa0b5cf5d2b0b7a9d8ee845cd683e8d17574f0d87cfb80cf72eefe81077",
+    "service/schemas.py": "aaa7a4adc0498adf196ac89ac2ffa3b91fdf109c0f47ec53b9c0a77a84a8a60c",
+    "service/seed.py": "a1086b484d7a5899e206c7083da33c016bf5d3b901f43f055cb25ba4cb754b78",
+    "service/workspace.py": "e7c5f1f5a745c9bb53a01bbe8b943a4a4e8bfe3e52c95a9e36f02914a743730b",
+    "service/__init__.py": "eab50d1fbacb8d86145c17800f90cb52992538f5334f1181418714416f603332",
+    "service/api/errors.py": "6f6f9ba080c30495d32a3f64493b72428191e9fe6b281bd718d4318c14a47d5c",
+    "service/api/schemas_v1.py": "09edde126659d19c924f5943807a7e967df4312423fee3583f24acf8278a6527",
+    "service/api/v1.py": "0082925289fc972e8ac2349f2898a31d014820f98cb06ea527f67834815c5ccd",
+    "service/api/__init__.py": "d033b38ebb5a89ef7caee75203f8eaf8f7de2468a63fb6dda7cedab11225dbc8",
+    "service/domain/canonical.py": "9796a3570dd6b41081a6877ec2b0629f6a27dbba0cb303e929aa17a05b098ebb",
+    "service/domain/evidence.py": "5a68210ebc7a4775274796edf2a57d4c23873c0c97ebc0de1598dae626c3d1f5",
+    "service/domain/gates.py": "24da5c6c0172276862910200bf199971ac6747f64a0e7b94d5ffb5c7e74b753a",
+    "service/domain/state_machine.py": "cd91d6bbe9cf58c57f737bef639ac76c86fd77e35fd7d55c59235c270a0dae92",
+    "service/domain/types.py": "9d087a6d649e12de4d0f97b46ced8bb6588c52760489551e1375bf021daa839a",
+    "service/domain/__init__.py": "536b7bec9b2c85335bf4af1c51fe8423e510193c0477fd281972aaf80b4df4b0",
+    "service/evaluation/adapters.py": "5074b8a05c07f55e02212fe9512872d7e5c1cf3ddd9d8d747eece6e40bd69ad9",
+    "service/evaluation/benchmark.py": "4864d077c354bb9dbc3b5d8ffbc92c9bee65439467714cb7a07a1e4841c9e7aa",
+    "service/evaluation/config.py": "a070396012947592ddbc1202b1d34d09ccc619f873a5fbfbc99f140b4547011c",
+    "service/evaluation/datasets.py": "e41f109e0d775a015894620caf7a32bcf18d3775a4e8edafe81d89236900347a",
+    "service/evaluation/metrics.py": "6fc094673b285941cb932e87d40a94a8a5b79a7d180dcf4ca281e86899de9d6b",
+    "service/evaluation/runner.py": "3636b866d9d747ec794f554136c99a5607e783e8cb7ea53bef0b712e9b4d56c0",
+    "service/evaluation/__init__.py": "06dcc8f8b367c7715cdd84913355ae0c29bb47cc1b829a8114f86bc149f1d336",
+    "service/policies/registry.py": "eb0f4112fa23627beb3a57e419dc9ccf52293d85612f1b2c3a73da23b19ea5cc",
+    "service/policies/resolver.py": "1312688fa9f4b5ff4c674d1f62c398fc6f014e97bbe6192678b53b8060922f1a",
+    "service/policies/schema.py": "a4106515dbea251acf532294c16e2d8576fd534c0d60809ea06118275dcc6a3a",
+    "service/policies/__init__.py": "c805f079acfd89d631f6e61c1effe3e8be4841b02f272e393a338d65c940c233",
+    "service/static/index.html": "378d80667c7d04bf295f383d8be1509158379d1070032fbbd41c154162172639",
+    "service/static/v1.css": "397b8d7c973680c2fc935a5d27382864cdb0a20053f7cd2b9467ada62ac8cafa",
+    "service/static/v1.html": "4ec666495cbc5cf089d1bc9be4d87375d657d84be06005512658438be61c3c43",
+    "service/static/v1.js": "4d54c56a2cf82db494e773ec6abfe50d17729b0b820e6bb6a99829f9c330c0b1",
+    "service/static/vendor/suit/LICENSE.txt": "30d101ee3c35ef629d622d933d261a27b2f60223e0a3b0f36791e569c2b9daa9",
+    "service/static/vendor/suit/PROVENANCE.json": "f26bc0ba208ce8334301a8b11fde1b7ef9cdd5f46d598c2bbfa136edbac5cb90",
+    "service/static/vendor/suit/SUIT-Variable.woff2": "aa894a204d5a6fbae259dac6868d350cbd373a390caee0313f92946af741df23",
+    "service/static/vendor/tabler-1.7.3/BOOTSTRAP-LICENSE.txt": "4620c84ad5ce8602ff65640ed6b7c8b78ebb9e036584f0ebc1ccc88206a4bb51",
+    "service/static/vendor/tabler-1.7.3/LICENSE.txt": "4f88a82d13be3c5c63a12c5631eae914aa4381b6dc17641bf1ab85f3f8f6c8a5",
+    "service/static/vendor/tabler-1.7.3/PROVENANCE.json": "10e01034d653c95cc849c587915960f713a2aa87a3c20195a58a190c55149504",
+    "service/static/vendor/tabler-1.7.3/tabler.min.css": "00601301716c0bd97acbec6c2b6cb98f257d148063ef168aa06f902b1e7d9ea5"
+  },
+  "changes_from_prior_verified_package": [
+    "service/static/v1.css"
+  ],
+  "css_change_verified": "Deleted only html smooth-scroll line; all other 47 service runtime files unchanged.",
+  "socketpair_initialization_retries": 20,
+  "manifest_check_exit": 0,
+  "build_exit": 0,
+  "release_source_zip_exit": 0,
+  "gitleaks_version": "8.30.1",
+  "gitleaks_scope": "All Git refs/full history plus git-tracked working public-file inventory. Default official rules; no added config/baseline/allowlist/exclusion. Ignore comments disabled; 100% redaction. Raw scanner returns1 for findings, triage unresolved0.",
+  "limitations": [
+    "Exact source is b0c3d64; root owns final remote/HEAD CI confirmation and any later evidence-only commit.",
+    "No repeated browser or font HTTP checks in this final package pass; prior checks passed and all affected font/server bytes match.",
+    "No package publishing, production, external model/anchor or independent expert review."
+  ],
+  "source_zip": {
+    "sha256": "de77bc804026b51bea6395896052aad8c018c89f1d739f44fc0a0e3414050afd",
+    "entries": 391,
+    "source_hash_count": 390,
+    "manifest_hash_mapping_matches_committed": true,
+    "manifest_format_regenerated_by_release_helper": true,
+    "archive_reports_local_runtime_excluded": true
+  },
+  "artifacts": {
+    "caseproof_local_demo-5.3.0.dev6-py3-none-any.whl": {
+      "sha256": "f9b68e2ed0909d03351fb9d4e84fffc2289a0c0667f525c45aeea1cc25c91077",
+      "size": 840095
+    },
+    "caseproof_local_demo-5.3.0.dev6.tar.gz": {
+      "sha256": "e98452bbf1086c50866a8c2424abdd64f1b074cff2a9f62e5bd19dc97d342119",
+      "size": 2307497
+    },
+    "CaseProof_Enterprise-5.3.0.dev6-b0c3d64-source.zip": {
+      "sha256": "de77bc804026b51bea6395896052aad8c018c89f1d739f44fc0a0e3414050afd",
+      "size": 2457915
+    }
+  },
+  "gitleaks": {
+    "gitleaks-history": {
+      "raw_exit_code": 1,
+      "candidate_count": 23,
+      "classification_counts": {
+        "sha256_digest": 16,
+        "synthetic_request_key": 7
+      },
+      "credential_candidates": 0,
+      "unresolved": 0
+    },
+    "gitleaks-working": {
+      "raw_exit_code": 1,
+      "candidate_count": 22,
+      "classification_counts": {
+        "sha256_digest": 15,
+        "synthetic_request_key": 7
+      },
+      "credential_candidates": 0,
+      "unresolved": 0
+    }
+  },
+  "installed_commands": [
+    {
+      "label": "archive-check",
+      "command": [
+        "$CHECKOUT\\.venv\\Scripts\\python.exe",
+        "-m",
+        "scripts.check_distribution",
+        "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\dist"
+      ],
+      "cwd": "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\source",
+      "exit_code": 0,
+      "log": "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\archive-check.log"
+    },
+    {
+      "label": "wheel-reinstall",
+      "command": [
+        "$USER\\AppData\\Local\\Temp\\caseproof-visual-package-b4cebeec84de48b592653d2d5275300e\\venv\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "install",
+        "--force-reinstall",
+        "--no-deps",
+        "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\dist\\caseproof_local_demo-5.3.0.dev6-py3-none-any.whl"
+      ],
+      "cwd": "$USER\\AppData\\Local\\Temp\\caseproof-visual-package-b4cebeec84de48b592653d2d5275300e",
+      "exit_code": 0,
+      "log": "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\wheel-reinstall.log"
+    },
+    {
+      "label": "installed-check",
+      "command": [
+        "$USER\\AppData\\Local\\Temp\\caseproof-visual-package-b4cebeec84de48b592653d2d5275300e\\venv\\Scripts\\python.exe",
+        "-m",
+        "scripts.windows_checks",
+        "scripts.check_distribution",
+        "--installed"
+      ],
+      "cwd": "$USER\\AppData\\Local\\Temp\\caseproof-visual-package-b4cebeec84de48b592653d2d5275300e",
+      "exit_code": 0,
+      "log": "$CHECKOUT\\.runtime\\visual-refresh\\package\\head-b0c3d64-d3258ecf\\installed-check.log"
+    }
+  ]
+}

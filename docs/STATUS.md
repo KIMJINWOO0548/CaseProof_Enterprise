@@ -37,3 +37,5 @@ dev6의 고정된 실행·HTTP·UI 소스에 대한 로컬 전체 회귀는 **90
 ## 추가 시각 개편
 
 잉크·아이리스·피치 색상, 로컬 SUIT 글꼴, 실제 현재 검토 단계와 넓은 화면의 독립 증거 패널을 적용했다. [설계·출처](VISUAL_DESIGN.md), [실제 화면·측정](evidence/g1-g6/ui-visual-refresh.json)을 기록했다. Chrome156에서 전체 반려/시정/승인·원래 요청 복구·오류 초점을 통과했고,375/390/768/1024/1280/1440px 가로 넘침0과 모션 감소를 확인했다. MIME 회귀는 RED→GREEN, 관련 Python4 PASS·선택 브라우저1 SKIP이다. 앞선 핵심 검증과 새 변경의 최종 CI는 SHA를 구분해 [VALIDATION](VALIDATION.md)에 기록한다.
+
+시각 구현 `b0c3d64`의 [CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는9개 성공이다. OS별 전체 각각912 PASS, 실제 PG460 PASS, 통계34 PASS이며 [새 배포물 설치·source ZIP](evidence/g1-g6/installed-b0c3d64.json)도 통과했다. 후속 현재 단계 외 라벨 대비 보정은 실제1440/390px에서5.53:1로 확인했다. 일반 CI의 선택 검사 skip을 실제 PG/NumPy 실행과 구분한다. 외부 검수와 운영 검증의 미완료 범위는 변함없다.

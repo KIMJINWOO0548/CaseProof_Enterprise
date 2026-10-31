@@ -73,6 +73,14 @@ The measured normal text pairs are 5.53–15.27:1; input border and focus outlin
 against white are 3.22:1 and 3.25:1. These are selected measurements, not a complete
 WCAG certification. [Actual flow, dimensions and measurements](evidence/g1-g6/ui-visual-refresh.json).
 
+Implementation `b0c3d64` passed all 9 CI jobs: each ordinary OS/Python matrix
+reported 912 PASS, actual PostgreSQL 460 PASS and paired statistics 34 PASS.
+[CI evidence](evidence/g1-g6/ci-b0c3d64.json) and the
+[exact source/wheel/outside-checkout checks](evidence/g1-g6/installed-b0c3d64.json)
+are preserved. A subsequent style-only refinement uses the muted text token
+for non-current stage labels, measured at 5.53:1, and removes an unused color
+rule. The desktop/mobile captures and computed-style check were repeated.
+
 This is a synthetic review prototype. Independent usability observation,
 screen-reader speech, real insurance decisions, external anchors/models and
 production deployment are not established by visual or automated checks.

@@ -5,6 +5,10 @@ The baseline `index.html` and vendored Tabler 1.7.3 stylesheet remain unchanged.
 The UI uses local Tabler tables, forms and buttons with native accessible dialogs;
 no frontend dependency or external resource is added.
 
+The current visual layer adds a locally bundled, unmodified OFL-1.1 SUIT font
+and a current-stage rail, with separate evidence at wide widths. See
+[visual design, primary references and browser checks](VISUAL_DESIGN.md).
+
 The workspace authenticates with an entered bearer token, lists changes with
 search/status filters, and uses registered synthetic presets including the third
 fictional pack. Analysts create immutable changes, edit public case claim-day

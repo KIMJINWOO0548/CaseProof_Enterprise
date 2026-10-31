@@ -238,13 +238,13 @@
   ],
   "source_sha256": {
     "service/static/v1.html": "4ec666495cbc5cf089d1bc9be4d87375d657d84be06005512658438be61c3c43",
-    "service/static/v1.css": "397b8d7c973680c2fc935a5d27382864cdb0a20053f7cd2b9467ada62ac8cafa",
+    "service/static/v1.css": "1274d410051e9c7549a7e25c859b6d1a1b146a1a05141219623f470dad071727",
     "service/static/v1.js": "4d54c56a2cf82db494e773ec6abfe50d17729b0b820e6bb6a99829f9c330c0b1",
     "service/workspace.py": "e7c5f1f5a745c9bb53a01bbe8b943a4a4e8bfe3e52c95a9e36f02914a743730b",
     "scripts/v1_ui_probe.js": "e03148225d527b7f1049ef9801b9e840cf6896c59e98a3f627fa8402f42fee2e",
     "tests/v1/test_workspace.py": "272447294dfb927fe26609e1ce7bc96f41c70540cdddadc8e65ba64a1f7bc762",
-    "docs/images/v1-review-desktop.jpg": "81d7284697f13c6191267415f73260cbebdc5e55db2989c15238ae1440d56fce",
-    "docs/images/v1-review-mobile.jpg": "50e59532f976c1ec1ef7e823dcd815fc9d695bebe363732408f70942df196f53",
+    "docs/images/v1-review-desktop.jpg": "4872003b35007f1ba52eff8672818bbc3c1d9148cf5c89435b9cf64e65898bf2",
+    "docs/images/v1-review-mobile.jpg": "9b4e079206c68a684c8f3d7fc39e849a4718ed5cc15c89857d7ed85a1741ec4c",
     "docs/images/v1-review-dialog.jpg": "d3be48d98a2fe61bf815d41a6e15ef66a45009f497dad5a92a420a390119f878"
   },
   "limitations": [
@@ -272,5 +272,19 @@
       "timestamp": "2026-11-01T02:48:07.585263+09:00",
       "hostname": "감자"
     }
+  },
+  "contrast_refinement": {
+    "change": "Use the existing muted text token for non-current stage labels; remove unused next-state color.",
+    "before_hex": "#77788a",
+    "after_hex": "#66677c",
+    "after_contrast_on_white": 5.53,
+    "computed_browser_rgb": "rgb(102, 103, 124)",
+    "native_widths_rechecked": [
+      1440,
+      390
+    ],
+    "horizontal_overflow": false,
+    "active_stage": "데모 승인",
+    "fixture_cleanup": "All four owned actors disabled again, actual HTTP401 for each; owned server stopped."
   }
 }

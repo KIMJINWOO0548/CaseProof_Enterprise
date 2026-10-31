@@ -1,5 +1,7 @@
 # 검토 결정 흐름 UX 감사 — 2026-11-01 KST
 
+아래는 오류 처리 수정 당시의 전후 감사 기록이다. 이후 [시각 개편](VISUAL_DESIGN.md)에서도 같은 요약/필드 초점·Escape 검사를 다시 통과했다. 최신 화면은 그 문서와 README에서 확인한다.
+
 목표는 대기 중인 합성 변경의 평가·근거를 확인하고, 사유를 입력해 결정을 기록하는 흐름이다. 기존 `/v1` 코드와 Tabler 스타일을 대상으로 했다. 새로운 앱·템플릿·페이지·배포를 만들지 않았다. 아래 화면은 이번 감사에서 직접 캡처하고 저장 파일을 열어 확인했다.
 
 UI/UX Pro Max의 `error summary validation --domain ux` 검색은 오류 요약의 초점, 잘못된 필드로의 링크, 연결된 인라인 오류를 제안했다. Product Design의 index/audit/user-context와 감사 프레임워크를 읽고 preflight를 실행했으며 저장된 별도 사용자 문맥은 없었다. Frontend Design과 Uncodixfy로 기존 정보 계층·팔레트를 유지하고 장식적인 새 요소를 배제했다. [실제 스킬·도구 기록](evidence/g1-g6/ux-tools-skills.json), [공식 비교 사례·라이선스](AI_UI_REFERENCES.md)를 함께 확인한다.

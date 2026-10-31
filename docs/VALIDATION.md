@@ -2,6 +2,10 @@
 
 ## 추가 시각 개편 — 2026-11-01 KST
 
+구현 `b0c3d64`의 [CI41226797390](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는 **9 success / PR 전용1skip**이다. Linux Python3.11/3.12/3.13·Windows3.12 각각 **912 PASS,459 optional SKIP,22 subtests PASS,3 warnings**이며, 별도 실제 PG17.11은 **460 PASS/0skip**, NumPy는 **34 PASS**다. [명령·JUnit·checksum](evidence/g1-g6/ci-b0c3d64.json), [정확한 source ZIP·wheel·저장소 밖 설치·Gitleaks](evidence/g1-g6/installed-b0c3d64.json)을 기록했다. 소스 ZIP은390개 source hash+manifest를 검증했다. Gitleaks 원시 종료값은1이며, 이력23/작업 소스22 후보를 해시·합성 요청키로 분류했고 자격 증명/미해결은0이었다. 보안 인증으로 해석하지 않는다.
+
+후속 대비 보정은 현재 단계 이외의 라벨을 기존 muted 색상으로 맞춰5.53:1로 높이고 사용되지 않는 next 색상 규칙을 제거했다.1440/390px의 실제 computed color·줄바꿈·현재 단계·화면을 재확인했다. 서버 동작과 폰트 bytes는 b0c3d64와 같으며, 최신 HEAD의 CI는 해당 SHA의 GitHub Actions 결과로 구분한다.
+
 [설계·1차 출처](VISUAL_DESIGN.md), [Chrome 실제 동선·화면·대비](evidence/g1-g6/ui-visual-refresh.json). 검토 단계 표시는 기존 렌더러에서 RED를 확인한 뒤 실제 생성→평가→응답 유실 복구→반려→시정→분리 승인→증거 조회에서 GREEN이었다. 오류 링크 안정화 timeout은 보존했고, 선택적 smooth scroll 제거·소유 페이지 재생성 후 제한 시간 내 전체 동선을 통과했다. 이전 세션 간섭과 scroll 각각의 기여는 분리 실험하지 않았다.
 
 최종 로컬 전체는 **913 PASS / 458 optional SKIP / 22 subtests PASS / 3 warnings**였다. 새 font MIME 회귀도 포함됐고, Windows socketpair 초기화만57회 재시도했다. 애플리케이션 요청·단언 재시도는 없다. 현재 PG 서버와 Python Playwright가 없어 관련 검사는 SKIP이며, NumPy는 설치된 환경이다. 별도 MCP Chrome156 검사는 실제 실행됐다. 관련 Python은4 PASS/1 optional SKIP, Node 원래 요청 복구·거부 이후 복구·문법 검사 PASS, baseline smoke12/12, manifest390 source/패키지 구조 검사 PASS다. 정확한 commit의 CI·설치 배포물 결과는 완료 기록에서 분리한다.

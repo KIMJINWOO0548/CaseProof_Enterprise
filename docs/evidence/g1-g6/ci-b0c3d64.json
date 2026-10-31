@@ -1,0 +1,317 @@
+{
+  "schema": "caseproof.ci-evidence.v1",
+  "run_id": 41226797390,
+  "source_sha": "b0c3d64b8617de3ccbaa272354f63bd7feac6920",
+  "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390",
+  "conclusion": "success",
+  "event": "push",
+  "created_utc": "2026-10-31T17:54:36Z",
+  "finished_utc": "2026-10-31T18:07:14Z",
+  "verified_utc": "2026-10-31T18:07:28.784220+00:00",
+  "commands": [
+    {
+      "args": [
+        "gh",
+        "run",
+        "watch",
+        "41226797390",
+        "--repo",
+        "KIMJINWOO0548/CaseProof_Enterprise",
+        "--exit-status",
+        "--interval",
+        "10"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "gh",
+        "run",
+        "view",
+        "41226797390",
+        "--repo",
+        "KIMJINWOO0548/CaseProof_Enterprise",
+        "--json",
+        "workflowName,event,headSha,status,conclusion,url,createdAt,updatedAt,jobs"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "gh",
+        "run",
+        "view",
+        "41226797390",
+        "--repo",
+        "KIMJINWOO0548/CaseProof_Enterprise",
+        "--log"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    },
+    {
+      "args": [
+        "gh",
+        "run",
+        "download",
+        "41226797390",
+        "--repo",
+        "KIMJINWOO0548/CaseProof_Enterprise",
+        "--dir",
+        ".runtime\\g1-g6\\ci-b0c3d64\\artifacts"
+      ],
+      "exit_code": 0,
+      "stderr": ""
+    }
+  ],
+  "jobs": [
+    {
+      "name": "PostgreSQL 17 roles, RLS and concurrency",
+      "databaseId": 124612523691,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523691"
+    },
+    {
+      "name": "ubuntu-24.04 / Python 3.11",
+      "databaseId": 124612523785,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523785"
+    },
+    {
+      "name": "OSV dependency audit",
+      "databaseId": 124612523820,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523820"
+    },
+    {
+      "name": "Paired evaluation statistics",
+      "databaseId": 124612523834,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523834"
+    },
+    {
+      "name": "Static UI JavaScript syntax",
+      "databaseId": 124612523835,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523835"
+    },
+    {
+      "name": "ubuntu-24.04 / Python 3.12",
+      "databaseId": 124612523868,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523868"
+    },
+    {
+      "name": "Build and install distribution",
+      "databaseId": 124612523959,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612523959"
+    },
+    {
+      "name": "windows-2022 / Python 3.12",
+      "databaseId": 124612524085,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612524085"
+    },
+    {
+      "name": "ubuntu-24.04 / Python 3.13",
+      "databaseId": 124612524141,
+      "status": "completed",
+      "conclusion": "success",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612524141"
+    },
+    {
+      "name": "Pull request dependency changes",
+      "databaseId": 124612525020,
+      "status": "completed",
+      "conclusion": "skipped",
+      "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390/job/124612525020"
+    }
+  ],
+  "ordinary": [
+    {
+      "job": "ubuntu-24.04 / Python 3.11",
+      "passed": 912,
+      "skipped": 459,
+      "warnings": 3,
+      "subtests_passed": 22,
+      "console_summary": "2026-10-31T17:56:19.3359744Z 912 passed, 459 skipped, 3 warnings, 22 subtests passed in 79.49s (0:01:19)",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      },
+      "skipped_groups": {
+        "browser": 1,
+        "evaluation": 1,
+        "postgres": 457
+      }
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.12",
+      "passed": 912,
+      "skipped": 459,
+      "warnings": 3,
+      "subtests_passed": 22,
+      "console_summary": "2026-10-31T17:56:13.3148531Z 912 passed, 459 skipped, 3 warnings, 22 subtests passed in 78.37s (0:01:18)",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      },
+      "skipped_groups": {
+        "browser": 1,
+        "evaluation": 1,
+        "postgres": 457
+      }
+    },
+    {
+      "job": "windows-2022 / Python 3.12",
+      "passed": 912,
+      "skipped": 459,
+      "warnings": 3,
+      "subtests_passed": 22,
+      "console_summary": "2026-10-31T18:07:03.5666175Z 912 passed, 459 skipped, 3 warnings, 22 subtests passed in 701.13s (0:11:41)",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      },
+      "skipped_groups": {
+        "browser": 1,
+        "evaluation": 1,
+        "postgres": 457
+      }
+    },
+    {
+      "job": "ubuntu-24.04 / Python 3.13",
+      "passed": 912,
+      "skipped": 459,
+      "warnings": 3,
+      "subtests_passed": 22,
+      "console_summary": "2026-10-31T17:55:53.7303362Z 912 passed, 459 skipped, 3 warnings, 22 subtests passed in 61.06s (0:01:01)",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      },
+      "skipped_groups": {
+        "browser": 1,
+        "evaluation": 1,
+        "postgres": 457
+      }
+    }
+  ],
+  "postgres": {
+    "console_summary": "2026-10-31T17:55:22.4725250Z 460 passed in 15.73s",
+    "server_version": "PostgreSQL 17.11 (Debian 17.11-1.pgdg12+2)",
+    "junit": {
+      "tests": 460,
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0
+    }
+  },
+  "evaluation": {
+    "job": "Paired evaluation statistics",
+    "passed": 34,
+    "console_summary": "2026-10-31T17:54:54.0479742Z 34 passed in 0.20s"
+  },
+  "osv": [
+    {
+      "file": "osv-evaluation.json",
+      "dependencies": 36,
+      "known_vulnerability_records": 0,
+      "skipped_dependencies": [],
+      "sha256": "f0fc8d6f1654c266355b0f8a38d29b90f51e278c42c6c405c3e2756810891282"
+    },
+    {
+      "file": "osv-postgres.json",
+      "dependencies": 37,
+      "known_vulnerability_records": 0,
+      "skipped_dependencies": [],
+      "sha256": "3b63b0683822993f3460dd3a22c8b2fd959c06b2cf4accb1db00e4f42c561dfa"
+    },
+    {
+      "file": "osv.json",
+      "dependencies": 35,
+      "known_vulnerability_records": 0,
+      "skipped_dependencies": [],
+      "sha256": "366f52faba60c7e993aede9fe8e845072fd255088752ffe427d4110cc8761094"
+    }
+  ],
+  "evidence_files": [
+    {
+      "path": "artifacts/postgres-17-verification/postgres.xml",
+      "sha256": "03a1e17c1ccaef6e0c452884c574c6f2a158b05855c718f26e98158a52b343ca",
+      "junit": {
+        "tests": 460,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 0
+      }
+    },
+    {
+      "path": "artifacts/synthetic-checks-ubuntu-24.04-python-3.11/ci/pytest.xml",
+      "sha256": "7bd373497e8c6bd1811dc1f9b1c16ba0e61107b2695ad45e0f134189e31467ff",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      }
+    },
+    {
+      "path": "artifacts/synthetic-checks-ubuntu-24.04-python-3.12/ci/pytest.xml",
+      "sha256": "52ef207fedab177018d3f38f36631244bae91939ae62e625541e552368816e93",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      }
+    },
+    {
+      "path": "artifacts/synthetic-checks-ubuntu-24.04-python-3.13/ci/pytest.xml",
+      "sha256": "5d56e277f31d231472b6a3ca419914d2b754d807ad225a5a82bba10a09b194f6",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      }
+    },
+    {
+      "path": "artifacts/synthetic-checks-windows-2022-python-3.12/ci/pytest.xml",
+      "sha256": "d84901028f21832bbcbb289531933ce3f517b3487b0922a7c6165e7841295dc4",
+      "junit": {
+        "tests": 1393,
+        "errors": 0,
+        "failures": 0,
+        "skipped": 459
+      }
+    }
+  ],
+  "limitations": [
+    "Ordinary matrix skips optional PostgreSQL, NumPy and Python-browser checks; separate jobs execute PostgreSQL and NumPy checks.",
+    "Browser MCP validation is separate from CI; no independent reviewer or production guarantee."
+  ],
+  "job_counts": {
+    "success": 9,
+    "skipped": 1
+  }
+}
