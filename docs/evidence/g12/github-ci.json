@@ -1,0 +1,59 @@
+{
+  "conclusion": "success",
+  "databaseId": 41164118260,
+  "event": "push",
+  "headSha": "fdac40dc922ceab60ab891bc58b5f27e0d71c9f6",
+  "status": "completed",
+  "url": "https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41164118260",
+  "jobs": [
+    {
+      "databaseId": 124427854743,
+      "name": "ubuntu-24.04 / Python 3.12",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427854935,
+      "name": "ubuntu-24.04 / Python 3.11",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427854944,
+      "name": "ubuntu-24.04 / Python 3.13",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427854945,
+      "name": "windows-2022 / Python 3.12",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427854961,
+      "name": "Build and install distribution",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427855021,
+      "name": "OSV dependency audit",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427855071,
+      "name": "Static UI JavaScript syntax",
+      "status": "completed",
+      "conclusion": "success"
+    },
+    {
+      "databaseId": 124427855720,
+      "name": "Pull request dependency changes",
+      "status": "completed",
+      "conclusion": "skipped"
+    }
+  ],
+  "verification": "GitHub Actions API through gh; job results also verified using GitHub MCP"
+}

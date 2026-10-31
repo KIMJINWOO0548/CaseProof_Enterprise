@@ -18,6 +18,7 @@ Alembic 1.20.1 / 임시 합성 SQLite / 단일 worker. 새 프로젝트 검증 �
 | baseline smoke | **12/12**, exit 0 |
 | JS 문법·실제 요청 재시도 함수 | 각각 exit 0; 새 브라우저 실행과 구별 |
 | wheel/sdist·격리 wheel 설치 실행 | **5.3.0.dev4 PASS**, runtime model·migration source·Tabler notices 포함; import·seed·HTML·health·CSS 확인 |
+| 실제 GitHub CI | 코드 `fdac40d`의 [실행](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41164118260) success; Linux 3.11/3.12/3.13·Windows 3.12·배포물·JS·OSV의 **7개 job 성공**, push의 PR 전용 1개 skipped |
 
 초기 [누락 모듈 실패](evidence/g12/schema-red.txt), fixture tenant 삽입 순서 오류,
 독립 검토에서 재현한 [5개 실패](evidence/g12/review-red.txt), constraint 이름 충돌로

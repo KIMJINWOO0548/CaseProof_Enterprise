@@ -80,7 +80,7 @@
 - [x] Test baseline DB import stays legacy-unverified; no fabricated DOMAIN events or automatic approval. No import API is provided; baseline migration is refused without changing its bytes.
 - [x] Implement Alembic on disposable DBs. Choose **no latest_revision FK** as fixed in 08; keep child FKs. Per-command projection verification remains G1.3, not a G1.2 DB-only guarantee.
 - [x] Run `python -m pytest tests/v1/test_schema.py -q`, blank-DB `alembic upgrade head`, `downgrade base`, `upgrade head`, and whole suite.
-- [ ] Commit `feat: add immutable change record schema` with actual migration logs.
+- [x] Commit `feat: add immutable change record schema` with actual migration logs (`fdac40d`).
 
 **Done:** empty SQLite migration and integrity tests pass; PG behavior still unverified until G2. Production data rollback is not tested by dropping an empty test schema.
 
