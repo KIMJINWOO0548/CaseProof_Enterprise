@@ -33,3 +33,7 @@ The integration adds truthful `aria-current` and a persistent selected-row marke
 ## 2026-11-01 — AI 제품 자료를 참고한 후속 배치
 
 [공식 조사와 적용 기록](AI_UI_REFERENCES.md)에 Langfuse·LangSmith·Dify의 확인 범위와 채택한 작업 방식을 기록했다. 후속 HTML/CSS와 최소 DOM 렌더링 변경으로 데스크톱 작업함·상세를 병렬 배치하고 상태와 revision을 묶었다. 기본 표·텍스트 노드·선택 표시·메모리 토큰·요청 복구 동작은 유지한다. 실제 브라우저에서 발견한 닫힌 native dialog 표시 충돌도 명시적 `dialog:not([open])` 규칙으로 수정했다. 실행 결과는 별도 검증 기록을 따른다.
+
+## 오류 회복 후속 감사
+
+실제 `error summary validation --domain ux` 검색의 Focusable Error Summary·Error Messages·Error Placement를 현재 native 결정 모달에 대조했다. 모달 내부 요약 초점·필드 링크·연결된 인라인 오류와 불투명 배경을 보완하고 native1440/390px·0POST·Escape·재열기를 검증했다. [캡처별 보고서](UI_FOCUS_AUDIT.md)와 [실제 도구/스킬 기록](evidence/g1-g6/ux-tools-skills.json)을 확인한다. 실제 스크린리더 발화와 독립 사용자 연구는 미실행이다.

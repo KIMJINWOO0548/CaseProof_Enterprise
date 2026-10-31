@@ -23,3 +23,5 @@ dev6의 고정된 실행·HTTP·UI 소스에 대한 로컬 전체 회귀는 **90
 후속 AI UI는 Chrome 156의 native clicks로 반려→시정→별도 검토자 승인·증거, committed response 유실 복구, 1280/1440px 병렬 배치·390/375px 넘침·닫힌 dialog·Escape 복귀를 검사했다. 합성 GET 403/404/409/422·로딩·빈 목록도 별도 관찰했다. 주요 텍스트 대비는 6.32 이상이며 모바일 표적은 44px였다. [최신 V2 실행 범위](evidence/g1-g6/ai-ui-browser-dev6.json), [화면 측정](evidence/g1-g6/ai-ui-metrics.json).
 
 실제 CLI의 Windows 10014 시작 실패를 독립 재현한 뒤 초기화만 제한적으로 보강했다. [CLI 5개 검사](evidence/g1-g6/demo-startup-verification.json)와 [새 V2 복구 4개 훈련](evidence/g1-g6/recovery-drill-dev6.json)이 통과했다. 최종 commit의 전체 CI와 격리 배포물 결과는 추가 기록한다.
+
+후속 [결정 흐름 UX 감사](UI_FOCUS_AUDIT.md)로 모달 투명 배경과 모달 밖 오류를 재현·수정했다. 1440/390px 요약/필드 초점·Escape·오류 초기화·잘못된 입력 POST0, 전체 3인 시정 승인 흐름을 실제 Chrome으로 재검증했다. [de1fc5e CI](evidence/g1-g6/ci-de1fc5e.json)는 9개 성공, 일반 각 911 PASS·PG460 PASS였으며 후속 UI commit은 별도 CI 대상이다.

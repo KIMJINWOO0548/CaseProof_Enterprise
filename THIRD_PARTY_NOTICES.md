@@ -41,6 +41,12 @@ Direct runtime projects are [FastAPI](https://github.com/fastapi/fastapi), [Pyda
 
 The Docker image incorporates the separately maintained Python/Debian base image and installed dependencies. Their terms and notices remain applicable. The mutable minor base tag must be replaced by a reviewed digest for an identified release image. A Python-only dependency audit does not cover operating-system packages or a browser binary.
 
+## Reference-only AI product interfaces
+
+The UI research cites public [Langfuse Sessions](https://langfuse.com/docs/observability/features/sessions), [LangSmith trace documentation](https://docs.langchain.com/langsmith/manage-trace), and [Dify Logs](https://docs.dify.ai/en/cloud/use-dify/monitor/logs) for general list/detail, selection-context and result-inspection patterns. No upstream UI source, CSS, logos, screenshots, SDKs or color tokens were copied or bundled. These references do not change the provenance of the vendored Tabler assets above.
+
+Langfuse core is MIT subject to the exclusions in its [pinned root LICENSE](https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/LICENSE); enterprise directories have a [separate commercial license](https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/ee/LICENSE). LangSmith is a proprietary commercial platform governed by its [Terms](https://www.langchain.com/terms-of-service); no SDK open-source license is inferred for its hosted UI. Dify's [pinned LICENSE](https://github.com/langgenius/dify/blob/4c521a3c0a1f60607c8a7bcf90792f34adcf18d0/LICENSE) modifies Apache-2.0 with additional multi-tenant, frontend-logo/copyright and contributor conditions and an appearance-patent assertion; it is not described here as plain Apache-2.0. See [the reference register](docs/AI_UI_REFERENCES.md) for exact source commits, text hashes, observations, application locations and rejected ideas. This is a provenance record, not rights clearance for copying those products.
+
 ## Rights-review record
 
 Before public release, record for each imported or adapted file: source or supplier, author/rightsholder if known, version/hash, license or written permission, retained notices, and reviewer/date. Unresolved material must be removed or held from public distribution; do not fill gaps with guessed authors or licenses. Store confidential permission records privately and record only a non-sensitive summary in the repository.

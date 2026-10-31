@@ -1,5 +1,13 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 후속 UI 오류 회복·라이선스 감사 — 2026-11-01 KST
+
+[현재 화면 7단계 감사](UI_FOCUS_AUDIT.md)와 [도구/스킬 실행](evidence/g1-g6/ux-tools-skills.json)을 기록했다. UI/UX Pro Max 실제 검색, Product Design preflight, Frontend Design/Uncodixfy 검토, GitHub MCP의 고정 LICENSE 원문, Context7의 Playwright 공식 초점/Escape 문서와 IAB/Playwright 실제 관찰을 구분한다. Langfuse MIT core/상용 ee, Dify 추가 조건부 수정 Apache2, LangSmith 상용 제품을 같은 라이선스로 취급하지 않았다. 코드·자산 복제는 없었다.
+
+공백 사유의 모달 밖 오류와 투명 배경을 이번 캡처에서 재현했다. 수정 후 실제 Chrome의 1440/390px에서 요약 초점·필드 링크·aria-invalid/describedby·정상 입력 해제·재열기·Escape·불투명 배경·잘못된 입력 POST0을 확인했다. 합성409 후 전역 오류 초점, 실제 IAB401 초점도 확인했고 같은 원래 fixture의 revision3/결정0을 보존했다. 전체 3인 반려→시정→승인과 committed-response 복구도 최신 UI에서 다시 통과했다. [Native 결과](evidence/g1-g6/ux-native-workflow.json), [표적3PASS/1선택skip](evidence/g1-g6/ux-final-target.txt). 초기 probe의 로딩 대기 누락은 실패로 보존하고 실제 업무 실패로 합산하지 않았다.
+
+선행 최종 core `de1fc5e`의 [CI](evidence/g1-g6/ci-de1fc5e.json)는 9개 success/PR전용1skip, Linux3.11/3.12/3.13·Windows3.12 각각911 PASS/459 optional skip/22subtests, 실제 PG17.11 460 PASS, 수치34 PASS다. [fresh runtime-only wheel/sourceZIP](evidence/g1-g6/installed-de1fc5e-wheel.json)은 설치된 V2 생성·전체 평가·검증 refs까지 통과했다. [새 비밀 검사](evidence/g1-g6/gitleaks-de1fc5e-summary.json)의 이력23·작업소스22 후보는 해시/합성멱등성키로 판별했고 실제자격증명/미해결0, 원본exit1을 보존했다. 후속 UI 소스는 새 SHA의 CI/배포물 검사로 구분한다.
+
 ## dev6 실행 설정·진단·전체 회귀 — 2026-11-01 KST
 
 [실제 로컬 전체 출력](evidence/g1-g6/ordinary-dev6-final.txt), [소스 범위와 명령](evidence/g1-g6/ordinary-dev6-final.json): **904 passed, 1 optional Python-browser skipped, 3 warnings, 22 subtests passed**, exit 0, 472.91초. 소켓 초기화만 662회 재시도했으며 테스트 본문·HTTP mutation을 반복하지 않았다. 이 실행은 마지막 CLI listener 보강 전의 고정된 V2/identity/API/UI 소스다. CLI 보강 후 최종 commit은 별도 전체 CI로 검증한다. 감독자의 이전 전체 실행 CLI TimeoutExpired(15초)는 보존했고 동일 원본 검사의 단독 실행은 사용자 보고 3.98초, 이 세션 14.64초로 각각 통과했다. timeout·기존 테스트는 변경하지 않았다.

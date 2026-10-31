@@ -1,0 +1,36 @@
+{
+  "schema": "caseproof.ui-audit-native.v1",
+  "result": "PASS",
+  "original": "7f1cdbc9-9139-4d2b-93d5-cf91a142b512",
+  "corrected": "efd1e7e0-5bb8-49b9-985c-8e9a9c8978c8",
+  "browser": "156.0.8078.48",
+  "checks": [
+    "1440/390 error summary focus and field link",
+    "invalid whitespace/short reason emits zero POST",
+    "inline aria-invalid/describedby, correction and reopen reset",
+    "opaque native modal, no horizontal overflow",
+    "Escape restores opener",
+    "full-suite evaluation, committed-response abort and same-key recovery",
+    "reject, linked correction, independent domain/release approval, VALID evidence",
+    "inert XSS and empty WebStorage"
+  ],
+  "setup_failure": "First integrated probe read status before detail load; fixed by waiting for visible decision control. Failure preserved, not counted as application failure or pass.",
+  "iab_check": {
+    "invalid_login": 401,
+    "focused": "message",
+    "role": "alert",
+    "live": "assertive"
+  },
+  "server_error_check": {
+    "status": 409,
+    "response": "synthetic intercepted conflict",
+    "focused": "message",
+    "dialogClosed": true,
+    "persisted_decisions": 0,
+    "original_revision": 3
+  },
+  "limits": [
+    "No screen-reader speech test or user study",
+    "Injected409 tests UI recovery, not server concurrency enforcement"
+  ]
+}

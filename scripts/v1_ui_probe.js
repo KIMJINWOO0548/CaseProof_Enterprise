@@ -62,6 +62,55 @@ async function checkLayout(page) {
   } finally { if (original) await page.setViewportSize(original); }
 }
 
+async function errorFocusProbe(page, { decisionSelector = '#decision-APPROVE' } = {}) {
+  await page.locator(decisionSelector).waitFor({ state: 'visible' });
+  const original = page.viewportSize();
+  const snapshot = await page.evaluate(() => ({ status: document.querySelector('#change-status').textContent,
+    revision: document.querySelector('.change-meta p').textContent }));
+  let posts = 0;
+  const count = request => { if (request.method() === 'POST' && request.url().includes('/api/v1/changes')) ++posts; };
+  page.on('request', count);
+  try {
+    for (const width of [1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      await page.locator(decisionSelector).click();
+      for (const reason of ['        ', '       a']) {
+        await page.locator('#reason').fill(reason);
+        await page.locator('#decision-form button[type=submit]').click();
+        await page.locator('#decision-error-summary').waitFor({ state: 'visible' });
+        const error = await page.evaluate(() => {
+          const dialog = document.querySelector('#decision-dialog'), field = document.querySelector('#reason');
+          const background = getComputedStyle(dialog).backgroundColor;
+          return { open: dialog.open, focus: document.activeElement.id, invalid: field.getAttribute('aria-invalid'),
+            describedBy: field.getAttribute('aria-describedby'), alert: document.querySelector('#decision-error-summary').getAttribute('role'),
+            backgroundAlpha: background.startsWith('rgba(') ? Number(background.split(',').at(-1).replace(')', '')) : background.startsWith('rgb(') ? 1 : 0,
+            overflow: document.documentElement.scrollWidth > innerWidth };
+        });
+        assert.equal(error.open, true); assert.equal(error.focus, 'decision-error-summary');
+        assert.equal(error.invalid, 'true'); assert.equal(error.describedBy, 'reason-error'); assert.equal(error.alert, 'alert');
+        assert.equal(error.backgroundAlpha, 1, 'native modal surface must be opaque'); assert.equal(error.overflow, false);
+        assert.equal(posts, 0, 'local invalid reason must not be submitted');
+        await page.locator('#reason-error-link').click();
+        assert.equal(await page.locator('#reason').evaluate(el => el === document.activeElement), true);
+      }
+      await page.locator('#reason').fill('a b cdef');
+      assert.equal(await page.locator('#decision-error-summary').isVisible(), false);
+      assert.equal(await page.locator('#reason-error').isVisible(), false);
+      assert.equal(await page.locator('#reason').getAttribute('aria-invalid'), null);
+      assert.equal(await page.locator('#reason').getAttribute('aria-describedby'), null);
+      await page.keyboard.press('Escape');
+      assert.equal(await page.locator(decisionSelector).evaluate(el => el === document.activeElement), true);
+      await page.locator(decisionSelector).click();
+      assert.equal(await page.locator('#decision-error-summary').isVisible(), false);
+      await page.keyboard.press('Escape');
+    }
+    assert.equal(posts, 0);
+    assert.deepEqual(await page.evaluate(() => ({ status: document.querySelector('#change-status').textContent,
+      revision: document.querySelector('.change-meta p').textContent })), snapshot);
+    return { widths: [1440, 390], posts, browser: page.context().browser().version() };
+  } finally { page.off('request', count); if (original) await page.setViewportSize(original); }
+}
+
 async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDays = 24 }) {
   const login = async token => {
     if (await page.locator('#switch-role').isVisible()) await page.locator('#switch-role').click();
@@ -96,6 +145,7 @@ async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDay
   await status('PENDING_DOMAIN_REVIEW');
   await login(tokens.domain);
   await page.locator('[data-change-id="' + original + '"]').click();
+  await errorFocusProbe(page, { decisionSelector: '#decision-REJECT' });
   await decision('REJECT', '<svg onload="window.__xss=1"> correction needed');
   await status('REJECTED');
   await login(tokens.analyst);
@@ -132,5 +182,5 @@ async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDay
   return { original, corrected, browser: page.context().browser().version() };
 }
 
-module.exports = { browserProbe, checkLayout, selfTest };
+module.exports = { browserProbe, checkLayout, errorFocusProbe, selfTest };
 if (require.main === module) selfTest().catch(error => { console.error(error); process.exitCode = 1; });

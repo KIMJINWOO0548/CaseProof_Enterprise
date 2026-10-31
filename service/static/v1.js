@@ -50,7 +50,19 @@
   const $ = id => document.getElementById(id), client = new RequestClient();
   let epoch = 0, selection = 0, workspace, rows = [], current, parent, decision, opener;
   function node(tag, text, className) { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (className) el.className = className; return el; }
-  function message(error = '') { $('message').textContent = error.message || error; }
+  function message(value = '') {
+    const target = $('message'), error = value instanceof Error;
+    target.textContent = value.message || value;
+    target.dataset.kind = error ? 'error' : 'notice';
+    target.setAttribute('role', error ? 'alert' : 'status');
+    target.setAttribute('aria-live', error ? 'assertive' : 'polite');
+    if (error) target.focus();
+  }
+  function validReason() { const value = $('reason').value; return [...value.trim()].length >= 8 && [...value].length <= 500; }
+  function clearDecisionError() {
+    $('decision-error-summary').hidden = true; $('reason-error').hidden = true;
+    $('reason').removeAttribute('aria-invalid'); $('reason').removeAttribute('aria-describedby');
+  }
   function role(name) { return workspace?.actor.roles.includes(name); }
   function lock() {
     const blocked = client.busy || !!client.pending();
@@ -136,25 +148,38 @@
   async function mutate(path, body, revision, retry = false) {
     const e = epoch; ++selection; message(); const promise = retry ? client.retry() : client.mutate(path, body, revision); lock();
     try { const result = await promise; if (e !== epoch) return; document.querySelectorAll('dialog[open]').forEach(d => d.close()); const data = result.data; message(result.replayed ? '원래 요청의 확정 결과를 복구했습니다.' : '기록했습니다.'); await refresh(); if (e === epoch) await select(data.change_id); }
-    catch (error) { if (e === epoch) { document.querySelectorAll('dialog[open]').forEach(d => d.close()); clearDetail('요청 실패 또는 결과 미확정입니다. 최신 변경을 다시 선택하세요.'); message(error); } } finally { if (e === epoch) lock(); }
+    catch (error) { if (e === epoch) { document.querySelectorAll('dialog[open]').forEach(d => d.close()); clearDetail(client.pending() ? '처리 결과가 미확정입니다. 원래 요청 복구를 이용하세요.' : '요청을 처리하지 못했습니다. 최신 변경을 다시 선택하세요.'); message(error); } } finally { if (e === epoch) lock(); }
   }
-  function showDialog(id) { opener = document.activeElement; $(id).showModal(); }
+  function showDialog(id) { message(); if (id === 'decision-dialog') clearDecisionError(); opener = document.activeElement; $(id).showModal(); }
   function openCreate(source) {
     parent = source || null; $('preset').replaceChildren(); workspace.presets.forEach((p, i) => { const option = node('option', p.label); option.value = i; $('preset').append(option); });
     const index = source ? workspace.presets.indexOf(presetFor(source)) : 0; $('preset').value = Math.max(index, 0); $('preset').disabled = !!source; $('title').value = source ? source.title + ' · 시정' : workspace.presets[0]?.create_body.title || ''; $('parent-description').textContent = source ? '원본 ' + source.change_id + ' · CORRECTS_REJECTED' : ''; showDialog('create-dialog'); lock();
   }
   $('login-form').onsubmit = async event => {
     event.preventDefault(); const token = $('token').value; $('token').value = ''; const e = ++epoch; ++selection; message(); const submit = event.submitter; submit.disabled = true;
-    try { const data = await client.get('/api/v1/workspace', token); if (e !== epoch) return; workspace = data; client.connect(token, data.actor); rows = []; clearDetail(); $('actor').textContent = `${data.actor.tenant_id} / ${data.actor.actor_id} · ${data.actor.roles.join(', ')}`; $('workspace').hidden = false; $('login').hidden = true; lock(); await refresh(); $('main').focus(); } catch (error) { if (e === epoch) message(error); } finally { submit.disabled = false; }
+    try { const data = await client.get('/api/v1/workspace', token); if (e !== epoch) return; workspace = data; client.connect(token, data.actor); rows = []; clearDetail(); $('actor').textContent = `${data.actor.tenant_id} / ${data.actor.actor_id} · ${data.actor.roles.join(', ')}`; $('workspace').hidden = false; $('login').hidden = true; lock(); await refresh(); if ($('message').dataset.kind !== 'error') $('main').focus(); } catch (error) { if (e === epoch) message(error); } finally { submit.disabled = false; }
   };
   $('switch-role').onclick = () => { ++epoch; ++selection; client.connect(null, null); workspace = null; rows = []; clearDetail(); document.querySelectorAll('dialog[open]').forEach(d => d.close()); $('workspace').hidden = true; $('login').hidden = false; message(); $('token').focus(); };
   $('refresh').onclick = () => { message(); ++selection; clearDetail(); refresh(); };
   $('new-change').onclick = () => openCreate(); $('search').oninput = renderQueue; $('status-filter').onchange = renderQueue;
   $('preset').onchange = () => { $('title').value = workspace.presets[Number($('preset').value)].create_body.title; };
   $('create-form').onsubmit = event => { event.preventDefault(); const body = { ...workspace.presets[Number($('preset').value)].create_body, title: $('title').value }; if (parent) Object.assign(body, { parent_change_id: parent.change_id, parent_relation: 'CORRECTS_REJECTED' }); mutate('/api/v1/changes', body, null); };
-  $('decision-form').onsubmit = event => { event.preventDefault(); const reason = $('reason').value; if ([...reason.trim()].length < 8 || [...reason].length > 500) { message('사유는 공백을 제외한 8–500자로 입력하세요.'); return; } mutate(decision.path, { decision: decision.value, reason }, decision.revision); };
+  $('decision-form').onsubmit = event => {
+    event.preventDefault();
+    if (!validReason()) {
+      $('decision-error-summary').hidden = false; $('reason-error').hidden = false;
+      $('reason').setAttribute('aria-invalid', 'true'); $('reason').setAttribute('aria-describedby', 'reason-error');
+      $('decision-error-summary').focus(); return;
+    }
+    clearDecisionError(); mutate(decision.path, { decision: decision.value, reason: $('reason').value }, decision.revision);
+  };
+  $('reason-error-link').onclick = event => { event.preventDefault(); $('reason').focus(); };
+  $('reason').oninput = () => { if (validReason()) clearDecisionError(); };
   $('retry-request').onclick = () => mutate(null, null, null, true);
   $('load-evidence').onclick = async () => { if (!current) return; const id = current.change_id, e = epoch, s = selection; $('evidence').textContent = '확인 중…'; try { const data = await client.get('/api/v1/changes/' + id + '/evidence'); if (e !== epoch || s !== selection) return; const list = node('dl'); for (const [label, key] of [['역사적 무결성', 'historical_integrity'], ['현재 승인 적격성', 'current_approval_eligibility'], ['외부 앵커', 'external_anchor'], ['승인 revision', 'approved_revision'], ['Envelope SHA-256', 'envelope_sha256']]) list.append(node('dt', label), node('dd', data[key] ?? '—')); const details = node('details'); details.append(node('summary', '원본 JSON'), node('pre', JSON.stringify(data, null, 2))); $('evidence').replaceChildren(list, details); } catch (error) { if (e === epoch && s === selection) { $('evidence').textContent = '증거 조회 실패'; message(error); } } };
   document.querySelectorAll('[data-close]').forEach(b => { b.onclick = () => b.closest('dialog').close(); });
-  document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => { if (opener?.isConnected) opener.focus(); }));
+  document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => {
+    if ($('message').dataset.kind === 'error') $('message').focus();
+    else if (opener?.isConnected) opener.focus();
+  }));
 }());

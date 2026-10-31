@@ -1,0 +1,69 @@
+{
+  "schema": "caseproof.ui-reference-provenance.v1",
+  "checked_at": "2026-10-31 16:33:21 UTC",
+  "scope": "Reference-only primary-source research; no upstream UI code, brand assets, screenshots or SDK vendored",
+  "method": {
+    "licenses": "GitHub MCP fetch branches/main then fetch_file pinned to returned commit; SHA-256 is UTF-8 content returned by tool with no normalization",
+    "docs": "web official documentation text; earlier Langfuse PNG inspection distinguished from doc-only LangSmith/Dify"
+  },
+  "licenses": [
+    {
+      "id": "langfuse-core",
+      "repository": "langfuse/langfuse",
+      "commit": "c96575bb34e9683885f94935604d3fc2064b14bc",
+      "path": "LICENSE",
+      "url": "https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/LICENSE",
+      "git_blob_sha1": "eaa2e5e444c8634f35b2a1137f7ea06e8353f475",
+      "utf8_content": "Copyright (c) 2023-2026 ClickHouse, Inc.\n\nPortions of this software are licensed as follows:\n\n- All content that resides under the \"ee/\", \"web/src/ee/\", \"worker/src/ee/\", and/or \"packages/shared/src/server/ee/\" directories of this repository, if these directories exist, is licensed under the license defined in \"ee/LICENSE\".\n- All third party components incorporated into the Langfuse Software are licensed under the original license provided by the owner of the applicable component.\n- Content outside of the above mentioned directories or restrictions above is available under the \"MIT Expat\" license as defined below.\n\nPermission is hereby granted, free of charge, to any person obtaining a copy\nof this software and associated documentation files (the \"Software\"), to deal\nin the Software without restriction, including without limitation the rights\nto use, copy, modify, merge, publish, distribute, sublicense, and/or sell\ncopies of the Software, and to permit persons to whom the Software is\nfurnished to do so, subject to the following conditions:\n\nThe above copyright notice and this permission notice shall be included in all\ncopies or substantial portions of the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n",
+      "license_text_sha256": "9ee6ca42e813fb58bcad18bed834438503bcc997da3b452d3f9ad4af4292b6b3"
+    },
+    {
+      "id": "langfuse-enterprise",
+      "repository": "langfuse/langfuse",
+      "commit": "c96575bb34e9683885f94935604d3fc2064b14bc",
+      "path": "ee/LICENSE",
+      "url": "https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/ee/LICENSE",
+      "git_blob_sha1": "3e78f3e97ac04d255328733b8c479d62bbaebadf",
+      "utf8_content": "START NOTE\nLangfuse is an open core project. Langfuse's core\nis permissively licensed (MIT license).\nCertain parts of the periphery of Langfuse are commercially\nlicensed and governed by this Enterprise License.\nFor the avoidance of doubt, this license does not apply \nto the core of Langfuse as it is defined in its license in \nthe directory \"/LICENSE\" (as opposed to this file  \"ee/LICENSE\")\nwhich can be used and run without infringing the below license\nand its licensed materials.\nEND NOTE\n\nSTART OF LICENSE\nLangfuse Enterprise license (the “Enterprise License” or \"EE license\")\n\nCopyright (c) 2023-2026 ClickHouse, Inc\n\nWith regard to the Langfuse Enterprise Software:\nThis software and associated documentation files (the \"Software\") may only be\nused, if you (and any entity that you represent) have agreed to,\nand are in compliance with, the applicable agreement governing the use of the Software, \nas agreed by you and Langfuse GmbH or ClickHouse, Inc. (including any successor or permitted assignee of either),\nand otherwise have a valid Langfuse Enterprise License.\n\nSubject to the foregoing sentence, you are free to\nmodify this Software and publish patches to the Software. You agree that Langfuse\nand/or its licensors (as applicable) retain all right, title and interest in and\nto all such modifications and/or patches, and all such modifications and/or\npatches may only be used, copied, modified, displayed, distributed, or otherwise\nexploited with a valid Langfuse Enterprise License. Notwithstanding the foregoing, you may copy and modify\nthe Software for development and testing purposes, without requiring a\nsubscription. You agree that Langfuse GmbH and/or its licensors (as applicable) retain\nall right, title and interest in and to all such modifications. You are not\ngranted any other rights beyond what is expressly stated herein. Subject to the\nforegoing, it is forbidden to copy, merge, publish, distribute, sublicense,\nand/or sell the Software.\n\nTHE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR\nIMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,\nFITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE\nAUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER\nLIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,\nOUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE\nSOFTWARE.\n\nFor all third party components incorporated into the Langfuse Software, those\ncomponents are licensed under the original license provided by the owner of the\napplicable component.\n\nEND OF LICENSE\n",
+      "license_text_sha256": "760f5202be4f31f9f8ca43a3c558bebaa5187fa7d7eccad6a32de8392cdccee6"
+    },
+    {
+      "id": "dify",
+      "repository": "langgenius/dify",
+      "commit": "4c521a3c0a1f60607c8a7bcf90792f34adcf18d0",
+      "path": "LICENSE",
+      "url": "https://github.com/langgenius/dify/blob/4c521a3c0a1f60607c8a7bcf90792f34adcf18d0/LICENSE",
+      "git_blob_sha1": "329ee302875f292fdd11e12e830562d0be9ade1c",
+      "utf8_content": "# Open Source License\n\nDify is licensed under a modified version of the Apache License 2.0, with the following additional conditions:\n\n1. Dify may be utilized commercially, including as a backend service for other applications or as an application development platform for enterprises. Should the conditions below be met, a commercial license must be obtained from the producer:\n\na. Multi-tenant service: Unless explicitly authorized by Dify in writing, you may not use the Dify source code to operate a multi-tenant environment.\n    - Tenant Definition: Within the context of Dify, one tenant corresponds to one workspace. The workspace provides a separated area for each tenant's data and configurations.\n\nb. LOGO and copyright information: In the process of using Dify's frontend, you may not remove or modify the LOGO or copyright information in the Dify console or applications. This restriction is inapplicable to uses of Dify that do not involve its frontend.\n    - Frontend Definition: For the purposes of this license, the \"frontend\" of Dify includes all components located in the `web/` directory when running Dify from the raw source code, or the \"web\" image when running Dify with Docker.\n\n2. As a contributor, you should agree that:\n\na. The producer can adjust the open-source agreement to be more strict or relaxed as deemed necessary.\nb. Your contributed code may be used for commercial purposes, including but not limited to its cloud business operations.\n\nApart from the specific conditions mentioned above, all other rights and restrictions follow the Apache License 2.0. Detailed information about the Apache License 2.0 can be found at http://www.apache.org/licenses/LICENSE-2.0.\n\nThe interactive design of this product is protected by appearance patent.\n\n© 2025 LangGenius, Inc.\n",
+      "license_text_sha256": "232cf91474932d5110ed304e53b6b742a58463857c571fae803fdf2ac36d7bb3"
+    }
+  ],
+  "documents": [
+    {
+      "name": "Langfuse Sessions",
+      "url": "https://langfuse.com/docs/observability/features/sessions",
+      "image_url": "https://langfuse.com/images/docs/session.png",
+      "inspection": "PNG visually inspected during 2026-10-31 phase1; official text re-read in current research"
+    },
+    {
+      "name": "LangSmith Manage a trace",
+      "url": "https://docs.langchain.com/langsmith/manage-trace",
+      "inspection": "official text only; earlier AVIF could not be displayed"
+    },
+    {
+      "name": "Dify Logs",
+      "url": "https://docs.dify.ai/en/cloud/use-dify/monitor/logs",
+      "inspection": "official text only; earlier image CDN returned403"
+    },
+    {
+      "name": "LangSmith commercial terms",
+      "url": "https://www.langchain.com/terms-of-service",
+      "published_updated_date": "2026-06-02",
+      "sections": [
+        "2.4 License Restrictions",
+        "4.1 Ownership; Reservation of Rights"
+      ],
+      "inspection": "official terms text; no open-source license for hosted UI inferred"
+    }
+  ]
+}

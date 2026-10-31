@@ -73,7 +73,7 @@ body { font-size: 14px; line-height: 1.6; word-break: keep-all; }
 #queue .btn-link { color: #1859a3; font-weight: 600; white-space: normal; }
 #queue .btn-link:hover { text-decoration: underline; }
 dialog:not([open]) { display: none; }
-dialog.modal-content { width: min(540px, calc(100% - 32px)); max-height: 90vh; overflow: auto; border: 1px solid #aeb7c2; margin: auto; }
+dialog.modal-content { width: min(540px, calc(100% - 32px)); max-height: 90vh; overflow: auto; border: 1px solid #aeb7c2; margin: auto; background: var(--cp-surface); color: var(--cp-ink); }
 dialog::backdrop { background: rgba(0, 0, 0, .4); }
 .modal-body { padding: 24px; }
 pre { padding: 12px; border: 1px solid var(--cp-line); border-radius: 4px; background: #f7f9fb; color: var(--cp-ink); white-space: pre-wrap; overflow-wrap: anywhere; word-break: normal; font-size: 12px; }
@@ -86,7 +86,13 @@ summary { padding: 8px 0; color: #1859a3; cursor: pointer; }
 .case-row label { overflow-wrap: anywhere; }
 button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, summary:focus-visible { outline: 3px solid #005fcc; outline-offset: 3px; }
 #message:empty { display: none; }
-#message { color: #842029; }
+#message { color: var(--cp-ink); }
+#message[data-kind="error"] { color: #842029; }
+.form-error-summary { padding: 12px; margin: 16px 0; border: 1px solid #b42318; background: #fff4f2; color: #842029; }
+.form-error-summary p { margin: 0 0 4px; font-weight: 600; }
+.form-error-summary a { display: block; min-height: 44px; color: inherit; text-decoration: underline; }
+.field-error { color: #842029; margin-top: -8px; margin-bottom: 16px; }
+#message:focus, .form-error-summary:focus { outline: 3px solid #005fcc; outline-offset: 3px; }
 .ref-list a { overflow-wrap: anywhere; }
 
 @media (max-width: 991px) {

@@ -1,0 +1,64 @@
+{
+  "skills_read": {
+    "ui-ux-pro-max": {
+      "path": "C:/Users/김진우/.agents/skills/ui-ux-pro-max/SKILL.md",
+      "sha256": "798785faea346cf824b761b36cf5f47335cfaeb9c4f5082a0355247cb4e302a1"
+    },
+    "frontend-design": {
+      "path": "C:/Users/김진우/.agents/skills/frontend-design/SKILL.md",
+      "sha256": "b8009ae690dfa69edc7f08bb8715f32db8817112cfa4388741dbaf876c237df8"
+    },
+    "uncodixfy": {
+      "path": "C:/Users/김진우/.agents/skills/uncodixfy/SKILL.md",
+      "sha256": "eab2c6c6790103b4088fe2ba46bd1c601dc0a3a3e4d4cf8a15daae66d9bfd265"
+    },
+    "product-design:index": {
+      "path": "C:/Users/김진우/.codex/plugins/cache/openai-curated-remote/product-design/0.1.56/skills/index/SKILL.md",
+      "sha256": "8e9916d9e5dc3b6a394bedcaa38cd9c8833a1f3b0c4538b75647cf9f62f779fc"
+    },
+    "product-design:audit": {
+      "path": "C:/Users/김진우/.codex/plugins/cache/openai-curated-remote/product-design/0.1.56/skills/audit/SKILL.md",
+      "sha256": "087f798c3fe02e91b4cca18cc0f42c358a4dc2c02ccf37a348b476fb19b64aa3"
+    },
+    "product-design:user-context": {
+      "path": "C:/Users/김진우/.codex/plugins/cache/openai-curated-remote/product-design/0.1.56/skills/user-context/SKILL.md",
+      "sha256": "5690a7f99cf896970493f5d0bd7f35f62ab9cbe21744352acf84dc0ceea4194c"
+    }
+  },
+  "ux_search": {
+    "command": "python <ui-ux-pro-max>/scripts/search.py \"error summary validation\" --domain ux",
+    "exit_code": 0,
+    "domain": "ux",
+    "results": [
+      "Focusable Error Summary",
+      "Error Messages",
+      "Error Placement"
+    ],
+    "applied": "Focus summary inside the active modal, link to the invalid field, retain described inline error; avoid focus changes on every blur."
+  },
+  "product_context_preflight": {
+    "command": "python <product-design>/skills/user-context/scripts/user_context_preflight.py",
+    "exit_code": 0,
+    "status": "missing",
+    "persistent_context_changes": false
+  },
+  "tools": {
+    "GitHub_MCP": "Pinned official Langfuse/Dify licenses and actual CI job status",
+    "Context7": {
+      "resolved_library": "/microsoft/playwright",
+      "topic": "native dialog Escape and element focus/ARIA assertions",
+      "sources": [
+        "https://github.com/microsoft/playwright/blob/main/docs/src/api/class-locatorassertions.md",
+        "https://github.com/microsoft/playwright/blob/main/tests/page/page-keyboard.spec.ts"
+      ]
+    },
+    "cua_repl_IAB": "Opened local target; actual invalid-token401 focus rolealert/assertive observed",
+    "Playwright_MCP": "Current audit screenshots01-07 saved and inspected; native modal/focus and complete3actor workflow executed"
+  },
+  "scope": "Existing v1 code target; no new app/template/deployment, no upstream code/assets copied",
+  "style_review": "Keep existing Tabler/system font/blue tokens; reject generic hero/KPI/gradient/chat decorations and unsupported upstream functions",
+  "request_client_prefix": {
+    "matches_de1fc5e_bytes": true,
+    "sha256": "03d29a659d35b08b17ba45bda6b8034bc72b331489d209ff22f0948c3ff60357"
+  }
+}
