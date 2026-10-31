@@ -48,7 +48,7 @@ include-package-data = false
 dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.package-data]
-service = ["static/*.html", "static/*.css", "static/*.js", "static/vendor/tabler-1.7.3/*"]
+service = ["static/*.html", "static/*.css", "static/*.js", "static/vendor/tabler-1.7.3/*", "static/vendor/suit/*"]
 datasets = ["*.json", "packs/*.json"]
 
 [tool.pytest.ini_options]

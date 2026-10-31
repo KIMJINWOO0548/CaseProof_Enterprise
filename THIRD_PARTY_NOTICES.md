@@ -35,6 +35,14 @@ fonts, or third-party network resources are bundled or loaded. Application
 markup adapts documented table, form, card, badge, step and modal structures;
 native browser dialogs supply focus and Escape behavior.
 
+`service/static/vendor/suit/SUIT-Variable.woff2` is the unmodified **SUIT Variable**
+font, copyright (c) 2022 SUNN, with Reserved Font Name SUIT, under **OFL-1.1**.
+The [official repository](https://github.com/sun-typeface/SUIT/tree/55118d981336d8fce005eb62888c12c0568ef7b0)
+and its complete license are recorded beside the font in `PROVENANCE.json` and
+`LICENSE.txt`. Upstream Git blob identities and downloaded SHA-256 were checked.
+The font is bundled locally, remains under OFL-1.1, and is not sold separately
+or modified. The project's Apache-2.0 license does not relicense the font.
+
 Python dependencies are obtained separately from package indexes; they are not vendored into the project's wheel or source tree. `requirements.lock` and `requirements-dev.lock` record the selected versions and distribution hashes. Each dependency and its transitive dependencies retains its own license. The project's Apache-2.0 license does not relicense them.
 
 Direct runtime projects are [FastAPI](https://github.com/fastapi/fastapi), [Pydantic](https://github.com/pydantic/pydantic), [SQLAlchemy](https://github.com/sqlalchemy/sqlalchemy), and [Uvicorn](https://github.com/encode/uvicorn). Development tooling includes pytest, HTTPX, jsonschema, PyPA build, setuptools, wheel, and [Alembic](https://alembic.sqlalchemy.org/) (with Mako and MarkupSafe). Optional browser testing uses Playwright and a separately installed browser. Review the `LICENSE`/`NOTICE` files for the exact resolved distributions, including their transitive components, before redistributing an environment or image. This list is an inventory starting point, not a completed license audit or SBOM.
@@ -48,6 +56,14 @@ The UI research cites public [Langfuse Sessions](https://langfuse.com/docs/obser
 Langfuse core is MIT subject to the exclusions in its [pinned root LICENSE](https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/LICENSE); enterprise directories have a [separate commercial license](https://github.com/langfuse/langfuse/blob/c96575bb34e9683885f94935604d3fc2064b14bc/ee/LICENSE). LangSmith is a proprietary commercial platform governed by its [Terms](https://www.langchain.com/terms-of-service); no SDK open-source license is inferred for its hosted UI. Dify's [pinned LICENSE](https://github.com/langgenius/dify/blob/4c521a3c0a1f60607c8a7bcf90792f34adcf18d0/LICENSE) modifies Apache-2.0 with additional multi-tenant, frontend-logo/copyright and contributor conditions and an appearance-patent assertion; it is not described here as plain Apache-2.0. See [the reference register](docs/AI_UI_REFERENCES.md) for exact source commits, text hashes, observations, application locations and rejected ideas. This is a provenance record, not rights clearance for copying those products.
 
 ## Rights-review record
+
+The visual refresh also consulted [Linear](https://linear.app/) and
+[Raycast](https://www.raycast.com/) for contrast and information hierarchy.
+Their [Linear terms](https://linear.app/terms) and
+[Raycast terms](https://www.raycast.com/terms-of-service) reserve product UI and
+materials; no open-source license is asserted for those interfaces. No code,
+CSS, imagery, icons or brand assets were imported. The palette, wordmark and
+layout changes are local design choices. See [the visual review](docs/VISUAL_DESIGN.md).
 
 Before public release, record for each imported or adapted file: source or supplier, author/rightsholder if known, version/hash, license or written permission, retained notices, and reviewer/date. Unresolved material must be removed or held from public distribution; do not fill gaps with guessed authors or licenses. Store confidential permission records privately and record only a non-sensitive summary in the repository.
 

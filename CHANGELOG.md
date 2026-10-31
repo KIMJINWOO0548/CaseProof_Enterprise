@@ -2,6 +2,8 @@
 
 ## 5.3.0.dev6 — 2026-11-01
 
+- Give the review workspace a distinct ink/iris/peach identity, local OFL-1.1 SUIT typography, responsive queue/detail/evidence panels and an accessible current-stage rail. Preserve raw statuses, actor-scoped recovery and evidence boundaries; serve the font with a portable explicit MIME type.
+
 - Keep validation errors inside the review dialog with linked field guidance and keyboard focus; use an opaque surface and distinguish error alerts from neutral notices. Record primary reference licenses and actual visual audit evidence.
 
 - Bind the complete evaluation configuration, including dataset and source bundle, with a versioned execution digest; preserve earlier stored bytes and fail closed on legacy runs.

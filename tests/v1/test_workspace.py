@@ -84,3 +84,13 @@ def test_workspace_auth_revocation_and_demo_boundary(workspace, monkeypatch):
     monkeypatch.delenv('CASEPROOF_DEMO_MODE')
     with pytest.raises(RuntimeError, match='DEMO_MODE'):
         create_workspace_app(factory, registry)
+
+
+def test_font_response_is_portable_and_preserves_upstream_bytes(workspace, monkeypatch):
+    from starlette import responses
+    client, _, _ = workspace
+    monkeypatch.setattr(responses, 'guess_type', lambda *args, **kwargs: ('application/octet-stream', None))
+    response = client.get('/static/vendor/suit/SUIT-Variable.woff2')
+    assert response.status_code == 200
+    assert response.headers['content-type'] == 'font/woff2'
+    assert hashlib.sha256(response.content).hexdigest() == 'aa894a204d5a6fbae259dac6868d350cbd373a390caee0313f92946af741df23'

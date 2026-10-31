@@ -1,6 +1,14 @@
 # 검증 결과 — 5.3.0.dev6
 
-## 검증된 최종 구현 `643e25f` — 2026-11-01 KST
+## 추가 시각 개편 — 2026-11-01 KST
+
+[설계·1차 출처](VISUAL_DESIGN.md), [Chrome 실제 동선·화면·대비](evidence/g1-g6/ui-visual-refresh.json). 검토 단계 표시는 기존 렌더러에서 RED를 확인한 뒤 실제 생성→평가→응답 유실 복구→반려→시정→분리 승인→증거 조회에서 GREEN이었다. 오류 링크 안정화 timeout은 보존했고, 선택적 smooth scroll 제거·소유 페이지 재생성 후 제한 시간 내 전체 동선을 통과했다. 이전 세션 간섭과 scroll 각각의 기여는 분리 실험하지 않았다.
+
+최종 로컬 전체는 **913 PASS / 458 optional SKIP / 22 subtests PASS / 3 warnings**였다. 새 font MIME 회귀도 포함됐고, Windows socketpair 초기화만57회 재시도했다. 애플리케이션 요청·단언 재시도는 없다. 현재 PG 서버와 Python Playwright가 없어 관련 검사는 SKIP이며, NumPy는 설치된 환경이다. 별도 MCP Chrome156 검사는 실제 실행됐다. 관련 Python은4 PASS/1 optional SKIP, Node 원래 요청 복구·거부 이후 복구·문법 검사 PASS, baseline smoke12/12, manifest390 source/패키지 구조 검사 PASS다. 정확한 commit의 CI·설치 배포물 결과는 완료 기록에서 분리한다.
+
+선택한 정상 텍스트 대비5.53–15.27:1, input 경계3.22:1, focus3.25:1을 측정했다.375/390/768/1024/1280/1440px 가로 넘침0, reduced-motion 전환0s, 실제 SUIT loaded/HTTP200 `font/woff2`였다. 이는 전체 WCAG 인증이나 독립 사용자/스크린리더 검수는 아니다. 외부 앵커·모델·운영 검증은 그대로 미실행이다.
+
+## 이전 핵심 구현 `643e25f` — 2026-11-01 KST
 
 [실제 CI41222223392](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392), [명령·JUnit·checksum](evidence/g1-g6/ci-643e25f.json): **9 success / push의 PR 전용1skip**. Linux3.11/3.12/3.13·Windows3.12 각각 **911 passed,459 optional skipped,22 subtests,3 warnings**다. 459skip은 PG457+NumPy1+Python-browser1이며 별도 job에서 실제 PG17.11 **460 PASS/0skip**, NumPy **34 PASS**를 실행했다. 빈 collection을 성공으로 세지 않았다. OSV는 dev35/evaluation36/postgres37 dependencies에서 known vulnerability record0/skipped dependency0이었다.
 

@@ -26,10 +26,14 @@ dev6의 고정된 실행·HTTP·UI 소스에 대한 로컬 전체 회귀는 **90
 
 후속 [결정 흐름 UX 감사](UI_FOCUS_AUDIT.md)로 모달 투명 배경과 모달 밖 오류를 재현·수정했다. 1440/390px 요약/필드 초점·Escape·오류 초기화·잘못된 입력 POST0, 전체 3인 시정 승인 흐름을 실제 Chrome으로 재검증했다. [de1fc5e CI](evidence/g1-g6/ci-de1fc5e.json)는 9개 성공, 일반 각 911 PASS·PG460 PASS였으며 후속 UI643e25f도 아래의 별도 CI·배포물 검사에서 통과했다.
 
-## 최종 검증된 구현
+## dev6 핵심 구현 검증
 
 구현 commit `643e25f`의 [CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392)는 **9개 job success / PR 전용 1개 skipped**다. Linux Python3.11/3.12/3.13·Windows3.12 각각 **911 PASS**, 실제 PG17.11 **460 PASS**, NumPy 평가 **34 PASS**를 확인했다. 일반 job의 선택 의존성 skip과 실제 PG/NumPy 별도 실행을 구분한다. [정확한 결과와 명령](evidence/g1-g6/ci-643e25f.json).
 
 [새 runtime-only wheel](evidence/g1-g6/installed-643e25f-wheel.json)은 체크아웃 밖 설치·V2 생성/평가·VALID 근거/immutable refs까지 통과했다. 소스 ZIP과 내부379개 source hash도 검증했다. 후속 완료 기록 변경은 문서·증거만 갱신하며 같은 구현을 유지한다. 실제 최신 브랜치 CI는 GitHub Actions에서 commit SHA별로 확인한다.
 
 현재 UI는 합성 검토 데모로 캡처·native 동선 검증을 마쳤다. 스크린리더 발화·독립 사용자/전문가·설치 검수, 비공개360연구, 외부 provider/job·anchor/WORM·운영 검증은 완료하지 않았다. 해당 외부 검수 bonus는0이다.
+
+## 추가 시각 개편
+
+잉크·아이리스·피치 색상, 로컬 SUIT 글꼴, 실제 현재 검토 단계와 넓은 화면의 독립 증거 패널을 적용했다. [설계·출처](VISUAL_DESIGN.md), [실제 화면·측정](evidence/g1-g6/ui-visual-refresh.json)을 기록했다. Chrome156에서 전체 반려/시정/승인·원래 요청 복구·오류 초점을 통과했고,375/390/768/1024/1280/1440px 가로 넘침0과 모션 감소를 확인했다. MIME 회귀는 RED→GREEN, 관련 Python4 PASS·선택 브라우저1 SKIP이다. 앞선 핵심 검증과 새 변경의 최종 CI는 SHA를 구분해 [VALIDATION](VALIDATION.md)에 기록한다.

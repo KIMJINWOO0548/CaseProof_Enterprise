@@ -98,9 +98,16 @@
   function presetFor(data) { return workspace.presets.find(p => p.create_body.suite_version_id === data.suite_version_id && p.create_body.pack_version_id === data.pack_version_id); }
   function render(data, run) {
     current = data; syncSelectedRow(); $('detail').replaceChildren(); $('evidence').textContent = '선택 후 별도로 조회하세요.'; $('load-evidence').disabled = false;
-    const target = $('detail'); target.append(node('h3', data.title, 'h3')); const id = node('p', data.change_id); id.id = 'change-id'; target.append(id);
-    const state = node('strong', data.status); state.id = 'change-status';
+    const target = $('detail'); target.append(node('h3', data.title, 'detail-heading')); const id = node('p', data.change_id); id.id = 'change-id'; target.append(id);
+    const state = node('strong', data.status); state.id = 'change-status'; state.dataset.status = data.status;
     const meta = node('div', undefined, 'change-meta'); meta.append(state, node('p', 'Revision ' + data.revision)); target.append(meta);
+    const stages = node('ol', undefined, 'review-stages'); stages.setAttribute('aria-label', '검토 단계 · 현재 상태만 표시');
+    for (const [status, label] of [['DRAFT', '작성·평가'], ['PENDING_DOMAIN_REVIEW', '현업 검토'], ['PENDING_RELEASE', '최종 검토'], ['APPROVED_FOR_DEMO', '데모 승인']]) {
+      const item = node('li', label); item.dataset.state = status === data.status ? 'current' : 'other';
+      if (status === data.status) item.setAttribute('aria-current', 'step');
+      stages.append(item);
+    }
+    target.append(stages);
     const actions = node('div', undefined, 'btn-list'); target.append(actions);
     refs(data, target);
     const own = workspace.actor.actor_id === data.requester_id;
@@ -133,7 +140,8 @@
       const tr = node('tr'), td = node('td'), b = node('button', row.title, 'btn btn-link p-0 text-start');
       b.type = 'button'; b.dataset.changeId = row.change_id; b.onclick = () => select(row.change_id);
       const meta = node('div', undefined, 'queue-meta'); meta.append(node('span', row.pack_version_id), node('span', 'Revision ' + row.revision));
-      td.append(b, node('div', row.status, 'queue-status'), meta); tr.append(td); body.append(tr);
+      const status = node('div', row.status, 'queue-status'); status.dataset.status = row.status;
+      td.append(b, status, meta); tr.append(td); body.append(tr);
     }); table.append(body); $('queue').append(table); syncSelectedRow();
   }
   async function refresh() {
@@ -176,7 +184,7 @@
   $('reason-error-link').onclick = event => { event.preventDefault(); $('reason').focus(); };
   $('reason').oninput = () => { if (validReason()) clearDecisionError(); };
   $('retry-request').onclick = () => mutate(null, null, null, true);
-  $('load-evidence').onclick = async () => { if (!current) return; const id = current.change_id, e = epoch, s = selection; $('evidence').textContent = '확인 중…'; try { const data = await client.get('/api/v1/changes/' + id + '/evidence'); if (e !== epoch || s !== selection) return; const list = node('dl'); for (const [label, key] of [['역사적 무결성', 'historical_integrity'], ['현재 승인 적격성', 'current_approval_eligibility'], ['외부 앵커', 'external_anchor'], ['승인 revision', 'approved_revision'], ['Envelope SHA-256', 'envelope_sha256']]) list.append(node('dt', label), node('dd', data[key] ?? '—')); const details = node('details'); details.append(node('summary', '원본 JSON'), node('pre', JSON.stringify(data, null, 2))); $('evidence').replaceChildren(list, details); } catch (error) { if (e === epoch && s === selection) { $('evidence').textContent = '증거 조회 실패'; message(error); } } };
+  $('load-evidence').onclick = async () => { if (!current) return; const id = current.change_id, e = epoch, s = selection; $('evidence').textContent = '확인 중…'; try { const data = await client.get('/api/v1/changes/' + id + '/evidence'); if (e !== epoch || s !== selection) return; const list = node('dl', undefined, 'evidence-result'); for (const [label, key] of [['역사적 무결성', 'historical_integrity'], ['현재 승인 적격성', 'current_approval_eligibility'], ['외부 앵커', 'external_anchor'], ['승인 revision', 'approved_revision'], ['Envelope SHA-256', 'envelope_sha256']]) { const value = node('dd', data[key] ?? '—'); value.dataset.result = String(data[key] ?? ''); list.append(node('dt', label), value); } const details = node('details'); details.append(node('summary', '원본 JSON'), node('pre', JSON.stringify(data, null, 2))); $('evidence').replaceChildren(list, details); } catch (error) { if (e === epoch && s === selection) { $('evidence').textContent = '증거 조회 실패'; message(error); } } };
   document.querySelectorAll('[data-close]').forEach(b => { b.onclick = () => b.closest('dialog').close(); });
   document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => {
     if ($('message').dataset.kind === 'error') $('message').focus();

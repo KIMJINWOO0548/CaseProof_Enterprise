@@ -1,0 +1,276 @@
+{
+  "browser-final-flow": {
+    "original": "567098e5-c00c-4d69-9d89-f2f9fbca75ae",
+    "corrected": "275681e7-1539-4286-8db7-c756739c2395",
+    "browser": "156.0.8078.48"
+  },
+  "browser-final-metrics": {
+    "measurements": [
+      {
+        "width": 1440,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 68.4000015258789,
+          "y": 276,
+          "width": 360.63751220703125,
+          "height": 388.45001220703125,
+          "top": 276,
+          "right": 429.03751373291016,
+          "bottom": 664.4500122070312,
+          "left": 68.4000015258789
+        },
+        "detail": {
+          "x": 451.0375061035156,
+          "y": 276,
+          "width": 554.6000366210938,
+          "height": 802.0499877929688,
+          "top": 276,
+          "right": 1005.6375427246094,
+          "bottom": 1078.0499877929688,
+          "left": 451.0375061035156
+        }
+      },
+      {
+        "width": 1280,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 78.4000015258789,
+          "y": 276,
+          "width": 320,
+          "height": 388.45001220703125,
+          "top": 276,
+          "right": 398.4000015258789,
+          "bottom": 664.4500122070312,
+          "left": 78.4000015258789
+        },
+        "detail": {
+          "x": 420.3999938964844,
+          "y": 276,
+          "width": 467.5,
+          "height": 802.0499877929688,
+          "top": 276,
+          "right": 887.8999938964844,
+          "bottom": 1078.0499877929688,
+          "left": 420.3999938964844
+        }
+      },
+      {
+        "width": 1024,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 16,
+          "y": 276,
+          "width": 320,
+          "height": 388.45001220703125,
+          "top": 276,
+          "right": 336,
+          "bottom": 664.4500122070312,
+          "left": 16
+        },
+        "detail": {
+          "x": 358,
+          "y": 276,
+          "width": 634.7999877929688,
+          "height": 802.0499877929688,
+          "top": 276,
+          "right": 992.7999877929688,
+          "bottom": 1078.0499877929688,
+          "left": 358
+        }
+      },
+      {
+        "width": 768,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 8,
+          "y": 276,
+          "width": 736.7999877929688,
+          "height": 307.6499938964844,
+          "top": 276,
+          "right": 744.7999877929688,
+          "bottom": 583.6499938964844,
+          "left": 8
+        },
+        "detail": {
+          "x": 8,
+          "y": 605.6500244140625,
+          "width": 736.7999877929688,
+          "height": 802.0499877929688,
+          "top": 605.6500244140625,
+          "right": 744.7999877929688,
+          "bottom": 1407.7000122070312,
+          "left": 8
+        }
+      },
+      {
+        "width": 390,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 16,
+          "y": 408,
+          "width": 343.20001220703125,
+          "height": 386.45001220703125,
+          "top": 408,
+          "right": 359.20001220703125,
+          "bottom": 794.4500122070312,
+          "left": 16
+        },
+        "detail": {
+          "x": 16,
+          "y": 809.4500122070312,
+          "width": 343.20001220703125,
+          "height": 1014.6500244140625,
+          "top": 809.4500122070312,
+          "right": 359.20001220703125,
+          "bottom": 1824.1000366210938,
+          "left": 16
+        }
+      },
+      {
+        "width": 375,
+        "overflow": false,
+        "current": "데모 승인",
+        "queue": {
+          "x": 16,
+          "y": 408,
+          "width": 328,
+          "height": 386.45001220703125,
+          "top": 408,
+          "right": 344,
+          "bottom": 794.4500122070312,
+          "left": 16
+        },
+        "detail": {
+          "x": 16,
+          "y": 809.4500122070312,
+          "width": 328,
+          "height": 1014.6500244140625,
+          "top": 809.4500122070312,
+          "right": 344,
+          "bottom": 1824.1000366210938,
+          "left": 16
+        }
+      }
+    ],
+    "motion": "0s",
+    "font": {
+      "status": "loaded",
+      "faces": [
+        "loaded"
+      ]
+    },
+    "fontHTTP": {
+      "status": 200,
+      "type": "font/woff2"
+    },
+    "focusReturned": true,
+    "browser": "156.0.8078.48"
+  },
+  "contrast": [
+    {
+      "element": "body",
+      "foreground": "#28283c",
+      "background": "#ffffff",
+      "ratio": 14.39
+    },
+    {
+      "element": "muted",
+      "foreground": "#66677c",
+      "background": "#ffffff",
+      "ratio": 5.53
+    },
+    {
+      "element": "primary",
+      "foreground": "#ffffff",
+      "background": "#5945d8",
+      "ratio": 6.43
+    },
+    {
+      "element": "masthead",
+      "foreground": "#ffffff",
+      "background": "#24223f",
+      "ratio": 15.27
+    },
+    {
+      "element": "peach action",
+      "foreground": "#24223f",
+      "background": "#ffbd9d",
+      "ratio": 9.46
+    },
+    {
+      "element": "evidence success",
+      "foreground": "#146c52",
+      "background": "#ffffff",
+      "ratio": 6.37
+    },
+    {
+      "element": "input border",
+      "foreground": "#918ca8",
+      "background": "#ffffff",
+      "ratio": 3.22
+    },
+    {
+      "element": "focus outline",
+      "foreground": "#8d7cff",
+      "background": "#ffffff",
+      "ratio": 3.25
+    }
+  ],
+  "checks": {
+    "stage_red": "FAILED before stage renderer",
+    "stage_green": "native full flow PASS",
+    "font_mime_red": "application/octet-stream before explicit route",
+    "font_mime_green": "4 passed, 1 optional Python-browser skipped; actual HTTP font/woff2",
+    "request_client_unchanged_sha256": "03d29a659d35b08b17ba45bda6b8034bc72b331489d209ff22f0948c3ff60357",
+    "node_replay": "PASS",
+    "ui_syntax": "PASS"
+  },
+  "failures_preserved": [
+    "First capture exposed white-on-white masthead buttons; explicit transparent backgrounds fixed it.",
+    "One browser macro was stopped after waiting without output; a later macro timed out waiting for the reason link to stabilize. Root closed its owned page, removed optional smooth page scrolling and passed a fresh bounded complete workflow. The precise contribution of session interference vs scrolling was not isolated.",
+    "First full suite ran before final font regression was collected, so it is historical only; a final frozen-source suite was started separately.",
+    "Package worker preserved Windows initialization and local helper failures before a passing installed check; the later one-line scroll removal is covered by final commit CI/distribution rather than mislabeling that older wheel exact-current."
+  ],
+  "source_sha256": {
+    "service/static/v1.html": "4ec666495cbc5cf089d1bc9be4d87375d657d84be06005512658438be61c3c43",
+    "service/static/v1.css": "397b8d7c973680c2fc935a5d27382864cdb0a20053f7cd2b9467ada62ac8cafa",
+    "service/static/v1.js": "4d54c56a2cf82db494e773ec6abfe50d17729b0b820e6bb6a99829f9c330c0b1",
+    "service/workspace.py": "e7c5f1f5a745c9bb53a01bbe8b943a4a4e8bfe3e52c95a9e36f02914a743730b",
+    "scripts/v1_ui_probe.js": "e03148225d527b7f1049ef9801b9e840cf6896c59e98a3f627fa8402f42fee2e",
+    "tests/v1/test_workspace.py": "272447294dfb927fe26609e1ce7bc96f41c70540cdddadc8e65ba64a1f7bc762",
+    "docs/images/v1-review-desktop.jpg": "81d7284697f13c6191267415f73260cbebdc5e55db2989c15238ae1440d56fce",
+    "docs/images/v1-review-mobile.jpg": "50e59532f976c1ec1ef7e823dcd815fc9d695bebe363732408f70942df196f53",
+    "docs/images/v1-review-dialog.jpg": "d3be48d98a2fe61bf815d41a6e15ef66a45009f497dad5a92a420a390119f878"
+  },
+  "limitations": [
+    "Synthetic local demo only; no independent usability or screen-reader speech study.",
+    "Remote Linear/Raycast screenshots could not be captured; DOM/text/computed-style observation only.",
+    "No external anchor, provider or production deployment."
+  ],
+  "final_local_suite": {
+    "command": ".venv/Scripts/python.exe -m scripts.windows_checks pytest -q --junitxml=<run>/full-suite-final.xml",
+    "exit_code": 0,
+    "passed": 913,
+    "skipped": 458,
+    "subtests_passed": 22,
+    "warnings": 3,
+    "socketpair_initialization_retries": 57,
+    "font_regression_collected": true,
+    "junit_sha256": "964769f6979e426fa3aa0895fb9eaead351757a007835720a164a476cc8e627e",
+    "junit_attributes": {
+      "name": "pytest",
+      "errors": "0",
+      "failures": "0",
+      "skipped": "458",
+      "tests": "1393",
+      "time": "253.042",
+      "timestamp": "2026-11-01T02:48:07.585263+09:00",
+      "hostname": "감자"
+    }
+  }
+}

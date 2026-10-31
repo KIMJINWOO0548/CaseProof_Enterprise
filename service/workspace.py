@@ -137,6 +137,10 @@ def create_workspace_app(session_factory, registry):
                         pack_version_id='—', revision=change.revision, status='INTEGRITY_INVALID'))
             return {'data': results}
 
+    @app.get('/static/vendor/suit/SUIT-Variable.woff2', include_in_schema=False)
+    async def workspace_font():
+        return FileResponse(ROOT / 'service' / 'static' / 'vendor' / 'suit' / 'SUIT-Variable.woff2', media_type='font/woff2')
+
     app.mount('/static', StaticFiles(directory=ROOT / 'service' / 'static'), name='static')
 
     @app.get('/', include_in_schema=False)

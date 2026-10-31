@@ -119,7 +119,15 @@ async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDay
     await page.locator('#workspace').waitFor({ state: 'visible' });
     await page.locator('#refresh').waitFor({ state: 'visible' });
   };
-  const status = value => page.waitForFunction(v => document.querySelector('#change-status')?.textContent === v, value);
+  const status = async value => {
+    await page.waitForFunction(v => document.querySelector('#change-status')?.textContent === v, value);
+    const stages = page.locator('.review-stages li');
+    assert.equal(await stages.count(), 4, 'all workflow stages remain visible');
+    const active = page.locator('.review-stages [aria-current="step"]');
+    const labels = { DRAFT: '작성·평가', PENDING_DOMAIN_REVIEW: '현업 검토', PENDING_RELEASE: '최종 검토', APPROVED_FOR_DEMO: '데모 승인' };
+    assert.equal(await active.count(), value === 'REJECTED' ? 0 : 1, 'only the actual current state is marked');
+    if (labels[value]) assert.equal(await active.textContent(), labels[value]);
+  };
   const decision = async (value, reason) => {
     await page.locator(`[data-decision="${value}"]`).click();
     await page.locator('#reason').fill(reason);

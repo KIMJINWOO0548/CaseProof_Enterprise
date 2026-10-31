@@ -6,7 +6,7 @@ include alembic.ini
 include alembic-postgres.ini compose.postgres-test.yaml
 recursive-include migrations *.py *.mako *.sql
 include Dockerfile compose.yaml .dockerignore .editorconfig .gitattributes .gitignore
-recursive-include service *.py *.html *.css *.js *.txt *.json
+recursive-include service *.py *.html *.css *.js *.txt *.json *.woff2
 recursive-include reference *.py
 recursive-include datasets *.json
 recursive-include tests *.py *.json

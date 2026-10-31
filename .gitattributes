@@ -17,3 +17,5 @@
 
 # Preserve upstream asset bytes and recorded SHA-256 across checkout platforms.
 service/static/vendor/** -text
+# Retain the unmodified OFL notice, including its upstream trailing space.
+service/static/vendor/suit/LICENSE.txt -whitespace

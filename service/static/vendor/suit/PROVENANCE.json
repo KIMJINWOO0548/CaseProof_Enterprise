@@ -1,0 +1,22 @@
+{
+  "name": "SUIT Variable",
+  "repository": "https://github.com/sun-typeface/SUIT",
+  "commit": "55118d981336d8fce005eb62888c12c0568ef7b0",
+  "spdx": "OFL-1.1",
+  "copyright": "Copyright (c) 2022, SUNN (http://sun.fo/suit), with Reserved Font Name SUIT.",
+  "modifications": "None; upstream binary and license bytes preserved.",
+  "files": {
+    "SUIT-Variable.woff2": {
+      "source_url": "https://raw.githubusercontent.com/sun-typeface/SUIT/55118d981336d8fce005eb62888c12c0568ef7b0/fonts/variable/woff2/SUIT-Variable.woff2",
+      "git_blob_sha1": "89d7e4c28fe8069a8110a79dc7ca3cd446745de9",
+      "sha256": "aa894a204d5a6fbae259dac6868d350cbd373a390caee0313f92946af741df23",
+      "size": 624536
+    },
+    "LICENSE.txt": {
+      "source_url": "https://raw.githubusercontent.com/sun-typeface/SUIT/55118d981336d8fce005eb62888c12c0568ef7b0/LICENSE",
+      "git_blob_sha1": "7ee44cf05fe09f5dc9293f40b96f3f9f66478d65",
+      "sha256": "30d101ee3c35ef629d622d933d261a27b2f60223e0a3b0f36791e569c2b9daa9",
+      "size": 4380
+    }
+  }
+}
