@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.3.0.dev6 — 2026-11-01
+
+- Bind the complete evaluation configuration, including dataset and source bundle, with a versioned execution digest; preserve earlier stored bytes and fail closed on legacy runs.
+- Recheck selected adapter/model/prompt content against execution-time configuration before submission or historical evidence validation; unrelated registrations leave a seal unchanged.
+- Start the local demo with an explicit loopback listener and bounded Windows10014 initialization recovery; verify authenticated startup without rewriting an existing DB.
+- Expose validated immutable evidence references over authenticated HTTP; unverified records return diagnostics without trusted references.
+
 ## 5.3.0.dev5 — 2026-11-01
 
 - Adapt official Langfuse/LangSmith/Dify inspection patterns into a responsive queue/detail workspace, with native dialog visibility and measured focus/contrast checks.

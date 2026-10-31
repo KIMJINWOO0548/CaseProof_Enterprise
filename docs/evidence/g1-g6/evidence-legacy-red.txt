@@ -1,0 +1,48 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_________ test_legacy_run_returns_unverified_diagnostic_without_refs __________
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-287/test_legacy_run_returns_unveri0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000021187841370>
+
+    def test_legacy_run_returns_unverified_diagnostic_without_refs(tmp_path, monkeypatch):
+        from service.evaluation import runner
+
+        app, factory, body = fixture(tmp_path)
+        original = runner.prepare_run
+
+        def legacy_run(history, *args, **kwargs):
+            run = original(history, *args, **kwargs)
+            refs = history['refs']
+            adapter = next(adapter for adapter in refs['adapters']
+                           if adapter['id'] == refs['candidate_snapshot']['adapter_version_id'])
+            run['schema'] = 'evaluation_run_v1'
+            run['run_config_sha256'] = content_hash('run-config',
+                {name: refs[name] for name in ('candidate_snapshot', 'suite', 'evaluator', 'model', 'prompt')}
+                | {'adapter': adapter})
+            return run
+
+        try:
+            monkeypatch.setattr(runner, 'prepare_run', legacy_run)
+            identity = create(app, body, 'evaluated')
+            monkeypatch.setattr(runner, 'prepare_run', original)
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+            assert response.status_code == 200
+>           assert response.json()['data'] == {
+                'historical_integrity': 'LEGACY_UNVERIFIED', 'current_approval_eligibility': 'BLOCKED',
+                'external_anchor': 'NOT_CONFIGURED', 'approved_revision': None,
+                'envelope_sha256': None, 'immutable_refs': None}
+E               AssertionError: assert {'historical_...n': None, ...} == {'historical_...n': None, ...}
+E
+E                 Omitting 3 identical items, use -vv to show
+E                 Differing items:
+E                 {'immutable_refs': {'candidate_snapshot_ref': {'id': '74599086-3b1d-4875-a81c-877ff39bd6f1', 'payload_sha256': '1b6230...0-4fb3-8687-c62fd34dafa0', 'payload_sha256': '93299e053b3fafe98312b247907eb8b1a45b51349dc8c7a2503b5d2659eb6413'}, ...}} != {'immutable_refs': None}
+E                 {'historical_integrity': 'VALID'} != {'historical_integrity': 'LEGACY_UNVERIFIED'}
+E                 {'current_approval_eligibility': 'ELIGIBLE'} != {'current_approval_eligibility': 'BLOCKED'}
+E                 Use -v to get more diff
+
+tests\v1\test_evidence_http.py:172: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/v1/test_evidence_http.py::test_legacy_run_returns_unverified_diagnostic_without_refs
+1 failed in 4.73s
+Windows socketpair initialization retries: 0

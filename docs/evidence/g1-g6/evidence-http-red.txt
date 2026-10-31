@@ -1,0 +1,107 @@
+FFF.F                                                                    [100%]
+================================== FAILURES ===================================
+______ test_evidence_refs_match_stored_hashes_without_payloads[created] _______
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-276/test_evidence_refs_match_store0')
+stage = 'created'
+
+    @pytest.mark.parametrize('stage', ['created', 'evaluated', 'approved'])
+    def test_evidence_refs_match_stored_hashes_without_payloads(tmp_path, stage):
+        app, factory, body = fixture(tmp_path)
+        try:
+            identity = create(app, body, stage)
+            with factory.begin() as db:
+                unrelated_adapter = str(uuid4())
+                add_payload(db, m.AdapterSnapshot, {'schema': 'adapter_v1', 'tenant_id': 'tenant-a',
+                    'id': unrelated_adapter, 'kind': 'unrelated-private-adapter', 'credential': 'MUST_NOT_LEAK'})
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+            assert response.status_code == 200
+            data = response.json()['data']
+            assert data['historical_integrity'] == 'VALID'
+            assert data['external_anchor'] == 'NOT_CONFIGURED'
+>           refs = data['immutable_refs']
+                   ^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'immutable_refs'
+
+tests\v1\test_evidence_http.py:76: KeyError
+_____ test_evidence_refs_match_stored_hashes_without_payloads[evaluated] ______
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-276/test_evidence_refs_match_store1')
+stage = 'evaluated'
+
+    @pytest.mark.parametrize('stage', ['created', 'evaluated', 'approved'])
+    def test_evidence_refs_match_stored_hashes_without_payloads(tmp_path, stage):
+        app, factory, body = fixture(tmp_path)
+        try:
+            identity = create(app, body, stage)
+            with factory.begin() as db:
+                unrelated_adapter = str(uuid4())
+                add_payload(db, m.AdapterSnapshot, {'schema': 'adapter_v1', 'tenant_id': 'tenant-a',
+                    'id': unrelated_adapter, 'kind': 'unrelated-private-adapter', 'credential': 'MUST_NOT_LEAK'})
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+            assert response.status_code == 200
+            data = response.json()['data']
+            assert data['historical_integrity'] == 'VALID'
+            assert data['external_anchor'] == 'NOT_CONFIGURED'
+>           refs = data['immutable_refs']
+                   ^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'immutable_refs'
+
+tests\v1\test_evidence_http.py:76: KeyError
+______ test_evidence_refs_match_stored_hashes_without_payloads[approved] ______
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-276/test_evidence_refs_match_store2')
+stage = 'approved'
+
+    @pytest.mark.parametrize('stage', ['created', 'evaluated', 'approved'])
+    def test_evidence_refs_match_stored_hashes_without_payloads(tmp_path, stage):
+        app, factory, body = fixture(tmp_path)
+        try:
+            identity = create(app, body, stage)
+            with factory.begin() as db:
+                unrelated_adapter = str(uuid4())
+                add_payload(db, m.AdapterSnapshot, {'schema': 'adapter_v1', 'tenant_id': 'tenant-a',
+                    'id': unrelated_adapter, 'kind': 'unrelated-private-adapter', 'credential': 'MUST_NOT_LEAK'})
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+            assert response.status_code == 200
+            data = response.json()['data']
+            assert data['historical_integrity'] == 'VALID'
+            assert data['external_anchor'] == 'NOT_CONFIGURED'
+>           refs = data['immutable_refs']
+                   ^^^^^^^^^^^^^^^^^^^^^^
+E           KeyError: 'immutable_refs'
+
+tests\v1\test_evidence_http.py:76: KeyError
+_______ test_invalid_evidence_returns_diagnostics_without_verified_refs _______
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-276/test_invalid_evidence_returns_0')
+
+    def test_invalid_evidence_returns_diagnostics_without_verified_refs(tmp_path):
+        app, factory, body = fixture(tmp_path)
+        try:
+            identity = create(app, body, 'approved')
+            with factory.begin() as db:
+                db.execute(text('DROP TRIGGER v1_change_revision_no_update'))
+                db.execute(update(m.ChangeRevision).where(m.ChangeRevision.change_id == identity,
+                    m.ChangeRevision.revision == 1).values(payload_sha256='f' * 64))
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+            assert response.status_code == 200
+            data = response.json()['data']
+>           assert data == {'historical_integrity': 'INVALID', 'current_approval_eligibility': 'BLOCKED',
+                            'external_anchor': 'NOT_CONFIGURED', 'approved_revision': None,
+                            'envelope_sha256': None, 'immutable_refs': None}
+E                           AssertionError: assert {'historical_...n': None, ...} == {'historical_...n': None, ...}
+E
+E                             Omitting 5 identical items, use -vv to show
+E                             Right contains 1 more item:
+E                             {'immutable_refs': None}
+E                             Use -v to get more diff
+
+tests\v1\test_evidence_http.py:142: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/v1/test_evidence_http.py::test_evidence_refs_match_stored_hashes_without_payloads[created]
+FAILED tests/v1/test_evidence_http.py::test_evidence_refs_match_stored_hashes_without_payloads[evaluated]
+FAILED tests/v1/test_evidence_http.py::test_evidence_refs_match_stored_hashes_without_payloads[approved]
+FAILED tests/v1/test_evidence_http.py::test_invalid_evidence_returns_diagnostics_without_verified_refs
+4 failed, 1 passed in 12.46s
+Windows socketpair initialization retries: 58

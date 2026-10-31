@@ -288,6 +288,10 @@ class EvaluationRun(JSONModel):
         return self
 
 
+class EvaluationRunV2(EvaluationRun):
+    schema_name: Literal['evaluation_run_v2'] = Field(alias='schema')
+
+
 Model = TypeVar('Model', bound=JSONModel)
 
 

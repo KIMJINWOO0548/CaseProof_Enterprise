@@ -95,6 +95,10 @@ case result는 `case_id,input_sha256,output_sha256,source_refs,resolution_status
 
 G1의 `/evaluation-runs`는 `FakeDeterministicAdapter`의 제한된 동기 실행만 지원한다. 입력은 `{suite_version_id, case_inputs}`이고 case_inputs는 suite의 case_id를 정확히 한 번씩 포함하는 typed input 목록이다. 모델·프롬프트·source·evaluator는 Change snapshot에서 결정된다. target 숫자 합성 adapter에서 각 input은 `case_id,claim_days,case_context`; G3에서 context는 계약/사고/청구/상담 날짜·rider facts·recorded_as_of를 포함한다. 예상 정답은 이 DTO에 없다. 실패 결과도 run으로 commit되면 HTTP 201이며 run.completion/gate_summary로 표시한다. HTTP 성공과 평가 PASS를 혼용하지 않는다.
 
+### 6.1 dev6 execution-config version boundary
+
+새 runtime 실행은 `evaluation_run_v2`이며 `H("run-config-v2", {schema:"execution_config_v2", candidate_snapshot, source_bundle, dataset, suite, evaluator, model, prompt, adapter})`로 평가 당시 전체 snapshot을 고정한다. source/policy는 bundle member의 ID/hash와 실제 bytes를 대조해 결합한다. V1 저장 bytes와 원본 schema/예제는 보존하고 신규 승인에 재사용하지 않는다. V1 history는 409 `EXECUTION_CONFIG_UNVERIFIED`, 인증된 조회는 `LEGACY_UNVERIFIED`와 null immutable refs를 반환한다. 자동 재해시·형식 변환·DB 삭제는 없다. [명시 경계와 새 프로필 절차](../docs/EXECUTION_CONFIG.md)를 따른다.
+
 ## 7. assessment와 approval envelope의 비순환 계약
 
 release APPROVE에서 tenant head와 change를 잠근 뒤 승인 직전 revision을 `p`, tenant audit head의 sequence/hash를 `a`로 고정한다. 다음 순서 외에는 허용하지 않는다.

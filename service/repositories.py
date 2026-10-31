@@ -2,9 +2,10 @@
 from sqlalchemy import select
 from service import models_v1 as m
 from service.api.errors import DomainError
-from service.api.schemas_v1 import ChangeRevision, DecisionNote, EvaluationRun
+from service.api.schemas_v1 import ChangeRevision, DecisionNote, EvaluationRun, EvaluationRunV2
 from service.domain.canonical import canonical_bytes, content_hash, parse_json
 from service.domain.state_machine import TABLE, SNAPSHOT_IDS
+from service.evaluation.config import execution_config_sha256
 
 ZERO = '0' * 64
 PURPOSES = {m.ChangeRevision: 'change-revision', m.ChangeTransition: 'transition', m.AuditEvent: 'audit-event',
@@ -27,6 +28,9 @@ def decode(row, purpose=None):
         require(canonical_bytes(data) == row.canonical_payload)
         require(content_hash(purpose or PURPOSES[type(row)], data) == row.payload_sha256)
         require(data.get('schema') == row.schema_version)
+        require(data.get('tenant_id') == row.tenant_id)
+        if 'id' in row.__table__.columns and not isinstance(row, (m.Assessment, m.ApprovalEnvelope, m.IdempotencyRecord)):
+            require(data.get('id') == row.id)
         for column in row.__table__.columns:
             if column.name in data:
                 require(getattr(row, column.name) == data[column.name])
@@ -43,7 +47,8 @@ def decode(row, purpose=None):
             require(getattr(row, column) == (ref['id'] if ref is not None else None))
         if isinstance(row, m.IdempotencyRecord):
             require(row.change_id == data['response_data_json']['change_id'])
-        model = {m.ChangeRevision: ChangeRevision, m.DecisionNote: DecisionNote, m.EvaluationRun: EvaluationRun}.get(type(row))
+        run_model = EvaluationRunV2 if data.get('schema') == 'evaluation_run_v2' else EvaluationRun
+        model = {m.ChangeRevision: ChangeRevision, m.DecisionNote: DecisionNote, m.EvaluationRun: run_model}.get(type(row))
         if model:
             require(model.model_validate(data).model_dump(by_alias=True) == data)
         return data
@@ -93,7 +98,8 @@ def load_refs(db, tenant_id, snapshot):
     members = rows(db, m.SourceBundleMember, tenant_id, source_bundle_id=snapshot['source_bundle_id'])
     refs['sources'] = [one(m.SourceSnapshot, identity) for identity in sorted({row.source_id for row in members})]
     refs['policies'] = [one(m.PolicySnapshot, identity) for identity in sorted({row.policy_id for row in members})]
-    refs['adapters'] = [decode(row) for row in rows(db, m.AdapterSnapshot, tenant_id)]
+    adapter_id = candidate.get('adapter_version_id')
+    refs['adapters'] = [one(m.AdapterSnapshot, adapter_id)] if adapter_id else []
     refs['source_eligibility'] = [decode(row) for row in rows(db, m.SourceEligibilitySnapshot, tenant_id,
                                                            source_bundle_id=snapshot['source_bundle_id'])]
     # Bundle member rows must be authenticated by the immutable bundle itself.
@@ -131,6 +137,7 @@ def _load_history(db, tenant_id, change_id):
     for name, model in (('snapshots', m.ChangeRevision), ('transitions', m.ChangeTransition),
                         ('runs', m.EvaluationRun), ('decisions', m.DecisionNote)):
         history[name] = [decode(row) for row in rows(db, model, tenant_id, change_id=change_id)]
+    require(all(run['schema'] == 'evaluation_run_v2' for run in history['runs']), 'EXECUTION_CONFIG_UNVERIFIED')
     snapshots = sorted(history['snapshots'], key=lambda p: p['revision'])
     transitions = sorted(history['transitions'], key=lambda p: p['revision_to'])
     history['snapshots'], history['transitions'] = snapshots, transitions
@@ -238,7 +245,11 @@ def _load_history(db, tenant_id, change_id):
     for run in history['runs']:
         adapter = db.get(m.AdapterSnapshot, (tenant_id, run['adapter_version_id']))
         require(adapter is not None)
-        decode(adapter)
+        adapter = decode(adapter)
+        refs = history['refs']
+        require(run['adapter_version_id'] == refs['candidate_snapshot'].get('adapter_version_id'))
+        # A rehashed snapshot must still match the configuration bound by the run.
+        require(run['run_config_sha256'] == execution_config_sha256(refs, adapter))
         expected_sources = {(case['case_id'], ref['id']) for case in run['case_results'] for ref in case['source_refs']}
         actual_sources = {(row.case_id, row.source_id) for row in rows(db, m.RunSourceRef, tenant_id, run_id=run['id'])}
         require(expected_sources == actual_sources)

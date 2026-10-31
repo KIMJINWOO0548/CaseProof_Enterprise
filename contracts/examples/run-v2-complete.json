@@ -1,0 +1,53 @@
+{
+  "schema": "evaluation_run_v2",
+  "id": "8b7a793c-6eaa-4773-b79a-43b06eda84c7",
+  "tenant_id": "tenant-a",
+  "change_id": "e06cc0a4-df7b-4b27-97e4-08948465b7e9",
+  "recorded_revision": 2,
+  "actor_id": "analyst",
+  "created_at": "2026-10-31T15:56:11.920489Z",
+  "candidate_snapshot_id": "71866024-5107-46e4-bbd1-d17b559b46af",
+  "source_bundle_id": "8ece1a8b-5acd-42b0-b24c-ef974fe93f5e",
+  "dataset_version_id": "822b9555-8dc6-4033-b6a6-ada21d9a0010",
+  "suite_version_id": "eed70a8c-767e-416b-a653-ba60fe8317e3",
+  "evaluator_version_id": "766777a6-e8f3-40ef-91dd-433f034f7f7c",
+  "adapter_version_id": "871d3b1e-3530-4022-a145-d149c2619894",
+  "run_input_sha256": "8b5984332d3add14e8917d406c2940ae0cae8e3ccb3e9b5177a12452c38b7a58",
+  "run_config_sha256": "8491800f474b4cb5a9526603b00e68941738d9b2ffca6fe7423baaf3d45acc14",
+  "case_results": [
+    {
+      "case_id": "case-a",
+      "input_sha256": "aa59bc0eb50b2aebe26725328fbf42371b8a5251ea5f8c56872d7a5236f545d1",
+      "output_sha256": "e61709d5b40edd2f6eba73313916f799951ba4cab753f9b0a867cabc7c21ed2d",
+      "source_refs": [
+        {
+          "id": "b2d85caa-e2aa-4226-b1a3-7665046261fe",
+          "payload_sha256": "b01f6fc26ceea7afdc8fb823a7060337fd2c7180c92d285b1991d5f799e07ed9"
+        }
+      ],
+      "resolution_status": "RESOLVED",
+      "verdict": "PASS",
+      "complete": true,
+      "error_code": null,
+      "critical_failure": false
+    },
+    {
+      "case_id": "case-b",
+      "input_sha256": "089f4d68541f7cd66fff1dcd69c5c2f40f1f20353840a01551069be49860b152",
+      "output_sha256": "e61709d5b40edd2f6eba73313916f799951ba4cab753f9b0a867cabc7c21ed2d",
+      "source_refs": [
+        {
+          "id": "b912715a-a55b-475d-b55d-b7f297de1a81",
+          "payload_sha256": "49277b96e71e3839b7e788ef8527bfcecb40012154253ca4d6d0773a8df388ff"
+        }
+      ],
+      "resolution_status": "RESOLVED",
+      "verdict": "PASS",
+      "complete": true,
+      "error_code": null,
+      "critical_failure": false
+    }
+  ],
+  "completion": "COMPLETE",
+  "gate_summary": "PASS"
+}

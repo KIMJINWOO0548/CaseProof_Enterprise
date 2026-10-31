@@ -1,4 +1,22 @@
-# 검증 결과 — 5.3.0.dev5
+# 검증 결과 — 5.3.0.dev6
+
+## dev6 실행 설정·진단·전체 회귀 — 2026-11-01 KST
+
+[실제 로컬 전체 출력](evidence/g1-g6/ordinary-dev6-final.txt), [소스 범위와 명령](evidence/g1-g6/ordinary-dev6-final.json): **904 passed, 1 optional Python-browser skipped, 3 warnings, 22 subtests passed**, exit 0, 472.91초. 소켓 초기화만 662회 재시도했으며 테스트 본문·HTTP mutation을 반복하지 않았다. 이 실행은 마지막 CLI listener 보강 전의 고정된 V2/identity/API/UI 소스다. CLI 보강 후 최종 commit은 별도 전체 CI로 검증한다. 감독자의 이전 전체 실행 CLI TimeoutExpired(15초)는 보존했고 동일 원본 검사의 단독 실행은 사용자 보고 3.98초, 이 세션 14.64초로 각각 통과했다. timeout·기존 테스트는 변경하지 않았다.
+
+평가 후 봉인 전 Dataset/SourceBundle을 한 행만 자체 재해시한 독립 RED 2개를 확인했다. `evaluation_run_v2`는 `run-config-v2`로 candidate/bundle/dataset/suite/evaluator/model/prompt/adapter 전체를 결합한다. V1 gold·기존 canonical bytes는 보존하며 이전 실행을 자동 변환하지 않는다. [형식과 fail-closed 경계](EXECUTION_CONFIG.md), [실행 기록](evidence/g1-g6/execution-config-verification.json), [재해시·non-null model/prompt 검사](evidence/g1-g6/tamper-config-verification.json)를 대조한다. 마지막 identity 보강 이전 V1 범위 회귀 528 PASS와 최종 전체 904 PASS를 구분한다.
+
+증거 GET의 immutable refs 누락은 HTTP RED 후 보완했다. 관련 57 PASS 뒤 canonical identity 누락의 500을 별도로 재현했고 [RED](evidence/g1-g6/missing-identity-http-red.txt)→[200 INVALID/null refs GREEN](evidence/g1-g6/missing-identity-http-green.txt)을 확인했다. 이전 V1 기록은 인증된 조회에서 LEGACY_UNVERIFIED/null refs이며 mutation은 409다. 인증·tenant 경계와 원래 저장 요청의 역사적 replay 계약은 유지한다.
+
+[최신 실제 Chrome 156](evidence/g1-g6/ai-ui-browser-dev6.json)은 새 V2 프로필에서 XSS 흐름과 깨끗한 캡처 흐름 두 번을 실행했다. 각 교정 변경의 DB에는 revision/transition/event 5개, decision 2개, V2 run과 VALID 증거가 있었다. 서버 성공 commit 후 응답 abort→원래 키 복구, 3인 승인, 1280/1440/390/375px, Escape, WebStorage 비사용과 이전 형식 UI 차단을 확인했다. 캡처는 실제 V2 데이터다. 이 Windows 재검증은 기본 서버 시작의 10014 실패 뒤 명시적 loopback listener와 프로세스 내 SelectorEventLoop로 실행했다. 정상 실행기 보강의 별도 결과를 후속 기록한다.
+
+`651a5bc`의 [실제 CI 증거](evidence/g1-g6/ci-651a5bc.json)는 9개 성공/PR 전용 1개 skip, 일반 각 868 PASS, 실제 PG17.11 460 PASS, NumPy 평가 34 PASS다. [격리 wheel](evidence/g1-g6/installed-651a5bc-wheel.json)은 runtime-only 환경에서 실행했다. 후속 dev6 전체 CI/새 설치를 이전 결과로 대체하지 않는다.
+
+Gitleaks 8.30.1 공식 바이너리의 게시 SHA-256 확인 후 Git 전체 이력과 작업 소스를 redaction 모드로 검사했다. 각각 원본 후보 20개(exit 1)를 보존하고 해시 기록 14개·합성 멱등성 키 6개로 판별했으며 실제 credential/미해결 후보는 0개였다. [명령·출처·판별 근거](evidence/g1-g6/gitleaks-summary.json). suppress/allowlist를 추가하지 않았으며 완전한 유출 부재 보증으로 표현하지 않는다. 라이선스·출처의 확인된 범위와 미확정 소유권은 THIRD_PARTY_NOTICES를 따른다.
+
+최종 CLI 시작은 기본 ProactorEventLoop와 명시적 loopback listener를 사용한다. 실제 시작 실패 RED 후 Windows 10014의 첫 listen만 최대 128회·20ms로 제한해 재시도하고 실패 소켓을 닫는다. 다른 OS/오류는 즉시 실패한다. [실제 CLI·제한 검사 5 PASS](evidence/g1-g6/demo-startup-verification.json), [실행 출력](evidence/g1-g6/demo-startup-verified.txt). 테스트는 인증 200·무인증 401·HTML/JS 200·DB 파일 hash 보존·소유 process 정리를 확인했다. HTTP나 mutation 재시도는 없다. 10014의 운영체제 원인은 확정하지 않았다.
+
+보강한 실행기로 [새 V2 복구 훈련](evidence/g1-g6/recovery-drill-dev6.json)을 다시 실행해 service outage·token theft·rollback/restore·evidence tampering의 **4개 PASS, exit 0**을 확인했다. 기본 실행기를 사용했고 controller의 socketpair 초기화 재시도는 0회였다. 관찰된 RTO/RPO와 초기화 시도는 해당 JSON의 로컬 환경 수치다.
 
 ## AI UI 및 후속 인수 검증 — 2026-11-01 KST
 

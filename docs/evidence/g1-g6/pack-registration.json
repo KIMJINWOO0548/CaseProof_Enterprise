@@ -1,0 +1,19 @@
+{
+  "scope": "local synthetic config-only registration, not independent third-pack review",
+  "result": "PASS",
+  "registered": [
+    "harbor",
+    "orchard",
+    "lantern"
+  ],
+  "core_before_sha256": {
+    "service/policies/schema.py": "a4106515dbea251acf532294c16e2d8576fd534c0d60809ea06118275dcc6a3a",
+    "service/policies/resolver.py": "1312688fa9f4b5ff4c674d1f62c398fc6f014e97bbe6192678b53b8060922f1a",
+    "service/policies/registry.py": "eb0f4112fa23627beb3a57e419dc9ccf52293d85612f1b2c3a73da23b19ea5cc"
+  },
+  "core_after_sha256": {
+    "service/policies/schema.py": "a4106515dbea251acf532294c16e2d8576fd534c0d60809ea06118275dcc6a3a",
+    "service/policies/resolver.py": "1312688fa9f4b5ff4c674d1f62c398fc6f014e97bbe6192678b53b8060922f1a",
+    "service/policies/registry.py": "eb0f4112fa23627beb3a57e419dc9ccf52293d85612f1b2c3a73da23b19ea5cc"
+  }
+}

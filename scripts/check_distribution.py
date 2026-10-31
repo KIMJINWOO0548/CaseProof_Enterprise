@@ -32,6 +32,7 @@ RUNTIME_FILES = {
     "service/domain/gates.py",
     "service/domain/evidence.py",
     "service/evaluation/runner.py",
+    "service/evaluation/config.py",
     "service/evaluation/adapters.py",
     "service/evaluation/metrics.py",
     "service/evaluation/benchmark.py",
@@ -219,6 +220,23 @@ def check_installed() -> None:
                         catalog = json.loads(b''.join(m.get('body', b'') for m in messages if m['type'] == 'http.response.body'))['data']
                         require(len(catalog['presets']) == 3 and catalog['capabilities']['external_model'] is False,
                                 'Installed synthetic pack catalog is incomplete or advertises a real provider.')
+                from service.commands import execute_command
+                from service.domain.types import ActorContext, CommandContext
+                actor = ActorContext('fictional', 'analyst', frozenset({'ANALYST'}))
+                preset = catalog['presets'][0]
+                created = execute_command(factory, actor, CommandContext('POST', '/api/v1/changes', 'NEW',
+                    'installed_create_key', None, preset['create_body']))
+                identity = created.data['change_id']
+                evaluated = execute_command(factory, actor, CommandContext('POST',
+                    '/api/v1/changes/{change_id}/evaluation-runs', identity, 'installed_evaluate_key', 1,
+                    {'suite_version_id': preset['create_body']['suite_version_id'], 'case_inputs': preset['case_inputs']}))
+                require(evaluated.data['run']['schema'] == 'evaluation_run_v2' and
+                        evaluated.data['run']['gate_summary'] == 'PASS', 'Installed v2 execution did not pass.')
+                messages = asyncio.run(request('/api/v1/changes/' + identity + '/evidence', workspace,
+                                               [(b'authorization', token)]))
+                evidence = json.loads(b''.join(m.get('body', b'') for m in messages if m['type'] == 'http.response.body'))['data']
+                require(evidence['historical_integrity'] == 'VALID' and evidence['immutable_refs']['run_refs'],
+                        'Installed evidence did not expose verified immutable execution references.')
             finally:
                 engine.dispose()
         finally:

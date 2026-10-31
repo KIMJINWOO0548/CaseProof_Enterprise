@@ -1,0 +1,187 @@
+{
+  "schema": "caseproof.local-recovery-drill.v1",
+  "started_at": "2026-10-31T16:22:24.708287Z",
+  "scope": "LOCAL synthetic SQLite v1; single worker; loopback HTTP; disposable data",
+  "environment": {
+    "python": "3.12.10",
+    "os": "Windows-11-10.0.26200-SP0",
+    "sqlite": "3.49.1"
+  },
+  "command": "python -m scripts.recovery_drill",
+  "exercises": [
+    {
+      "name": "service_outage",
+      "status": "PASS",
+      "started_at": "2026-10-31T16:22:30.381230Z",
+      "completed_at": "2026-10-31T16:22:35.843687Z",
+      "old_pid": 30172,
+      "restarted_pid": 33856,
+      "outage_observed": true,
+      "readiness_rto_ms": 5469,
+      "readiness_polling": "GET only; application mutations are never retried"
+    },
+    {
+      "name": "token_theft",
+      "status": "PASS",
+      "started_at": "2026-10-31T16:22:35.843687Z",
+      "completed_at": "2026-10-31T16:22:35.923938Z",
+      "before_disable_http": 200,
+      "after_disable_http": 401,
+      "unauthorized_mutation_http": 401,
+      "database_effect": false,
+      "containment": "Owner disabled demo Actor; registry rotation still required after restore"
+    },
+    {
+      "name": "rollback_restore",
+      "status": "PASS",
+      "started_at": "2026-10-31T16:22:36.439139Z",
+      "completed_at": "2026-10-31T16:22:37.198163Z",
+      "backup": {
+        "schema": "caseproof.local-backup.v1",
+        "started_at": "2026-10-31T16:22:36.439139Z",
+        "completed_at": "2026-10-31T16:22:36.582638Z",
+        "backup_sha256": "83d2ced65342ff13c87f1809136add6a75782b603413485d80f2f2b205c9e31a",
+        "snapshot": {
+          "schema_sha256": "63582f67e26b94386b41b7ed26c6de0ec69fe9a527c4350c467a0438a6215e5f",
+          "integrity_check": "ok",
+          "row_counts": {
+            "v1_tenant": 1,
+            "v1_actor": 4,
+            "v1_tenant_audit_head": 1,
+            "v1_source_snapshot": 3,
+            "v1_policy_snapshot": 3,
+            "v1_model_snapshot": 0,
+            "v1_prompt_snapshot": 0,
+            "v1_candidate_snapshot": 3,
+            "v1_source_bundle": 3,
+            "v1_source_bundle_member": 3,
+            "v1_dataset_snapshot": 3,
+            "v1_suite_snapshot": 3,
+            "v1_evaluator_snapshot": 3,
+            "v1_adapter_snapshot": 3,
+            "v1_source_eligibility_snapshot": 3,
+            "v1_change": 1,
+            "v1_change_revision": 5,
+            "v1_evaluation_run": 1,
+            "v1_decision_note": 2,
+            "v1_change_transition": 5,
+            "v1_audit_event": 5,
+            "v1_assessment": 1,
+            "v1_approval_envelope": 1,
+            "v1_idempotency_record": 5,
+            "v1_assessment_run_ref": 1,
+            "v1_assessment_decision_ref": 1,
+            "v1_assessment_transition_ref": 4,
+            "v1_run_source_ref": 1
+          },
+          "tenant_heads": [
+            {
+              "tenant_id": "fictional",
+              "sequence": 5,
+              "head_sha256": "9176b9a8358d8c1ea7a5e165324f1e6a49a4991c53c88be49f16136f1f8d6e22"
+            }
+          ],
+          "envelopes": [
+            {
+              "tenant_id": "fictional",
+              "change_id": "5b32f4a3-512a-487c-a99e-991d63191726",
+              "sha256": "9932c322459325ac7450c036ecb20c1ba6a128351a2eba2d4246833f4bdea14f"
+            }
+          ]
+        },
+        "external_anchor": "SKIPPED"
+      },
+      "restore": {
+        "started_at": "2026-10-31T16:22:36.794809Z",
+        "completed_at": "2026-10-31T16:22:37.078938Z",
+        "snapshot": {
+          "schema_sha256": "63582f67e26b94386b41b7ed26c6de0ec69fe9a527c4350c467a0438a6215e5f",
+          "integrity_check": "ok",
+          "row_counts": {
+            "v1_tenant": 1,
+            "v1_actor": 4,
+            "v1_tenant_audit_head": 1,
+            "v1_source_snapshot": 3,
+            "v1_policy_snapshot": 3,
+            "v1_model_snapshot": 0,
+            "v1_prompt_snapshot": 0,
+            "v1_candidate_snapshot": 3,
+            "v1_source_bundle": 3,
+            "v1_source_bundle_member": 3,
+            "v1_dataset_snapshot": 3,
+            "v1_suite_snapshot": 3,
+            "v1_evaluator_snapshot": 3,
+            "v1_adapter_snapshot": 3,
+            "v1_source_eligibility_snapshot": 3,
+            "v1_change": 1,
+            "v1_change_revision": 5,
+            "v1_evaluation_run": 1,
+            "v1_decision_note": 2,
+            "v1_change_transition": 5,
+            "v1_audit_event": 5,
+            "v1_assessment": 1,
+            "v1_approval_envelope": 1,
+            "v1_idempotency_record": 5,
+            "v1_assessment_run_ref": 1,
+            "v1_assessment_decision_ref": 1,
+            "v1_assessment_transition_ref": 4,
+            "v1_run_source_ref": 1
+          },
+          "tenant_heads": [
+            {
+              "tenant_id": "fictional",
+              "sequence": 5,
+              "head_sha256": "9176b9a8358d8c1ea7a5e165324f1e6a49a4991c53c88be49f16136f1f8d6e22"
+            }
+          ],
+          "envelopes": [
+            {
+              "tenant_id": "fictional",
+              "change_id": "5b32f4a3-512a-487c-a99e-991d63191726",
+              "sha256": "9932c322459325ac7450c036ecb20c1ba6a128351a2eba2d4246833f4bdea14f"
+            }
+          ]
+        },
+        "registry_rotation_required": true
+      },
+      "restore_rto_ms": 282,
+      "observed_rpo_lost_committed_transitions": 1,
+      "last_post_backup_commit_observed_at": "2026-10-31T16:22:36.649379Z",
+      "rpo_basis": "One observed committed create after backup is absent in restored checkpoint",
+      "restored_exposed_to_http": false
+    },
+    {
+      "name": "evidence_tampering",
+      "status": "PASS",
+      "started_at": "2026-10-31T16:22:37.522462Z",
+      "completed_at": "2026-10-31T16:22:37.622901Z",
+      "approval_http": 409,
+      "historical_integrity": "INVALID",
+      "release_created": false,
+      "mutation": "Owner changed latest Change revision projection"
+    }
+  ],
+  "external_anchor": {
+    "status": "SKIPPED",
+    "reason": "No independent infrastructure configured",
+    "bonus": 0
+  },
+  "external_review": {
+    "status": "SKIPPED",
+    "reason": "No consented independent reviewer data",
+    "bonus": 0
+  },
+  "server_initialization_attempts": [
+    1,
+    1
+  ],
+  "completed_at": "2026-10-31T16:22:38.353136Z",
+  "status": "PASS",
+  "source_sha256": {
+    "service/recovery.py": "445ce395c70edeb640837175031cdd5ff2c9c24a66807eb3643c12a70301e3c6",
+    "scripts/recovery_drill.py": "044dbecc3382a0776f3793222ac900b9c793aa1f3aa3a11e54e6f0a9bca9b28a",
+    "service/workspace.py": "5a65084061a5d3f1e4a5d86dba70e77e6c77a5f3a9e3dd075ad60b2ea5c53d24",
+    "service/api/v1.py": "0082925289fc972e8ac2349f2898a31d014820f98cb06ea527f67834815c5ccd"
+  },
+  "exit_code": 0
+}

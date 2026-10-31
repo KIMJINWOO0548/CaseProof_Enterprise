@@ -16,7 +16,7 @@ from pydantic import BaseModel, ConfigDict, Field, InstanceOf, TypeAdapter, Vali
 from service.api.errors import DomainError
 from service.api.schemas_v1 import (
     MAX_REVISION, SHA256, UUIDv4, UTCTimestamp, ChangeRevision, CreateChange, Decision,
-    DecisionNote, EvaluationRun, RecordEvaluation, RegisteredId, Revision, SubmitChange,
+    DecisionNote, EvaluationRun, EvaluationRunV2, RecordEvaluation, RegisteredId, Revision, SubmitChange,
 )
 from service.domain.canonical import content_hash
 from service.domain.types import ActorContext
@@ -79,7 +79,8 @@ def _require(condition, code='EVIDENCE_RECORD_TAMPERED'):
 
 
 def _run(command, snapshot):
-    run = _parse(EvaluationRun, command.run)
+    model = EvaluationRunV2 if (command.run or {}).get('schema') == 'evaluation_run_v2' else EvaluationRun
+    run = _parse(model, command.run)
     _require(run.tenant_id == snapshot['tenant_id'] and run.change_id == snapshot['change_id'])
     _require(all(getattr(run, key) == snapshot[key] for key in SNAPSHOT_IDS), 'SNAPSHOT_MISMATCH')
     _require(run.actor_id == snapshot['requester_id'])

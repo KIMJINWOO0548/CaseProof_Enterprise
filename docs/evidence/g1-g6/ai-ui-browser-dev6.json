@@ -1,0 +1,57 @@
+{
+  "date": "2026-11-01",
+  "browser": "156.0.8078.48",
+  "tool": "Playwright MCP native clicks + SQLAlchemy stored-history assertions",
+  "result": "PASS",
+  "original": "0ffd7597-3c3b-4cd1-8a47-e20baa139d00",
+  "corrected": "ffc08de9-7941-404e-92ff-3385cde36891",
+  "clean_capture_original": "65f7f5c7-b7a1-4fc8-abcb-6284d0115009",
+  "clean_capture_corrected": "62223ffa-b68f-4ac5-8082-ca8baf773b2e",
+  "checks": [
+    "1280/1440 parallel queue inspector",
+    "390/375px single column no horizontal overflow",
+    "native dialogs hidden when closed",
+    "three distinct actors",
+    "full suite PASS",
+    "commit then response abort and original-key replay",
+    "rejection -> linked correction -> independent approvals",
+    "evidence VALID with immutable_refs",
+    "inert XSS title/reason",
+    "WebStorage empty",
+    "Escape focus restoration",
+    "intercepted LEGACY_UNVERIFIED prevents evaluation and evidence actions"
+  ],
+  "stored_records": [
+    {
+      "change_id": "ffc08de9-7941-404e-92ff-3385cde36891",
+      "historical_integrity": "VALID",
+      "run_schemas": [
+        "evaluation_run_v2"
+      ],
+      "revisions": 5,
+      "decisions": 2
+    },
+    {
+      "change_id": "62223ffa-b68f-4ac5-8082-ca8baf773b2e",
+      "historical_integrity": "VALID",
+      "run_schemas": [
+        "evaluation_run_v2"
+      ],
+      "revisions": 5,
+      "decisions": 2
+    }
+  ],
+  "startup_observations": {
+    "standard_launcher": "WinError10014 before requests; attempts preserved",
+    "verification_helper": "process-local SelectorEventLoop and pre-bound IPv4 loopback socket; product code otherwise unchanged"
+  },
+  "source_sha256": {
+    "service/static/v1.js": "42faf83085c844730b7a742f6c2cb9b7cc491d6f85e333f4d4baf436fa43f327",
+    "service/static/v1.html": "d3e6ec7b2500f7303db45d19430cb85688949a9762ccdbfbbf2ac0dfd5184696",
+    "service/static/v1.css": "7f7c18c38f9439a6bee72a24eb3938682380a1437c79e8b8be8d3b4323a9f932",
+    "service/api/v1.py": "0082925289fc972e8ac2349f2898a31d014820f98cb06ea527f67834815c5ccd",
+    "service/repositories.py": "1950faa0b5cf5d2b0b7a9d8ee845cd683e8d17574f0d87cfb80cf72eefe81077",
+    "service/evaluation/config.py": "a070396012947592ddbc1202b1d34d09ccc619f873a5fbfbc99f140b4547011c",
+    "service/evaluation/runner.py": "3636b866d9d747ec794f554136c99a5607e783e8cb7ea53bef0b712e9b4d56c0"
+  }
+}

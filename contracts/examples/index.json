@@ -94,6 +94,8 @@
       "valid": true,
       "note": "Structural specimen only; suite coverage and referenced records are not demonstrated."
     },
+    {"file": "examples/run-v2-complete.json", "schema": "evaluation-run-v2.schema.json", "valid": true,
+      "note": "Synthetic runtime v2 specimen; standalone JSON validation does not establish a verified approval history."},
     {"file": "examples/run-incomplete.json", "schema": "evaluation-run.schema.json", "valid": true},
     {"file": "examples/run-incomplete-false-pass.json", "schema": "evaluation-run.schema.json", "valid": false},
     {

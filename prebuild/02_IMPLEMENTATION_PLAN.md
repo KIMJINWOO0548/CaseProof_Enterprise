@@ -107,7 +107,7 @@
 **Runtime boundary:** `service/workspace.py` registers the standalone target router with explicit configuration; baseline `service/app.py` route behavior is preserved.
 **Consumes:** executor/types/auth. **Produces:** endpoint table in 08 §8 and actor-scoped result lookup.
 
-- [ ] Test same key+same semantic request returns same object/status/result_revision; only replayed changes. Test same actor key across route/resource/body/revision gives 409.
+- [x] Test same key+same semantic request returns same object/status/result_revision; only replayed changes. Test same actor key across route/resource/body/revision gives 409.
 - [x] Simulate successful commit followed by lost response, advance change state and retry original key: original result is replayed before stale checking. Revoked/disabled actor receives no replay.
 - [ ] Test raw JSON duplicate key, bool/float/string claim_days, missing/whitespace reason, extra tenant/actor/revision body fields; invalid revision header/leading zeros/key; cross-tenant IDs are 404.
 - [x] Implement normalized fingerprint and success-record transaction. Failure responses do not reserve keys; 503 outcome unknown tells client to query/retry same key. `POST create` rejects revision header.
@@ -135,14 +135,14 @@
 **Consumes:** complete history from G1.3 and selected run from G1.5. **Produces:** assessment/envelope and evidence diagnostic endpoint.
 
 - [x] Test preapproval revision p excludes final p+1 from assessment; envelope includes final note/transition/event without a hash cycle.
-- [ ] Test changes to frozen source bytes, note reason, event or run invalidate evidence; unrelated later tenant events/new source versions preserve historical seal.
+- [x] Test changes to frozen source bytes, note reason, event or run invalidate evidence; unrelated later tenant events/new source versions preserve historical seal.
 - [x] Test source withdrawn after sealing: historical integrity stays valid and current eligibility changes separately. No anchor configured stays NOT_CONFIGURED.
 - [x] Implement canonical payload reconstruction from immutable records, compare stored bytes/hash, emit three separate integrity/eligibility/anchor dimensions.
 - [x] Run `python -m pytest tests/v1/test_evidence.py -q` and whole suite; commit.
 
-**G1 completion:** all G1 tasks and real HTTP/SQLite end-to-end pass. Snapshot bytes and code hashes are recorded. Still no production release or PG claim.
+**G1 completion criterion:** all G1 tasks and real HTTP/SQLite end-to-end pass; unchecked broader matrices above remain explicit. Snapshot bytes and code hashes are recorded. Still no production release or PG claim.
 
-**Evidence boundary:** frozen source, reason, event and run mutation plus unrelated tenant activity and later withdrawal are tested. A separately enumerated new-source-version-after-seal case remains to complete the broader assertion above.
+**Evidence boundary:** frozen source, reason, event and run mutation plus unrelated tenant activity and later withdrawal are tested. Stored post-seal new source versions now have a separate preservation regression, as do non-null model/prompt and unrelated configuration registrations. Execution-config V2 also rejects dataset/bundle partial rewrites before sealing.
 
 ## G2.1 — PostgreSQL role/migration foundation
 
@@ -168,11 +168,11 @@
 **Create:** `tests/postgres/test_concurrency.py`, `tests/postgres/test_lock_failure.py`.
 
 - [x] Barrier-start two real sessions with same revision/key: one effect, coherent replay or specified conflict, no duplicate note/head sequence. Repeat 100 trials and record counts.
-- [ ] Race different changes under same tenant; inject lock timeout/deadlock; verify entire rollback and 503 Retry-After 1. No unbounded automatic retries.
+- [x] Race different changes under same tenant; inject lock timeout/deadlock; verify entire rollback and 503 Retry-After 1. No unbounded automatic retries.
 - [ ] Verify no external adapter calls occur while transaction holds tenant lock; request cancellation cannot commit half a state.
 - [ ] Run target and full suites; commit G2 completion only with actual role/worker/DB/latency evidence.
 
-**Evidence boundary:** 100 two-physical-session same-key races, actual PostgreSQL deadlock victim rollback, lock timeout rollback, and separate executor/HTTP 503 mapping are tested. A different-change race under one tenant and an explicit external-adapter lock-boundary test are not recorded; no external adapter is enabled. Cancellation rollback is covered in the SQLite executor test, not claimed as a separate PG cancellation test.
+**Evidence boundary:** 100 two-physical-session same-key races, actual PostgreSQL deadlock victim rollback, lock timeout rollback, and separate executor/HTTP 503 mapping are tested. The different-change race is verified in the 651a5bc PG17 CI (460 PASS total). An external-adapter lock-boundary test is not executed because no external adapter is enabled. Cancellation rollback is covered in the SQLite executor test, not claimed as a separate PG cancellation test.
 
 ## G3 — approved synthetic policy packs and time/context
 
@@ -182,10 +182,10 @@
 - [x] Test valid/recorded interval boundaries, contract/incident/claim/consultation dates that differ, missing required date, timezone normalization and from>=to registration rejection.
 - [x] Test CONFIRMED-empty vs UNKNOWN rider, unknown/unapproved/withdrawn rider, ambiguity/priority conflict, unapproved retroactivity and wrong tenant/product/source.
 - [x] Implement the ordered filtering contract in 08 §12; preserve candidate rejection reasons and conservative INCONCLUSIVE. Do not encode unreviewed real insurance law as fact.
-- [ ] Register a third fictional pack using the registry API/config only; record unchanged core hash and full API/DB/browser flow. External B05 credit still needs an external tester.
+- [x] Register a third fictional pack using the registry API/config only; record unchanged core hash and full API/DB/browser flow. External B05 credit still needs an external tester.
 - [x] Run `python -m pytest tests/policies -q`, full suites; commit.
 
-**Evidence boundary:** all three packs resolve through registry configuration and the third pack completes actual API/DB and browser approval. The explicit before/after unchanged-core-hash registration artifact is not recorded; independent third-pack testing remains SKIPPED, bonus 0.
+**Evidence boundary:** all three packs resolve through registry configuration and the third pack completes actual API/DB and browser approval. The before/after unchanged-core-hash registration is recorded in docs/evidence/g1-g6/pack-registration.json; independent third-pack testing remains SKIPPED, bonus 0.
 
 ## G4 — UI correction, retry recovery, accessibility
 
@@ -197,7 +197,7 @@
 - [ ] Render user/source/model text with text nodes; test XSS payloads in reason/title/output, no executable HTML. Do not store bearer tokens in browser persistent storage.
 - [ ] Run real Playwright clicks with three distinct users and server+DB assertions. Record browser/version and failures separately from API tests. User study with five participants remains a separate observed activity.
 
-**Evidence boundary:** the first recorded Chrome MCP flow completed correction, distinct-reviewer approval, evidence lookup, response-loss recovery, XSS title/reason, no WebStorage, narrow viewport and focus restoration. Later native-click timeouts are retained as failures. A full browser matrix for every listed HTTP/error state and model-output XSS is not recorded; the final AI-reference layout has its own subsequent visual check. The optional Python Playwright test was skipped when its dependency was absent.
+**Evidence boundary:** the first recorded Chrome MCP flow completed correction, distinct-reviewer approval, evidence lookup, response-loss recovery, XSS title/reason, no WebStorage, narrow viewport and focus restoration. Later native-click timeouts are retained as failures. Subsequent native clicks verified injected GET 403/404/409/422, loading/empty and final V2 responsive layout/legacy guard. Model-output XSS and a complete keyboard-only workflow are not separately enumerated; those broader checkboxes remain partial. The optional Python Playwright test was skipped when its dependency was absent.
 
 ## G5.1 — model/gold boundary and metrics
 

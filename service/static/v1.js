@@ -130,7 +130,7 @@
   }
   async function select(id) {
     const e = epoch, s = ++selection; clearDetail('불러오는 중…'); $('detail').setAttribute('aria-busy', 'true'); message();
-    try { const data = await client.get('/api/v1/changes/' + id); if (e !== epoch || s !== selection) return; if (data.historical_integrity === 'INVALID') { clearDetail('기록 무결성이 유효하지 않습니다.'); return; } render(data.snapshot || data, data.latest_run || data.run); }
+    try { const data = await client.get('/api/v1/changes/' + id); if (e !== epoch || s !== selection) return; if (data.historical_integrity === 'INVALID') { clearDetail('기록 무결성이 유효하지 않습니다.'); return; } if (data.historical_integrity === 'LEGACY_UNVERIFIED') { clearDetail('이전 실행 형식의 기록입니다. 기록을 보존하고 새 프로필에서 평가하세요.'); return; } render(data.snapshot || data, data.latest_run || data.run); }
     catch (error) { if (e === epoch && s === selection) { clearDetail('변경을 불러오지 못했습니다.'); message(error); } } finally { if (e === epoch && s === selection) $('detail').setAttribute('aria-busy', 'false'); }
   }
   async function mutate(path, body, revision, retry = false) {

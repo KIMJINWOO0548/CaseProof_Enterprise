@@ -4,7 +4,7 @@
 
 CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
 
-**Release: `5.3.0.dev5` — versioned review, evaluation and evidence workspace.** The explicit `/api/v1` profile provides atomic revisions, full-suite runs, linked corrections, separate reviewers and reconstructed evidence. The original `/api` profile remains available. PostgreSQL role/RLS tests, exact paired statistics and local recovery exercises have separate evidence; external models, anchors and independent reviews remain unavailable.
+**Release: `5.3.0.dev6` — versioned review, evaluation and evidence workspace.** The explicit `/api/v1` profile provides atomic revisions, full-suite runs, linked corrections, separate reviewers and reconstructed evidence. The original `/api` profile remains available. PostgreSQL role/RLS tests, exact paired statistics and local recovery exercises have separate evidence; external models, anchors and independent reviews remain unavailable.
 
 합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
 
@@ -27,12 +27,15 @@ The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), wi
 ## Versioned workspace
 
 ```powershell
+py -3.12 -m venv .venv
 $env:CASEPROOF_DEMO_MODE = '1'
 .\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
 .\.venv\Scripts\python.exe -m scripts.windows_checks scripts.v1_demo --port 8766
 ```
 
 Open `http://127.0.0.1:8766/v1`. The command creates a new disposable profile and prints its path. Copy role tokens from that ignored local `profile.json`; tokens are never published or stored in browser persistent storage. Restart with `--profile <path>` to preserve the same synthetic database. No migration or seeding runs on application startup. See [workspace details](docs/G4_WORKSPACE.md), [policy packs](docs/G3_POLICIES.md), [PostgreSQL checks](docs/G2_POSTGRES.md), and [local recovery](docs/operations/RECOVERY.md).
+
+dev6 writes versioned execution configurations. Preserve older profiles; their v1 runs remain `LEGACY_UNVERIFIED` and require a fresh evaluation in a new disposable profile. See [the explicit format boundary](docs/EXECUTION_CONFIG.md).
 
 Optional test environments use separate hash locks: `requirements-evaluation.lock` for NumPy statistics and `requirements-postgres.lock` for PostgreSQL. The [readiness checklist](docs/operations/RELEASE_READINESS.md) separates local exercises from unavailable external evidence.
 

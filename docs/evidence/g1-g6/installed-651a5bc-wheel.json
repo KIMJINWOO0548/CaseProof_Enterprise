@@ -1,0 +1,132 @@
+{
+  "commit": "651a5bc4ae798d44fa7df52baca175ea7a30f904",
+  "started_utc": "2026-10-31T15:42:41.482251+00:00",
+  "workspace": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86",
+  "commands": [
+    {
+      "args": [
+        "git",
+        "archive",
+        "--format=zip",
+        "--output",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source.zip",
+        "651a5bc4ae798d44fa7df52baca175ea7a30f904"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+        "VERIFY_PACKAGE.py"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+        "-m",
+        "build",
+        "--no-isolation",
+        "--outdir",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\dist",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+        "-m",
+        "scripts.check_distribution",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\dist"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.venv\\Scripts\\python.exe",
+        "-m",
+        "venv",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "install",
+        "--require-hashes",
+        "-r",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source\\requirements.lock"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "install",
+        "--no-deps",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\dist\\caseproof_local_demo-5.3.0.dev5-py3-none-any.whl"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Scripts\\python.exe",
+        "-m",
+        "pip",
+        "check"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+      "exit_code": 0
+    },
+    {
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Scripts\\python.exe",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\outside\\verify_installed.py",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\source\\scripts\\check_distribution.py"
+      ],
+      "cwd": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\outside",
+      "exit_code": 0
+    }
+  ],
+  "source_manifest_sha256": "269c773e0704476e4cb8968b6218e3108a4821ceeea4e1487b0cb6e2385d4224",
+  "runtime": {
+    "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+    "version": "5.3.0.dev5",
+    "service": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Lib\\site-packages\\service\\__init__.py",
+    "reference": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\wheel-ui-dca65ccb86\\env\\Lib\\site-packages\\reference\\__init__.py",
+    "optional_present": {
+      "numpy": false,
+      "psycopg": false,
+      "alembic": false
+    }
+  },
+  "socketpair_initialization_retries": 27,
+  "artifacts": {
+    "caseproof_local_demo-5.3.0.dev5-py3-none-any.whl": {
+      "sha256": "24349d260697f85d4607108c1b83446cb00e1d2dc5207470a612c7bece4d95bf",
+      "bytes": 207700,
+      "entries": 66
+    },
+    "caseproof_local_demo-5.3.0.dev5.tar.gz": {
+      "sha256": "d169a12235d21903639728f96a3ee5e1d5f77f3176f4b3ebbb4860e57efe5b96",
+      "bytes": 1025870,
+      "entries": 383
+    }
+  },
+  "local_runtime_archive_entries": 0,
+  "finished_utc": "2026-10-31T15:46:35.362298+00:00",
+  "result": "PASS"
+}

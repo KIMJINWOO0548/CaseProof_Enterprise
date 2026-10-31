@@ -1,0 +1,258 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EvaluationRun v2 canonical payload",
+  "description": "Standalone runtime execution-config v2 boundary. Historical evaluation_run_v1 specimens are unchanged and cannot be verified or resealed by the current runtime.",
+  "x-contract-status": "IMPLEMENTED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "evaluation_run_v2"
+    },
+    "id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "tenant_id": {
+      "$ref": "common.schema.json#/$defs/RegisteredId"
+    },
+    "change_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "recorded_revision": {
+      "$ref": "common.schema.json#/$defs/Revision"
+    },
+    "actor_id": {
+      "$ref": "common.schema.json#/$defs/RegisteredId"
+    },
+    "created_at": {
+      "$ref": "common.schema.json#/$defs/UTCTimestamp"
+    },
+    "candidate_snapshot_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "source_bundle_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "dataset_version_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "suite_version_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "evaluator_version_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "adapter_version_id": {
+      "$ref": "common.schema.json#/$defs/UUIDv4"
+    },
+    "run_input_sha256": {
+      "$ref": "common.schema.json#/$defs/SHA256"
+    },
+    "run_config_sha256": {
+      "$ref": "common.schema.json#/$defs/SHA256"
+    },
+    "case_results": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "case_id": {
+            "$ref": "common.schema.json#/$defs/RegisteredId"
+          },
+          "input_sha256": {
+            "$ref": "common.schema.json#/$defs/SHA256"
+          },
+          "output_sha256": {
+            "$ref": "common.schema.json#/$defs/SHA256"
+          },
+          "source_refs": {
+            "type": "array",
+            "uniqueItems": true,
+            "items": {
+              "$ref": "common.schema.json#/$defs/PayloadRef"
+            }
+          },
+          "resolution_status": {
+            "$ref": "common.schema.json#/$defs/RegisteredId"
+          },
+          "verdict": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "INCONCLUSIVE"
+            ]
+          },
+          "complete": {
+            "type": "boolean"
+          },
+          "error_code": {
+            "anyOf": [
+              {
+                "$ref": "common.schema.json#/$defs/RegisteredId"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "critical_failure": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          }
+        },
+        "required": [
+          "case_id",
+          "input_sha256",
+          "output_sha256",
+          "source_refs",
+          "resolution_status",
+          "verdict",
+          "complete",
+          "error_code",
+          "critical_failure"
+        ],
+        "allOf": [
+          {
+            "if": {
+              "properties": {
+                "complete": {
+                  "const": false
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "verdict": {
+                  "const": "INCONCLUSIVE"
+                },
+                "critical_failure": {
+                  "type": "null"
+                },
+                "error_code": {
+                  "$ref": "common.schema.json#/$defs/RegisteredId"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "completion": {
+      "enum": [
+        "COMPLETE",
+        "INCOMPLETE"
+      ]
+    },
+    "gate_summary": {
+      "enum": [
+        "PASS",
+        "BLOCK"
+      ]
+    }
+  },
+  "required": [
+    "schema",
+    "id",
+    "tenant_id",
+    "change_id",
+    "recorded_revision",
+    "actor_id",
+    "created_at",
+    "candidate_snapshot_id",
+    "source_bundle_id",
+    "dataset_version_id",
+    "suite_version_id",
+    "evaluator_version_id",
+    "adapter_version_id",
+    "run_input_sha256",
+    "run_config_sha256",
+    "case_results",
+    "completion",
+    "gate_summary"
+  ],
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "completion": {
+            "const": "COMPLETE"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "case_results": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "complete": {
+                  "const": true
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "gate_summary": {
+            "const": "PASS"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "completion": {
+            "const": "COMPLETE"
+          },
+          "case_results": {
+            "minItems": 1,
+            "items": {
+              "properties": {
+                "complete": {
+                  "const": true
+                },
+                "verdict": {
+                  "const": "PASS"
+                },
+                "critical_failure": {
+                  "const": false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "x-runtime-rules": [
+    "case_results sorted by case_id, with exactly one entry for every suite required case.",
+    "Gate PASS additionally requires coverage, no review veto and valid authorized snapshots/sources.",
+    "The highest committed recorded_revision is selected; an incomplete latest run vetoes an older PASS.",
+    "Failed completed recording still returns HTTP 201; HTTP success is not evaluation PASS."
+  ],
+  "x-hash-purpose": "evaluation-run",
+  "x-canonicalization": "caseproof.c14n.v1",
+  "x-execution-config": {
+    "hash-purpose": "run-config-v2",
+    "payload-schema": "execution_config_v2",
+    "fields": [
+      "schema",
+      "candidate_snapshot",
+      "source_bundle",
+      "dataset",
+      "suite",
+      "evaluator",
+      "model",
+      "prompt",
+      "adapter"
+    ],
+    "legacy-runtime-error": "EXECUTION_CONFIG_UNVERIFIED"
+  }
+}

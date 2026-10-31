@@ -20,6 +20,7 @@
             "IDEMPOTENCY_CONFLICT",
             "AUDIT_INTEGRITY_FAILURE",
             "EVIDENCE_RECORD_TAMPERED",
+            "EXECUTION_CONFIG_UNVERIFIED",
             "INVALID_STATUS",
             "STALE_REVISION",
             "EVALUATION_INCOMPLETE",

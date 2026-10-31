@@ -728,6 +728,7 @@
     "/api/v1/changes/{change_id}/evidence": {
       "get": {
         "summary": "Evidence",
+        "description": "Returns integrity diagnostics and immutable_refs containing only canonical identities and purpose-separated payload_sha256 hashes for the selected change. immutable_refs is null when historical integrity is INVALID or LEGACY_UNVERIFIED.",
         "operationId": "evidence_api_v1_changes__change_id__evidence_get",
         "security": [
           {

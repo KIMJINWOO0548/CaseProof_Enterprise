@@ -1,0 +1,28 @@
+.s...................................................................... [  7%]
+...................................................................... [ 15%]
+.................................................... [ 21%]
+........................................................................ [ 29%]
+........................................................................ [ 37%]
+........................................................................ [ 45%]
+........................................................................ [ 53%]
+........................................................................ [ 61%]
+........................................................................ [ 69%]
+........................................................................ [ 77%]
+........................................................................ [ 85%]
+........................................................................ [ 93%]
+...............................................................          [100%]
+============================== warnings summary ===============================
+.venv\Lib\site-packages\fastapi\testclient.py:1
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\.venv\Lib\site-packages\fastapi\testclient.py:1: StarletteDeprecationWarning: Using `httpx` with `starlette.testclient` is deprecated; install `httpx2` instead.
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+tests/v1/test_schema.py::test_migration_roundtrip_and_metadata
+tests/v1/test_schema.py::test_migration_roundtrip_and_metadata
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\migrations\env.py:38: SAWarning: Cannot correctly sort tables; there are unresolvable cycles between tables "v1_approval_envelope, v1_assessment, v1_audit_event, v1_change, v1_change_revision, v1_change_transition, v1_decision_note, v1_evaluation_run", which is usually caused by mutually dependent foreign key constraints.  Foreign key constraints involving these tables will not be considered; this warning may raise an error in a future release.
+    context.run_migrations()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+SKIPPED [1] tests\browser\test_v1_workspace.py:28: Optional Playwright is absent; real browser NOT run
+904 passed, 1 skipped, 3 warnings, 22 subtests passed in 472.91s (0:07:52)
+Windows socketpair initialization retries: 662

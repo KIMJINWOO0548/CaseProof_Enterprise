@@ -1,36 +1,51 @@
-# CaseProof v5.3 — Codex 구현·오픈소스 공개 준비 패키지
+# CaseProof v5.3 — 시작 안내
 
-> **2026-10-30 업데이트:** 현재 `5.3.0.dev3`는 v1 DTO·순수 상태기계와 Tabler 기반 검토 화면을 제공합니다. 기존 전이 원장·승인 봉인·전체 요청 재시도 기능을 보존했으며 `/api/v1` HTTP·DB 연결은 후속 작업입니다. [통합 기록](docs/V53_INTEGRATION.md), [현재 상태](docs/STATUS.md), [이번 검증](docs/VALIDATION.md)을 먼저 확인하세요. 공개 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)입니다.
+현재 개발 버전은 **`5.3.0.dev6`**입니다. 합성 보험 규칙을 평가하고 요청자·현업 검토자·최종 승인자의 결정을 불변 기록과 연결하는 로컬 연구용 서비스입니다. 공개 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)이며, 이 폴더가 Git 저장소 루트입니다.
 
-이 폴더 자체가 Git 저장소 루트입니다. 이전 `current/`, `legacy/`, 중복 ZIP 중심 구조를 없애고 **실행 코드와 앞으로 구현할 계약을 구분**했습니다. 새 원격 저장소를 만들거나 GitHub에 게시한 상태는 아닙니다.
+## 실행 프로필
 
-## 이번 수정의 의미
+- 기존 `/api` baseline은 기존 SQLite 데이터·API·digest 계약을 유지합니다.
+- 명시적으로 실행하는 `/api/v1` 작업공간은 원자적 revision·전체 사례 평가·모든 변경 요청의 멱등성·반려 시정 연결·분리된 검토자 승인·assessment/envelope 재구성을 제공합니다. 세 개의 등록된 허구 팩을 사용합니다.
+- PostgreSQL role/RLS·동시성, NumPy paired 통계, 로컬 복구 훈련은 별도 시험과 증거로 구분합니다. UI는 로컬 Tabler와 실제 AI 제품의 목록/상세 검사 패턴을 사용합니다. [참고 자료와 적용 범위](docs/AI_UI_REFERENCES.md)를 확인하세요.
 
-- 실행 가능한 기존 합성 데모를 유지하며 승인 상태·revision·담당자 변조 검증, 입력 계약, 평가자 권한, 미완료 비교실험 처리와 검증 스크립트를 보완합니다. 실제 실행 결과는 [VALIDATION.md](docs/VALIDATION.md)가 정본입니다.
-- `/api`는 현재 시제품 API입니다. `/api/v1`은 향후 구현 계약입니다. 전이 테이블, 전체 쓰기의 idempotency, PostgreSQL/RLS, 완전한 평가 run, 모델 어댑터는 계획으로 명시합니다.
-- 오픈소스 기본 파일, GitHub CI, 의존성 잠금, 예제 계약, 구현 계획과 인수 기준을 제공합니다. 실보험 업무·보안 인증·360건 외부 검증 완료를 주장하지 않습니다.
+실제 동작과 실행 결과는 [현재 상태](docs/STATUS.md), [검증 기록](docs/VALIDATION.md)이 정본입니다. 구현 파일이나 계획 문서만으로 검증 완료를 판단하지 않습니다.
 
-## 바로 넘기는 방법
+## 처음 실행하기
 
-1. 압축을 풀어 `CaseProof_Enterprise_v5_3` 폴더를 Codex 작업 폴더로 엽니다.
-2. [AGENTS.md](AGENTS.md), [상태표](docs/STATUS.md), [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md)을 읽게 합니다.
-3. [05_CODEX_KICKOFF.md](prebuild/05_CODEX_KICKOFF.md)의 전문을 붙여넣습니다. G0 재검증 후 G1의 첫 미완료 작업부터 시작하면 됩니다.
-4. 구현 후 [PUBLISHING.md](docs/PUBLISHING.md)의 절차로 GitHub에 게시합니다. 이 패키지 자체는 개발용 pre-release로 공개할 수 있도록 구성했습니다.
+저장소 루트에서 Windows PowerShell로 실행합니다. 기존 가상환경이 있다면 새로 만들지 않고 사용할 수 있습니다.
 
-Codex에는 `이 폴더의 AGENTS.md와 prebuild/05_CODEX_KICKOFF.md를 읽고, G0 검증 뒤 첫 미완료 작업부터 구현해 주세요. 기존 테스트와 합성 데이터의 정답을 보존하고, 각 Gate의 실제 실행 결과를 reports/runs에 남겨 주세요.`라고 전달하셔도 됩니다.
+```powershell
+py -3.12 -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --require-hashes -r requirements-dev.lock
+$env:CASEPROOF_DEMO_MODE = '1'
+.\.venv\Scripts\python.exe -m scripts.windows_checks scripts.v1_demo --port 8766
+```
+
+`http://127.0.0.1:8766/v1`을 엽니다. 명령이 만든 새 임시 프로필의 경로가 표시됩니다. 역할별 토큰은 Git에서 제외된 `profile.json`에서 직접 확인하고 공개하지 않습니다. 앱은 토큰을 브라우저 메모리에만 보관합니다. DB 초기화·seed는 명시적 준비 단계에서만 실행되며 앱 시작 때 자동 수행하지 않습니다.
+
+같은 버전의 기존 합성 프로필을 재개하려면 `--profile <profile.json 경로>`를 사용합니다. **dev6 이전 실행은 그대로 보존하세요.** dev6의 새 실행은 전체 설정을 묶는 `evaluation_run_v2`를 기록합니다. 기존 `evaluation_run_v1`은 자동 변환하지 않으며 `LEGACY_UNVERIFIED`로 표시하고 평가·승인 동작을 제공하지 않습니다. 새 실행을 하려면 `--profile` 없이 새 임시 프로필을 준비합니다. 정확한 경계와 과거 요청 replay는 [실행 설정 계약](docs/EXECUTION_CONFIG.md)에 설명되어 있습니다.
+
+이 Windows 호스트의 초기 `WinError 10014`를 재현해 실행기가 loopback listener를 먼저 준비하도록 보강했습니다. Windows의 해당 소켓 초기화만 최대 128회·20ms 간격으로 재시도하며 다른 오류와 HTTP 요청은 반복하지 않습니다. 실제 CLI 인증·UI·DB 보존 검사와 새 V2 복구 훈련을 실행했습니다. socketpair 초기화용 `scripts.windows_checks`와 listener 초기화의 범위는 [검증 기록](docs/VALIDATION.md)에서 구분합니다.
+
+다른 플랫폼의 실행과 baseline 데모는 [README](README.md), v1 역할별 흐름은 [작업공간 안내](docs/G4_WORKSPACE.md)를 따릅니다. 운영 DB·실고객 자료·외부 모델 키는 필요하지 않습니다.
+
+## 검증과 후속 개발
+
+실행 가능한 CI는 이미 존재합니다. `e9b67ac`의 [backend CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555)와 `651a5bc`의 [UI 변경 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41216084641)는 각각 9개 job 성공과 push에서의 PR 전용 1개 skip을 확인했습니다. **이 결과는 후속 dev6 변경의 CI 통과를 의미하지 않습니다.** 최종 소스의 실행 결과는 [VALIDATION](docs/VALIDATION.md)에서 commit과 함께 확인합니다.
+
+개발을 이어갈 때는 [AGENTS.md](AGENTS.md), [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md), [진행 체크리스트](prebuild/02_IMPLEMENTATION_PLAN.md)를 읽고 첫 미완료 인수 항목부터 진행합니다. 원본 테스트·합성 정답·기존 기록을 보존하고 새 결과는 `reports/runs/<run-id>/`에 남깁니다. 선택적 도구나 외부 검수 자료가 없으면 해당 검사를 SKIPPED로 기록합니다.
+
+외부 모델과 optional job/lease 확장은 미활성·미구현입니다. 독립 앵커/WORM·보험 전문가 검수·비공개 360건 연구·독립 Windows 설치·사용자 관찰은 확보되지 않았으며 외부 검수 bonus는 0입니다. 로컬 PASS나 `APPROVED_FOR_DEMO`는 실제 보험 판단·운영 배포 승인이 아닙니다.
 
 ## 문서 우선순위
 
 | 질문 | 정본 |
 | --- | --- |
-| 지금 실제로 무엇이 동작하는가 | 코드 + 이번 실행 기록 + [STATUS](docs/STATUS.md) |
-| 다음 버전은 정확히 무엇을 구현해야 하는가 | [08 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md) → [01 설계](prebuild/01_TARGET_DESIGN.md) → [02 계획](prebuild/02_IMPLEMENTATION_PLAN.md) |
-| 예제 JSON이 올바른가 | `contracts/` 스키마·샘플; 현재 API와 혼동 금지 |
-| 과거의 19/105·80/105·90 테스트는 무엇인가 | [PROVENANCE](docs/PROVENANCE.md); 새 버전 점수나 검증 결과가 아님 |
-| 공개/배포 가능한 범위는 무엇인가 | [STATUS](docs/STATUS.md), [SECURITY](SECURITY.md), [PUBLISHING](docs/PUBLISHING.md) |
+| 지금 구현·검증된 범위 | 코드, [STATUS](docs/STATUS.md), [VALIDATION](docs/VALIDATION.md) |
+| API·데이터·hash의 계약 | [08 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md), [dev6 형식 경계](docs/EXECUTION_CONFIG.md), [실제 OpenAPI](docs/api/v1-openapi.json) |
+| 다음에 검증할 항목 | [02 구현 계획](prebuild/02_IMPLEMENTATION_PLAN.md) |
+| 스키마·구조 예제의 의미 | [contracts 안내](contracts/README.md); 예제 자체는 실행 증거가 아님 |
+| 출처·라이선스·과거 자료 | [PROVENANCE](docs/PROVENANCE.md), [THIRD_PARTY_NOTICES](THIRD_PARTY_NOTICES.md) |
+| Git 관리와 배포물 준비 | [PUBLISHING](docs/PUBLISHING.md), [SECURITY](SECURITY.md) |
 
-문서 사이의 충돌을 발견하면 숨기지 말고 해당 계약과 테스트를 같이 수정합니다. 하위 문서의 오래된 문장을 근거로 상위 계약을 우회해서는 안 됩니다. 도구·외부인이 없으면 확인되지 않은 것을 확인했다고 만들지 않습니다.
-
-## 로컬 실행과 환경
-
-Windows에서도 활성화 스크립트 없이 `.venv\Scripts\python.exe`를 직접 실행할 수 있습니다. 플랫폼별 정확한 명령은 [README](README.md)에 있습니다. 저장소 밖의 운영 DB, 실고객 자료, 외부 모델 키는 필요하지 않습니다. 원본 ZIP은 본 패키지에 중복 포함하지 않았으며 원본 파일 해시와 제외 내역은 [PROVENANCE](docs/PROVENANCE.md)에 기록합니다.
+문서가 충돌하면 현재 계약·코드·실행 증거를 함께 대조합니다. Git commit과 push는 이 작업에서 별도로 승인되었지만 패키지 공개 release나 배포는 수행하지 않았습니다.

@@ -11,6 +11,7 @@ from service.api.errors import DomainError, error_payload
 from service.api.schemas_v1 import CreateHeaders, MutationHeaders, UUIDv4, parse_body
 from service.auth import current_actor
 from service.commands import BASE, ROUTES, authorize, execute_command, normalize
+from service.domain.canonical import content_hash
 from service.domain.types import CommandContext, json_payload
 from service.idempotency_v1 import lookup, replay
 from service.repositories import decode, get_change, load_history, require
@@ -43,6 +44,38 @@ def _schema(model):
             return {key: inline(item) for key, item in value.items()}
         return value
     return inline(schema)
+
+
+def _immutable_refs(history):
+    """Project validated history into identities and purpose-separated hashes only."""
+    def ref(purpose, payload):
+        return {'id': payload['id'], 'payload_sha256': content_hash(purpose, payload)} if payload is not None else None
+
+    stored = history['refs']
+    result = {}
+    for target, name, purpose in (
+        ('candidate_snapshot_ref', 'candidate_snapshot', 'candidate'), ('source_bundle_ref', 'source_bundle', 'source-bundle'),
+        ('dataset_ref', 'dataset', 'dataset'), ('suite_ref', 'suite', 'suite'), ('evaluator_ref', 'evaluator', 'evaluator'),
+        ('model_ref', 'model', 'model'), ('prompt_ref', 'prompt', 'prompt'),
+    ):
+        result[target] = ref(purpose, stored[name])
+    for target, purpose, payloads in (
+        ('run_refs', 'evaluation-run', history['runs']), ('decision_refs', 'decision', history['decisions']),
+        ('transition_refs', 'transition', history['transitions']), ('audit_event_refs', 'audit-event', history['events']),
+        ('source_refs', 'source', stored['sources']), ('policy_refs', 'policy', stored['policies']),
+        ('source_eligibility_refs', 'source-eligibility', stored['source_eligibility']),
+    ):
+        result[target] = [ref(purpose, payload) for payload in payloads]
+    adapter_ids = {stored['candidate_snapshot'].get('adapter_version_id')} | {run['adapter_version_id'] for run in history['runs']}
+    result['adapter_refs'] = [ref('adapter', adapter) for adapter in stored['adapters'] if adapter['id'] in adapter_ids]
+    result['change_revision_refs'] = [
+        {'change_id': snapshot['change_id'], 'revision': snapshot['revision'],
+         'payload_sha256': content_hash('change-revision', snapshot)} for snapshot in history['snapshots']]
+    for target, name, purpose in (('assessment_ref', 'assessment', 'assessment'),
+                                  ('approval_envelope_ref', 'envelope', 'approval-envelope')):
+        payload = history[name]
+        result[target] = {'change_id': payload['change_id'], 'payload_sha256': content_hash(purpose, payload)} if payload else None
+    return result
 
 
 def build_router(session_factory, authenticator):
@@ -109,12 +142,16 @@ def build_router(session_factory, authenticator):
                     history = load_history(db, actor.tenant_id, change_id)
                     data.update(snapshot=history['snapshot'], latest_run=history['runs'][-1] if history['runs'] else None,
                                 historical_integrity='VALID')
-                except DomainError:
-                    data.update(historical_integrity='INVALID', latest_run=None)
+                except DomainError as error:
+                    integrity = 'LEGACY_UNVERIFIED' if error.code == 'EXECUTION_CONFIG_UNVERIFIED' else 'INVALID'
+                    data.update(historical_integrity=integrity, latest_run=None)
                 return JSONResponse({'data': data})
         return await respond(request, action)
 
-    @router.get('/changes/{change_id}/evidence')
+    @router.get('/changes/{change_id}/evidence', description=(
+        'Returns integrity diagnostics and immutable_refs containing only canonical identities and purpose-separated '
+        'payload_sha256 hashes for the selected change. immutable_refs is null when historical integrity is INVALID '
+        'or LEGACY_UNVERIFIED.'))
     async def evidence(change_id: str, request: Request):
         async def action():
             actor = actor_for(request)
@@ -127,9 +164,12 @@ def build_router(session_factory, authenticator):
                     history = load_history(db, actor.tenant_id, change_id)
                     from service.domain.evidence import verify_evidence
                     data = verify_evidence(history)
-                except DomainError:
-                    data = {'historical_integrity': 'INVALID', 'current_approval_eligibility': 'BLOCKED',
-                            'external_anchor': 'NOT_CONFIGURED', 'approved_revision': None, 'envelope_sha256': None}
+                    data['immutable_refs'] = _immutable_refs(history) if data['historical_integrity'] == 'VALID' else None
+                except DomainError as error:
+                    integrity = 'LEGACY_UNVERIFIED' if error.code == 'EXECUTION_CONFIG_UNVERIFIED' else 'INVALID'
+                    data = {'historical_integrity': integrity, 'current_approval_eligibility': 'BLOCKED',
+                            'external_anchor': 'NOT_CONFIGURED', 'approved_revision': None, 'envelope_sha256': None,
+                            'immutable_refs': None}
                 return JSONResponse({'data': data})
         return await respond(request, action)
 

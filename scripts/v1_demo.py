@@ -5,12 +5,34 @@ import json
 import os
 from pathlib import Path
 import secrets
+import socket
 import subprocess
 import sys
+import time
 from uuid import uuid4
 
 from service.db import make_engine, session_factory
 from service.workspace import ACTORS, ROOT, create_workspace_app, seed_workspace
+
+
+def _listener(port, backlog):
+    # Some Windows hosts fail the first listen with 10014; retry initialization only.
+    for attempt in range(128):
+        listener = None
+        try:
+            listener = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            listener.bind(('127.0.0.1', port))
+            listener.listen(backlog)
+        except OSError as error:
+            if listener is not None:
+                listener.close()
+            if sys.platform != 'win32' or getattr(error, 'winerror', None) != 10014 or attempt == 127:
+                raise
+            time.sleep(0.02)
+        else:
+            if sys.platform == 'win32':
+                print('Windows loopback listener initialization retries: ' + str(attempt))
+            return listener
 
 
 def main():
@@ -59,8 +81,10 @@ def main():
     import uvicorn
     engine = make_engine('sqlite:///' + db_path.as_posix())
     try:
-        uvicorn.run(create_workspace_app(session_factory(engine), profile['registry']),
-                    host='127.0.0.1', port=args.port, workers=1)
+        config = uvicorn.Config(create_workspace_app(session_factory(engine), profile['registry']),
+                                host='127.0.0.1', port=args.port, workers=1, backlog=128)
+        with _listener(args.port, config.backlog) as listener:
+            uvicorn.Server(config).run(sockets=[listener])
     finally:
         engine.dispose()
 

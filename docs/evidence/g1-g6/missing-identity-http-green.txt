@@ -1,0 +1,3 @@
+.                                                                        [100%]
+1 passed in 5.97s
+Windows socketpair initialization retries: 2

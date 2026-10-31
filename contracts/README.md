@@ -196,3 +196,7 @@ deliberate: verify projection integrity on every mutation and test atomicity;
 do not claim a complete DB-only invariant. Actual PostgreSQL role/lock/RLS
 tests, independent human review, private holdout evaluation, and external
 anchors remain separately evidenced gates.
+
+## dev6 execution-config boundary
+
+The original `evaluation-run.schema.json` and v1 gold examples remain historical contracts. New runtime writes use the separate `evaluation-run-v2.schema.json` with a complete versioned execution digest. V1 persisted runs are not silently upgraded or certified. See [execution configuration and evidence refs](../docs/EXECUTION_CONFIG.md).

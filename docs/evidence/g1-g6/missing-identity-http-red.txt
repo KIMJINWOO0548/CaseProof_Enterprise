@@ -1,0 +1,27 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+____ test_missing_canonical_candidate_identity_returns_invalid_diagnostic _____
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-298/test_missing_canonical_candida0')
+
+    def test_missing_canonical_candidate_identity_returns_invalid_diagnostic(tmp_path):
+        app, factory, body = fixture(tmp_path)
+        try:
+            identity = create(app, body, 'created')
+            with factory.begin() as db:
+                candidate = db.get(m.CandidateSnapshot, ('tenant-a', body['candidate_snapshot_id']))
+                payload = json.loads(candidate.canonical_payload)
+                del payload['id']
+                db.execute(text('DROP TRIGGER v1_candidate_snapshot_no_update'))
+                db.execute(update(m.CandidateSnapshot).where(m.CandidateSnapshot.id == candidate.id).values(
+                    canonical_payload=canonical_bytes(payload), payload_sha256=content_hash('candidate', payload)))
+            response = request(app, 'GET', f'/api/v1/changes/{identity}/evidence')
+>           assert response.status_code == 200
+E           assert 500 == 200
+E            +  where 500 = <Response [500 Internal Server Error]>.status_code
+
+tests\v1\test_evidence_http.py:162: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/v1/test_evidence_http.py::test_missing_canonical_candidate_identity_returns_invalid_diagnostic
+1 failed in 5.13s
+Windows socketpair initialization retries: 2

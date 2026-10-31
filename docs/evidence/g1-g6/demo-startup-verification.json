@@ -1,0 +1,72 @@
+{
+  "python": "3.12.10",
+  "source_commit_before_working_tree_changes": "651a5bc4ae798d44fa7df52baca175ea7a30f904",
+  "implementation": {
+    "loop": "Uvicorn default; observed ProactorEventLoop in independent helper",
+    "bind": "AF_INET 127.0.0.1 synchronously before Server.run(sockets=[listener])",
+    "backlog": 128,
+    "retry_platform": "win32",
+    "retry_error": 10014,
+    "retry_limit": 128,
+    "retry_delay_seconds": "0.02",
+    "retry_scope": "socket creation/bind/first listen initialization only; failed socket closed; other errors propagate immediately",
+    "application_or_mutation_retries_added": false,
+    "global_event_loop_policy_changed": false
+  },
+  "checks": [
+    {
+      "log": "demo-startup-red.txt",
+      "exit_code": 1,
+      "result": "1 failed; original documented CLI exits3 with Win10014 before HTTP readiness",
+      "seconds": 17.33,
+      "outer_socketpair_initialization_retries": 0
+    },
+    {
+      "log": "demo-startup-green.txt",
+      "exit_code": 1,
+      "result": "first prebound attempt still fails10014 at synchronous listen2048",
+      "seconds": 10.6,
+      "outer_socketpair_initialization_retries": 0
+    },
+    {
+      "log": "demo-startup-final-green.txt",
+      "exit_code": 1,
+      "result": "4 unit checks pass; real CLI reaches all required HTTP checks; test log decoding fails due localized taskkill output",
+      "seconds": 19.55,
+      "note": "Corrected test-only cleanup output and token-byte assertion; readiness unchanged."
+    },
+    {
+      "log": "demo-startup-verified.txt",
+      "exit_code": 0,
+      "result": "5 passed",
+      "seconds": 8.03,
+      "outer_socketpair_initialization_retries": 0,
+      "observed_server_listener_initialization_retries": 0,
+      "assertions": [
+        "authenticated catalog200 with3presets",
+        "unauthenticated catalog401",
+        "v1HTML200",
+        "JavaScript200",
+        "existing DBfileSHA256unchanged",
+        "tokenabsentfromserverlog",
+        "ownedprocesstreestopped"
+      ]
+    }
+  ],
+  "experiments": [
+    "prebound-default-loop-probe.json",
+    "prebound-default-loop-server.txt",
+    "listener-backlog-order-probe.json",
+    "listener-repeated-backlog-probe.json"
+  ],
+  "observations": "First-listen10014 occurred across all tested backlogs; repeated second listen succeeded after first succeeded. Backlog correlation observed, underlying host cause not established.",
+  "source_after_sha256": {
+    "scripts/v1_demo.py": "9fb8bb97c8049d0bc5273ca7bfb5c5f7ad3ffd6edde78b8bb4023fb83ab9ea69",
+    "tests/v1/test_demo_startup.py": "4c110b42d912998f0198e3eb8dae2c21cec2b5f089d720458930355975ea940c"
+  },
+  "limitations": [
+    "Complete ordinary904PASS prefix predates this focused CLI change; final exact-source CI remains required.",
+    "No arbitrary DB deletion/reset, global settings, external provider or production operation.",
+    "Server socketpair retry count was not emitted during forced owned-process cleanup; do not infer zero from the outer test shim count."
+  ]
+}

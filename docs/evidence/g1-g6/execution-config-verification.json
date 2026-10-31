@@ -1,0 +1,101 @@
+{
+  "source_commit_before_working_tree_changes": "651a5bc4ae798d44fa7df52baca175ea7a30f904",
+  "python": "3.12.10",
+  "boundary": {
+    "new_run_schema": "evaluation_run_v2",
+    "canonicalization": "caseproof.c14n.v1",
+    "run_hash_purpose": "evaluation-run",
+    "execution_config_payload_schema": "execution_config_v2",
+    "execution_config_hash_purpose": "run-config-v2",
+    "execution_config_fields": [
+      "schema",
+      "candidate_snapshot",
+      "source_bundle",
+      "dataset",
+      "suite",
+      "evaluator",
+      "model",
+      "prompt",
+      "adapter"
+    ],
+    "historical_run_schema": "evaluation_run_v1",
+    "historical_run_runtime_error": "EXECUTION_CONFIG_UNVERIFIED",
+    "historical_run_status": 409,
+    "saved_historical_mutation_replay": "preserved; not a current integrity claim"
+  },
+  "checks": [
+    {
+      "log": "execution-config-red.txt",
+      "exit_code": 1,
+      "result": "2 genuine preapproval rewrite failures",
+      "seconds": 4.79,
+      "socketpair_initialization_retries": 0
+    },
+    {
+      "log": "execution-config-initial-green.txt",
+      "exit_code": 0,
+      "result": "79 passed",
+      "seconds": 12.04,
+      "socketpair_initialization_retries": 0
+    },
+    {
+      "log": "execution-config-green.txt",
+      "exit_code": 1,
+      "result": "39 passed,1 test fixture mappingproxy construction error",
+      "seconds": 79.76,
+      "note": "Corrected with json_payload; no runtime weakening."
+    },
+    {
+      "log": "execution-config-boundary-green.txt",
+      "exit_code": 0,
+      "result": "6 passed",
+      "seconds": 16.16,
+      "socketpair_initialization_retries": 0
+    },
+    {
+      "log": "execution-config-v1-suite.txt",
+      "exit_code": 0,
+      "result": "528 passed,3 warnings",
+      "seconds": 238.43,
+      "socketpair_initialization_retries": 125,
+      "scope": "V2 boundary source prefix before final canonical-identity guard; exact final source requires root complete suite/CI."
+    },
+    {
+      "command": "python -m scripts.check_package",
+      "exit_code": 0,
+      "result": {
+        "schemas": 13,
+        "examples": 63,
+        "canonical_vectors": 14
+      },
+      "scope": "structural public contracts, not security certification"
+    }
+  ],
+  "original_bytes_equal_HEAD": {
+    "contracts/evaluation-run.schema.json": true,
+    "contracts/examples/run-complete.json": true,
+    "contracts/examples/run-incomplete.json": true,
+    "tests/fixtures/canonical_vectors_v1.json": true,
+    "service/domain/canonical.py": true,
+    "reference/evidence_pack.py": true,
+    "service/idempotency.py": true
+  },
+  "source_after_sha256": {
+    "service/evaluation/config.py": "a070396012947592ddbc1202b1d34d09ccc619f873a5fbfbc99f140b4547011c",
+    "service/evaluation/runner.py": "3636b866d9d747ec794f554136c99a5607e783e8cb7ea53bef0b712e9b4d56c0",
+    "service/repositories.py": "1950faa0b5cf5d2b0b7a9d8ee845cd683e8d17574f0d87cfb80cf72eefe81077",
+    "service/api/schemas_v1.py": "09edde126659d19c924f5943807a7e967df4312423fee3583f24acf8278a6527",
+    "service/domain/state_machine.py": "cd91d6bbe9cf58c57f737bef639ac76c86fd77e35fd7d55c59235c270a0dae92",
+    "service/api/errors.py": "6f6f9ba080c30495d32a3f64493b72428191e9fe6b281bd718d4318c14a47d5c",
+    "tests/v1/test_execution_config.py": "2905777050049bdb936f6b0079f34c4930f3f01d067b33dee97a3b62922010c8",
+    "contracts/evaluation-run-v2.schema.json": "8b39816927ae6ba202dfd1f01c907392ca3a806d62f75be1cfa2a7061d07567f",
+    "contracts/examples/run-v2-complete.json": "cde3c2c6fb65782526e553ec24fa98a7e0cd34122c7b5135220e7121b2b6c443",
+    "contracts/error.schema.json": "377dc032fcc5686792eeda2b665af082391fd65d0ef698ab28d60b6f8253b140",
+    "contracts/examples/index.json": "4b05a580ee17619bac0eb10a93c2ecfacd313a14a0236fa923aa7c3754f13602"
+  },
+  "limitations": [
+    "Historical V1 rows are not rewritten, migrated or eligible to be silently resealed.",
+    "No external model, production database, independent anchor or human expert review was executed.",
+    "Final canonical identity guard was independently HTTP-tested by the API worker and must also be covered by root final complete suite/CI."
+  ]
+}

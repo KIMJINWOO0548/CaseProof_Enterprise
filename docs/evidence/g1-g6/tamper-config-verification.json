@@ -1,0 +1,38 @@
+{
+  "source_commit": "651a5bc4ae798d44fa7df52baca175ea7a30f904",
+  "python": "3.12.10",
+  "checks": [
+    {
+      "command": "python -m scripts.windows_checks pytest tests/v1/test_tamper_matrix.py tests/v1/test_integrity.py tests/v1/test_evidence.py tests/v1/test_record_links.py -q",
+      "exit_code": 1,
+      "result": "5 failed,47 passed",
+      "seconds": 138.81,
+      "note": "One genuine adapter-kind rehash acceptance failure; four test setup defects corrected (two composite-PK assumptions and two correctly blocked deferred FKs). The same-kind description variant was added after this collection."
+    },
+    {
+      "command": "python -m scripts.windows_checks pytest tests/v1/test_tamper_matrix.py tests/v1/test_integrity.py tests/v1/test_evidence.py tests/v1/test_record_links.py tests/v1/test_transactions.py -q",
+      "exit_code": 0,
+      "result": "76 passed",
+      "seconds": 147.62
+    },
+    {
+      "command": "python -m scripts.windows_checks pytest tests/v1/test_run_config_refs.py -q",
+      "exit_code": 0,
+      "result": "4 passed",
+      "seconds": 11.23
+    }
+  ],
+  "windows_socketpair_initialization_retries": 0,
+  "requests_or_assertions_retried": false,
+  "files_sha256": {
+    "tests/v1/test_tamper_matrix.py": "5ee1307526b803274371ff9d90fdb45c94d4dc2d5d3072e11cf6acf721d6f635",
+    "tests/v1/test_run_config_refs.py": "cfbb7ad99ddf9df9424ac6b9322f1d160e04b8c215dbf4641a9bb7b51189a92c",
+    "service/repositories.py": "7bb800d526a440e38f2fb4dc7ec7faf1b241489e448731c2419a55346e1f9a18"
+  },
+  "boundaries": [
+    "Test-only disposable SQLite owner removes an UPDATE trigger to simulate partial rewrite; actual app role grants and source DDL remain unchanged.",
+    "Deferred FK blocks assert unchanged rows and preserved valid original seal.",
+    "Unselected malformed adapter registration is intentionally isolated from the selected approval.",
+    "No real provider call, external anchor, human review or production database involved."
+  ]
+}

@@ -20,7 +20,7 @@ its original serialized body, path, key and revision under the authenticated ten
 and actor in memory. All server 5xx, network loss and unparseable responses retain
 that request. Recovery explicitly retries the same request, with no automatic new
 key. Another role cannot recover it; switching back to the original actor can.
-Known 4xx clears the pending request and reports the server code/request ID.
+A first known 4xx clears that failed request. After an uncertain outcome, a later 4xx retains the original key until its committed result is resolved. Both report the server code/request ID.
 Mutations cannot overlap. Session and selection counters discard stale responses.
 Failed reads/mutations clear prior detail/evidence instead of leaving a stale verdict.
 Page reload clears pending recovery; durable cross-reload recovery is outside scope.
