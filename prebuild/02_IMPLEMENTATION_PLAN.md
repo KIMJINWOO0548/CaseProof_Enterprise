@@ -1,6 +1,8 @@
 # CaseProof v1 Implementation Plan — v5.3 handoff
 
-> For agentic workers: implement one reviewable task at a time. Use `superpowers:executing-plans` or `superpowers:subagent-driven-development` when available; otherwise the same test-first procedure works without installed skills. Checkboxes below refer to **future v1 work**, not the already hardened `/api` baseline.
+> For agentic workers: implement one reviewable task at a time. Use `superpowers:executing-plans` or `superpowers:subagent-driven-development` when available; otherwise the same test-first procedure works without installed skills. Checkboxes below track **v1 acceptance work**, separately from the hardened `/api` baseline. Checked items have recorded execution evidence; unchecked items can contain implemented portions whose full acceptance matrix is not yet evidenced.
+
+**Verification checkpoint (2026-11-01 KST):** implementation commit `e9b67ac`; [local evidence](../docs/VALIDATION.md), [PG17 CI job](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555). Final UI revision and complete release CI are tracked separately. An implemented feature does not close a broader unexecuted acceptance matrix.
 
 **Goal:** 합성 답변 변경의 평가·사람 승인·증거를 일관되게 연결하고, 공개 저장소에서 재현할 수 있는 v1을 만든다.
 
@@ -89,37 +91,41 @@
 **Create:** `service/commands.py`, `service/repositories.py`, `tests/v1/test_transactions.py`, `tests/v1/test_integrity.py`.
 **Consumes:** G1.1+G1.2. **Produces:** `execute_command(...)`, `load_history(db,tenant_id,change_id)->dict`.
 
-- [ ] Add status-only P0 reproduction to v1; expected 409 and zero new release note/transition/audit.
+- [x] Add status-only P0 reproduction to v1; expected 409 and zero new release note/transition/audit.
 - [ ] Test mutation of each status/revision/actor/hash, deletion/duplication/reordering of every record type and cross-tenant child FK. Honest three-person path remains possible.
-- [ ] Parameterize exception injection after projection/note/snapshot/transition/audit/head stages; assert **all** persisted state equals pre-request state, not merely response 500.
-- [ ] Implement deterministic reconstruction, common lock order, CAS, rollback and structured errors. Validate reject paths too. App roles cannot UPDATE/DELETE immutable tables (enforce in PG G2).
-- [ ] Run `python -m pytest tests/v1/test_transactions.py tests/v1/test_integrity.py -q` plus whole suite; commit `feat: atomically bind workflow state and evidence`.
+- [x] Parameterize exception injection after projection/note/snapshot/transition/audit/head stages; assert **all** persisted state equals pre-request state, not merely response 500.
+- [x] Implement deterministic reconstruction, common lock order, CAS, rollback and structured errors. Validate reject paths too. App roles cannot UPDATE/DELETE immutable tables (enforce in PG G2).
+- [x] Run `python -m pytest tests/v1/test_transactions.py tests/v1/test_integrity.py -q` plus whole suite; recorded implementation commit `e9b67ac`.
 
 **Done:** every mutation uses one executor; malformed data fails closed without uncaught parsing exceptions. Full DB owner rewrite is explicitly out of threat coverage.
 
+**Evidence boundary:** projection/status P0 and all-stage rollback tests passed. `test_record_links.py` additionally checks nested references and assessment relations. The broader every-record deletion/duplication/reorder matrix above is not yet independently enumerated. Implementation and tests were committed in `e9b67ac`, rather than using the originally suggested commit title.
+
 ## G1.4 — idempotency and actual v1 HTTP boundaries
 
-**Create:** `service/api/v1.py`, `service/idempotency.py`, `tests/v1/test_http.py`, `tests/v1/test_idempotency.py`.
-**Modify:** `service/app.py` only to register target router with explicit new configuration, preserving baseline route behavior.
+**Create:** `service/api/v1.py`, `service/idempotency_v1.py`, `tests/v1/test_http.py`, `tests/v1/test_idempotency.py`.
+**Runtime boundary:** `service/workspace.py` registers the standalone target router with explicit configuration; baseline `service/app.py` route behavior is preserved.
 **Consumes:** executor/types/auth. **Produces:** endpoint table in 08 §8 and actor-scoped result lookup.
 
 - [ ] Test same key+same semantic request returns same object/status/result_revision; only replayed changes. Test same actor key across route/resource/body/revision gives 409.
-- [ ] Simulate successful commit followed by lost response, advance change state and retry original key: original result is replayed before stale checking. Revoked/disabled actor receives no replay.
+- [x] Simulate successful commit followed by lost response, advance change state and retry original key: original result is replayed before stale checking. Revoked/disabled actor receives no replay.
 - [ ] Test raw JSON duplicate key, bool/float/string claim_days, missing/whitespace reason, extra tenant/actor/revision body fields; invalid revision header/leading zeros/key; cross-tenant IDs are 404.
-- [ ] Implement normalized fingerprint and success-record transaction. Failure responses do not reserve keys; 503 outcome unknown tells client to query/retry same key. `POST create` rejects revision header.
-- [ ] Run `python -m pytest tests/v1/test_http.py tests/v1/test_idempotency.py -q`; export actual v1 OpenAPI and compare DTO/header/errors to contracts; run whole suite and commit.
+- [x] Implement normalized fingerprint and success-record transaction. Failure responses do not reserve keys; 503 outcome unknown tells client to query/retry same key. `POST create` rejects revision header.
+- [x] Run `python -m pytest tests/v1/test_http.py tests/v1/test_idempotency.py -q`; export actual v1 OpenAPI and compare DTO/header/errors to contracts; run whole suite and commit.
 
 **Done:** HTTP enforcement is proven independently of JSON Schema limitations. Actual multi-session PG duplicate/race tests belong to G2.
+
+**Evidence boundary:** actual create replay/lookup, current revocation, body conflicts, strict raw JSON/claim days and headers passed. Explicit same-actor cross-route/resource/revision conflict cases and missing/whitespace decision-reason cases through HTTP are not yet a complete recorded matrix; domain DTO coverage is separate.
 
 ## G1.5 — immutable full-suite runs and current-run gate
 
 **Create:** `service/evaluation/{adapters,runner}.py`, `service/domain/gates.py`, `tests/v1/test_runs.py`, `tests/v1/test_gate.py`.
 **Consumes:** immutable snapshot refs and `EvaluationRun` model. **Produces:** full run and one EVALUATION_RECORDED transition.
 
-- [ ] Test exact required case set, duplicates/missing/unknown IDs, snapshot mismatch, insufficient distinct **policy_version** coverage, critical failure and incomplete output.
-- [ ] Test run1 BLOCK→run2 full PASS permits submit while run1 persists; run3 INCOMPLETE blocks without falling back to run2. Partial PASS fragments cannot be combined.
-- [ ] Implement fake deterministic adapter and synchronous full suite under bounded local computation. Record completion/gate_summary independently of HTTP 201.
-- [ ] Run `python -m pytest tests/v1/test_runs.py tests/v1/test_gate.py -q`, end-to-end three-role scenario and whole suite; commit.
+- [x] Test exact required case set, duplicates/missing/unknown IDs, snapshot mismatch, insufficient distinct **policy_version** coverage, critical failure and incomplete output.
+- [x] Test run1 BLOCK→run2 full PASS permits submit while run1 persists; run3 INCOMPLETE blocks without falling back to run2. Partial PASS fragments cannot be combined.
+- [x] Implement fake deterministic adapter and synchronous full suite under bounded local computation. Record completion/gate_summary independently of HTTP 201.
+- [x] Run `python -m pytest tests/v1/test_runs.py tests/v1/test_gate.py -q`, end-to-end three-role scenario and whole suite; commit.
 
 **Done:** selected run is `active_run_id` frozen at submit. Candidate/source change requires a new immutable change snapshot, not altered old results.
 
@@ -128,71 +134,79 @@
 **Create:** `service/domain/evidence.py`, `tests/v1/test_evidence.py`.
 **Consumes:** complete history from G1.3 and selected run from G1.5. **Produces:** assessment/envelope and evidence diagnostic endpoint.
 
-- [ ] Test preapproval revision p excludes final p+1 from assessment; envelope includes final note/transition/event without a hash cycle.
+- [x] Test preapproval revision p excludes final p+1 from assessment; envelope includes final note/transition/event without a hash cycle.
 - [ ] Test changes to frozen source bytes, note reason, event or run invalidate evidence; unrelated later tenant events/new source versions preserve historical seal.
-- [ ] Test source withdrawn after sealing: historical integrity stays valid and current eligibility changes separately. No anchor configured stays NOT_CONFIGURED.
-- [ ] Implement canonical payload reconstruction from immutable records, compare stored bytes/hash, emit three separate integrity/eligibility/anchor dimensions.
-- [ ] Run `python -m pytest tests/v1/test_evidence.py -q` and whole suite; commit.
+- [x] Test source withdrawn after sealing: historical integrity stays valid and current eligibility changes separately. No anchor configured stays NOT_CONFIGURED.
+- [x] Implement canonical payload reconstruction from immutable records, compare stored bytes/hash, emit three separate integrity/eligibility/anchor dimensions.
+- [x] Run `python -m pytest tests/v1/test_evidence.py -q` and whole suite; commit.
 
 **G1 completion:** all G1 tasks and real HTTP/SQLite end-to-end pass. Snapshot bytes and code hashes are recorded. Still no production release or PG claim.
+
+**Evidence boundary:** frozen source, reason, event and run mutation plus unrelated tenant activity and later withdrawal are tested. A separately enumerated new-source-version-after-seal case remains to complete the broader assertion above.
 
 ## G2.1 — PostgreSQL role/migration foundation
 
 **Create:** `compose.postgres-test.yaml`, `scripts/pg_test_bootstrap.py`, migration role/policy SQL, `tests/postgres/test_roles.py`, `tests/postgres/test_migrations.py`.
 **Modify:** `service/db.py`, dev optional dependencies with Alembic and psycopg locks.
 
-- [ ] Use a clearly disposable PG17 test instance with generated credentials outside Git. Refuse non-test database names and never reset a user-configured production URL.
-- [ ] Test migrator owner, non-owner/NOBYPASSRLS app role, explicit grants and no app schema create/immutable update/delete. Fail setup if app is superuser/owner/BYPASSRLS.
-- [ ] Apply migration on empty DB; verify downgrade/upgrade in disposable DB, source snapshots and FK consistency.
-- [ ] Run `python -m pytest tests/postgres/test_roles.py tests/postgres/test_migrations.py -q` against real PG. No engine→SQLite substitution.
+- [x] Use a clearly disposable PG17 test instance with generated credentials outside Git. Refuse non-test database names and never reset a user-configured production URL.
+- [x] Test migrator owner, non-owner/NOBYPASSRLS app role, explicit grants and no app schema create/immutable update/delete. Fail setup if app is superuser/owner/BYPASSRLS.
+- [x] Apply migration on empty DB; verify downgrade/upgrade in disposable DB, source snapshots and FK consistency.
+- [x] Run `python -m pytest tests/postgres/test_roles.py tests/postgres/test_migrations.py -q` against real PG. No engine→SQLite substitution.
 
 ## G2.2 — RLS authentication and cross-tenant isolation
 
 **Modify:** `service/auth.py`, `service/db.py`; **Create:** `tests/postgres/test_rls.py`, `tests/postgres/test_auth_bootstrap.py`.
 
-- [ ] Test registry→tenant context→enabled User lookup before data access; null/empty/malformed context reads zero rows and denies writes.
-- [ ] Test SELECT/INSERT/UPDATE/DELETE/FK for every tenant table as app role, not owner. Test A rollback→B and A exception→no-context on reused pooled connection.
-- [ ] Implement transaction-local context and parameterized SQL. Store secret registry outside repo; unknown/duplicate registry entry is handled per 08 §11.
-- [ ] Run both files, full PG tests and baseline suite. Record context/role/DB version, excluding credentials.
+- [x] Test registry→tenant context→enabled User lookup before data access; null/empty/malformed context reads zero rows and denies writes.
+- [x] Test SELECT/INSERT/UPDATE/DELETE/FK for every tenant table as app role, not owner. Test A rollback→B and A exception→no-context on reused pooled connection.
+- [x] Implement transaction-local context and parameterized SQL. Store secret registry outside repo; unknown/duplicate registry entry is handled per 08 §11.
+- [x] Run both files, full PG tests and baseline suite. Record context/role/DB version, excluding credentials.
 
 ## G2.3 — independent-session concurrency and bounded failure
 
 **Create:** `tests/postgres/test_concurrency.py`, `tests/postgres/test_lock_failure.py`.
 
-- [ ] Barrier-start two real sessions with same revision/key: one effect, coherent replay or specified conflict, no duplicate note/head sequence. Repeat 100 trials and record counts.
+- [x] Barrier-start two real sessions with same revision/key: one effect, coherent replay or specified conflict, no duplicate note/head sequence. Repeat 100 trials and record counts.
 - [ ] Race different changes under same tenant; inject lock timeout/deadlock; verify entire rollback and 503 Retry-After 1. No unbounded automatic retries.
 - [ ] Verify no external adapter calls occur while transaction holds tenant lock; request cancellation cannot commit half a state.
 - [ ] Run target and full suites; commit G2 completion only with actual role/worker/DB/latency evidence.
+
+**Evidence boundary:** 100 two-physical-session same-key races, actual PostgreSQL deadlock victim rollback, lock timeout rollback, and separate executor/HTTP 503 mapping are tested. A different-change race under one tenant and an explicit external-adapter lock-boundary test are not recorded; no external adapter is enabled. Cancellation rollback is covered in the SQLite executor test, not claimed as a separate PG cancellation test.
 
 ## G3 — approved synthetic policy packs and time/context
 
 **Create:** `service/policies/{schema,resolver,registry}.py`, `datasets/packs/`, `tests/policies/test_bitemporal.py`, `test_riders.py`, `test_pack_isolation.py`.
 **Interface:** `resolve_context(context: dict, pack_snapshot: dict, recorded_as_of: str) -> dict`; result includes reasons and source/version/clause refs.
 
-- [ ] Test valid/recorded interval boundaries, contract/incident/claim/consultation dates that differ, missing required date, timezone normalization and from>=to registration rejection.
-- [ ] Test CONFIRMED-empty vs UNKNOWN rider, unknown/unapproved/withdrawn rider, ambiguity/priority conflict, unapproved retroactivity and wrong tenant/product/source.
-- [ ] Implement the ordered filtering contract in 08 §12; preserve candidate rejection reasons and conservative INCONCLUSIVE. Do not encode unreviewed real insurance law as fact.
+- [x] Test valid/recorded interval boundaries, contract/incident/claim/consultation dates that differ, missing required date, timezone normalization and from>=to registration rejection.
+- [x] Test CONFIRMED-empty vs UNKNOWN rider, unknown/unapproved/withdrawn rider, ambiguity/priority conflict, unapproved retroactivity and wrong tenant/product/source.
+- [x] Implement the ordered filtering contract in 08 §12; preserve candidate rejection reasons and conservative INCONCLUSIVE. Do not encode unreviewed real insurance law as fact.
 - [ ] Register a third fictional pack using the registry API/config only; record unchanged core hash and full API/DB/browser flow. External B05 credit still needs an external tester.
-- [ ] Run `python -m pytest tests/policies -q`, full suites; commit.
+- [x] Run `python -m pytest tests/policies -q`, full suites; commit.
+
+**Evidence boundary:** all three packs resolve through registry configuration and the third pack completes actual API/DB and browser approval. The explicit before/after unchanged-core-hash registration artifact is not recorded; independent third-pack testing remains SKIPPED, bonus 0.
 
 ## G4 — UI correction, retry recovery, accessibility
 
-**Modify:** `service/static/`; **Create:** `tests/browser/test_v1_workflow.py`, `test_retry_accessibility.py`.
+**Modify:** `service/static/`; **Create:** `tests/browser/test_v1_workspace.py`, `scripts/v1_ui_probe.js`, `scripts/check_uncertain_recovery.cjs`.
 
-- [ ] Exercise analyst→full suite→submit→domain reject→linked new change→re-evaluate→different reviewers approve→evidence.
-- [ ] Simulate dropped success response; UI keeps exact pending key/body/revision, offers same-key recovery, never creates a new key automatically for an uncertain outcome.
+- [x] Exercise analyst→full suite→submit→domain reject→linked new change→re-evaluate→different reviewers approve→evidence.
+- [x] Simulate dropped success response; UI keeps exact pending key/body/revision, offers same-key recovery, never creates a new key automatically for an uncertain outcome.
 - [ ] Exercise 403/404/409/422/loading/empty/network states, keyboard navigation, focus restoration, labels, textual verdicts and narrow viewport.
 - [ ] Render user/source/model text with text nodes; test XSS payloads in reason/title/output, no executable HTML. Do not store bearer tokens in browser persistent storage.
 - [ ] Run real Playwright clicks with three distinct users and server+DB assertions. Record browser/version and failures separately from API tests. User study with five participants remains a separate observed activity.
+
+**Evidence boundary:** the first recorded Chrome MCP flow completed correction, distinct-reviewer approval, evidence lookup, response-loss recovery, XSS title/reason, no WebStorage, narrow viewport and focus restoration. Later native-click timeouts are retained as failures. A full browser matrix for every listed HTTP/error state and model-output XSS is not recorded; the final AI-reference layout has its own subsequent visual check. The optional Python Playwright test was skipped when its dependency was absent.
 
 ## G5.1 — model/gold boundary and metrics
 
 **Create:** `service/evaluation/{datasets,benchmark,metrics}.py`, `tests/evaluation/test_gold_boundary.py`, `test_paired.py`, `test_split.py`.
 
-- [ ] Test model input allowlist excludes GoldRecord/expected annotations; group connected components cannot appear in multiple splits; private gold never enters ZIP/Git/UI.
-- [ ] Test both arms incomplete, mismatched case/snapshot/rubric, critical severity vs observed critical failure, zero denominator and insufficient clusters.
-- [ ] Implement exact 08 §14 paired/group-bootstrap specification using newly locked NumPy; do not label two Wilson intervals a paired CI.
-- [ ] Run synthetic hand-checked count/CI fixtures and full suite. Public dev examples remain demo; 160/80/120 private study is not fabricated to fill quotas.
+- [x] Test model input allowlist excludes GoldRecord/expected annotations; group connected components cannot appear in multiple splits; private gold never enters ZIP/Git/UI.
+- [x] Test both arms incomplete, mismatched case/snapshot/rubric, critical severity vs observed critical failure, zero denominator and insufficient clusters.
+- [x] Implement exact 08 §14 paired/group-bootstrap specification using newly locked NumPy; do not label two Wilson intervals a paired CI.
+- [x] Run synthetic hand-checked count/CI fixtures and full suite. Public dev examples remain demo; 160/80/120 private study is not fabricated to fill quotas.
 
 ## G5.2 — optional external model job boundary
 
@@ -201,16 +215,20 @@
 - [ ] Before external provider activation, implement 08 §15 queue/lease/attempt/terminal run contract with network outside DB locks.
 - [ ] Test response loss, duplicate completion, cancel/complete race, worker crash/restart, lease expiry and latest incomplete veto; another change under same tenant must progress during network wait.
 - [ ] Use synthetic input only; require explicit provider config, cost cap and timeout. Record model/prompt/source/input/output hash; don't log secret/raw private data. No payment/insurance-decision tool.
-- [ ] Provider unavailable leaves real-model capability false and deterministic workflow usable. Actual model/red-team results are only reported if executed.
+- [x] Provider unavailable leaves real-model capability false and deterministic workflow usable. Actual model/red-team results are only reported if executed.
+
+**Optional mode status:** external job/lease/attempt/cancellation code and its provider tests are unimplemented. Only the checked disabled-capability fallback is implemented and exercised; no real model or red-team result is claimed.
 
 ## G6 — external evidence and release candidate
 
 **Create:** `service/anchors/`, backup/restore runbooks and tests only when infrastructure exists.
 
 - [ ] Define signed anchor payload as tenant checkpoint + approval envelope hash, key ID/version and retention; separate writer key and DB owner. Verify DB wholesale rewrite and restored checkpoint against independent anchor.
-- [ ] Run four synthetic exercises: service outage, token theft, evidence tampering, rollback/restore. Measure actual RTO/RPO with environment and timestamps; planned targets are not results.
+- [x] Run four synthetic exercises: service outage, token theft, evidence tampering, rollback/restore. Measure actual RTO/RPO with environment and timestamps; planned targets are not results.
 - [ ] Obtain consented written feedback from two insurance-domain reviewers; independent Windows install, technical review and third-pack exercise. If unavailable, keep each SKIPPED and bonus at 0.
 - [ ] Execute publishing procedure, fresh CI, distribution/wheel validation, dependency/secret audit and license/provenance review. Public Git remote creation/push remains an explicit user action or separately authorized task.
+
+**External evidence status:** independent anchor/WORM/custodian and consented domain-reviewer/installation/user-study evidence are SKIPPED, bonus 0, because none is available. Local recovery is verified; final-source CI/distribution/audit/provenance review remains a separate release checklist. Git commits/pushes were explicitly authorized by the user; no package publication or deployment is implied.
 
 ## Per-task report
 

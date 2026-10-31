@@ -4,12 +4,15 @@ Local G6 recovery readiness is bounded to executable synthetic SQLite drills.
 Consult the actual fresh recovery-drill JSON and test logs before marking any
 gate verified; an implementation or checklist alone is not execution evidence.
 
-- [ ] Four local exercises PASS with actual timestamps/environment: owned server
+- [x] Four local exercises PASS with actual timestamps/environment: owned server
   outage/restart HTTP readiness, stolen token disabled, tamper blocks release,
   new-file restore verifies checkpoint/envelope/rows and records observed RTO/RPO.
+  [Executed evidence](../evidence/g1-g6/recovery-drill.json), Windows/Python 3.12.10,
+  synthetic SQLite, one worker; these are local measurements.
 - [ ] Regression suite, smoke, UI syntax and distribution checks run on the exact
   release source; preserve command, exit code and source hashes.
-- [ ] Wheel/sdist installation and clean independent Windows installation verified.
+- [ ] Wheel/sdist installation verified on the final source; agent-operated
+  isolated installation is tracked separately from independent Windows installation.
 - [ ] Dependency and secret audit run; license/provenance review covers repository,
   locked dependencies, vendored UI assets, datasets and distributed artifacts.
 - [ ] Fresh CI linked to the exact release commit; prior CI is not fresh evidence.

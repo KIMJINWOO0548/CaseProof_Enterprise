@@ -1,7 +1,8 @@
 # Changelog
 
-## 5.3.0.dev5 — 2026-10-31
+## 5.3.0.dev5 — 2026-11-01
 
+- Adapt official Langfuse/LangSmith/Dify inspection patterns into a responsive queue/detail workspace, with native dialog visibility and measured focus/contrast checks.
 - Add the independent v1 command, HTTP, full-suite evaluation, frozen evidence and linked review workspace.
 - Add frozen PostgreSQL 17 schema, non-owner privileges/RLS and physical-session concurrency tests; preserve baseline idempotency and digest bytes.
 - Add three fictional policy packs, bitemporal/rider resolution, exact optional NumPy paired statistics and public/private artifact guards.

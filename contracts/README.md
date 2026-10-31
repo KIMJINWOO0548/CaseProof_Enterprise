@@ -1,7 +1,11 @@
-# Target contracts — PLANNED
+# Versioned contracts and runtime evidence
 
-These files describe the future `/api/v1` protocol. They are **not** the running
-baseline `/api` OpenAPI and do not make Gate 1 complete. The normative design is
+These files specify the `/api/v1` protocol implemented by the explicit standalone
+workspace. They are **not** the baseline `/api` OpenAPI. Original `PLANNED`
+metadata and example placeholders are retained as design artifacts; current
+implementation and verification status lives in [STATUS](../docs/STATUS.md).
+The [actual exported OpenAPI](../docs/api/v1-openapi.json) and
+`tests/v1/test_http.py` describe the runtime boundary. The normative design is
 [the implementation contract](../prebuild/08_IMPLEMENTATION_CONTRACTS.md).
 Schema validation checks document structure; it cannot prove authentication,
 authorization, atomic commits, evidence integrity, or insurance correctness.
@@ -39,16 +43,17 @@ slip past a regular-expression `$` anchor.
 entry has `file` relative to `contracts/`, a `schema` filename with an optional
 `#/$defs/...` fragment, and expected JSON Schema boolean `valid`. Optional
 `runtime_valid: false` explicitly marks inputs that JSON Schema accepts but the
-planned stricter HTTP runtime must reject. There are 62 examples: 29 expected
+stricter HTTP runtime must reject. There are 62 examples: 29 expected
 schema-valid and 33 expected schema-invalid. This is an assertion registry, not
 an API execution report. The package checker consumes it with a local registry.
 
 [state-machine.json](state-machine.json) describes the seven core transitions,
 required roles, guards, inserted-row counts, and terminal states.
 [requirements-traceability.json](requirements-traceability.json) maps target
-requirements to gates and planned acceptance-test identifiers. Every runtime
-requirement remains `implemented: false`; target test names are not evidence
-that those tests exist or pass.
+requirements to gates and originally planned acceptance-test identifiers. Its
+retained `implemented: false` fields are not a live completion ledger; use the
+[implementation checklist](../prebuild/02_IMPLEMENTATION_PLAN.md). A planned
+test name or structural example alone is not evidence that a runtime test passed.
 
 ## Command bodies and headers
 
@@ -85,7 +90,7 @@ idempotency records or workflow transitions.
 ## Concrete v5.3 structural choices
 
 These choices complete names left implicit in the prose contract and are part
-of this planned version, rather than choices left for each implementer:
+of this protocol version, rather than choices left for each implementer:
 
 - Payload schema labels are `change_revision_v1`, `change_transition_v1`,
   `decision_note_v1`, `audit_event_v1`, `evaluation_run_v1`,
@@ -168,7 +173,9 @@ example is therefore schema-valid and explicitly runtime-invalid. Strict HTTP
 tests must reject floats, booleans/strings used as claim days, NaN/Infinity,
 duplicate object keys, invalid UTF-8, lone surrogates, and values outside safe
 integer bounds. [http-negative-cases.json](http-negative-cases.json) contains
-planned raw-body/header cases; none is represented as an executed HTTP test.
+raw-body/header specimens. Those specimens alone are not execution evidence;
+the actual raw-body and header tests are in `tests/v1/test_http.py`, with run
+results and limitations in [VALIDATION](../docs/VALIDATION.md).
 
 String lengths do not perform Python `str.strip()` or reject all surrogate
 encodings. Check both original and stripped reason lengths, then store only the

@@ -9,20 +9,20 @@ CaseProof checks a numeric claim against versioned synthetic rules, records the 
 합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
 
 - Synthetic fixtures only; no real customer information or insurance decisions.
-- FastAPI, SQLAlchemy, SQLite, static HTML/JavaScript; one local server worker.
-- Two fictional organizations, four roles, ten synthetic rules and twenty public resolver examples; transition records and actor-scoped retries for every mutation.
-- No LLM connection, production authentication, PostgreSQL RLS, externally anchored evidence, or completed 360-case study.
+- FastAPI, SQLAlchemy, static HTML/JavaScript; local SQLite demo and separate disposable PostgreSQL role/RLS tests.
+- The `/api` baseline has two fictional organizations, four roles, ten synthetic rules and twenty public resolver examples. The standalone `/api/v1` workspace has three registered fictional packs; both profiles retain actor-scoped retries.
+- No LLM connection, production authentication, externally anchored evidence, or completed 360-case study. Tested PostgreSQL RLS does not establish production deployment readiness.
 - `PASS` means the tested numeric claim matched a synthetic rule. `APPROVED_FOR_DEMO` never deploys software or authorizes a real claim.
 
 한국어 시작 안내: [START_HERE.md](START_HERE.md). Codex 구현 진입점: [AGENTS.md](AGENTS.md), [실행 프롬프트](prebuild/05_CODEX_KICKOFF.md).
 
 ## Review workspace
 
-The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), with the MIT stylesheet and notices included locally. Searchable request tables, evaluation results, decision forms and evidence checks use its standard components. No CDN or external font is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. See [UI scope and validation](docs/UI_WORKSPACE.md).
+The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), with the MIT stylesheet and notices included locally. Searchable request tables, evaluation results, decision forms and evidence checks use its standard components. No CDN or external font is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. The v1 layout adapts list/detail inspection patterns from Langfuse, LangSmith and Dify; see [official references and design decisions](docs/AI_UI_REFERENCES.md).
 
-![CaseProof review workspace with a filtered synthetic change and verified evidence](docs/images/review-workspace.jpg)
+![CaseProof review workspace with a filtered synthetic change and verified evidence](docs/images/v1-workspace-desktop.jpg)
 
-[Narrow-screen capture](docs/images/review-mobile.jpg). Screenshots show an actual temporary synthetic workflow; counts and approvals are recorded test data.
+[Narrow-screen capture](docs/images/v1-workspace-mobile.jpg). Screenshots show an actual temporary synthetic workflow; counts and approvals are recorded test data.
 
 ## Versioned workspace
 
@@ -36,7 +36,7 @@ Open `http://127.0.0.1:8766/v1`. The command creates a new disposable profile an
 
 Optional test environments use separate hash locks: `requirements-evaluation.lock` for NumPy statistics and `requirements-postgres.lock` for PostgreSQL. The [readiness checklist](docs/operations/RELEASE_READINESS.md) separates local exercises from unavailable external evidence.
 
-## Quick start
+## Baseline quick start
 
 Python 3.11–3.13 is the declared support target. See [validation](docs/VALIDATION.md) for versions actually run. Node.js is only needed for the JavaScript syntax check. No cloud account or API key is needed.
 
@@ -64,7 +64,7 @@ export CASEPROOF_DEMO_MODE=1
 
 Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The initializer prints freshly generated local tokens once. Keep them private; they do not expire automatically. Change roles with **연결 해제 / 역할 변경**. Tokens remain in browser memory only. Initialization does not reset an existing database or reissue its credentials. For another demo, choose a **new database path** using `CASEPROOF_DATABASE_URL` and pass the same path to `init-demo --database`; do not delete an unknown database.
 
-## Five-minute scenario
+## Baseline five-minute scenario
 
 1. Sign in as `aurora-analyst`; create a change for `AUTO-101 / DOCUMENT_WINDOW_DAYS`.
 2. Evaluate `30` days on `2026-06-30`, then `20` days on `2026-07-01`.
@@ -72,7 +72,7 @@ Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The initializer prints fres
 4. Sign in as `aurora-approver` and approve for the demo with a reason.
 5. Inspect evidence: audit and record checks should be true; `external_trust_anchor` and `real_release` stay false.
 
-A failed evaluation blocks this baseline change. Create a fresh change to try again. The target design introduces complete, immutable evaluation runs and a linked correction workflow; those are future work.
+A failed evaluation blocks this baseline change. Create a fresh change to try again. The separate `/api/v1` workspace supports complete immutable evaluation runs and linked corrections; use its explicit launcher above to exercise that workflow.
 
 ## Checks
 
@@ -106,7 +106,7 @@ The included GitHub Actions workflow defines fresh CI runs. A workflow file is n
 | [prebuild/01_TARGET_DESIGN.md](prebuild/01_TARGET_DESIGN.md) | Product scope, design decisions, invariants |
 | [prebuild/08_IMPLEMENTATION_CONTRACTS.md](prebuild/08_IMPLEMENTATION_CONTRACTS.md) | Exact target API, transactions, state/evidence and data contracts |
 | [prebuild/02_IMPLEMENTATION_PLAN.md](prebuild/02_IMPLEMENTATION_PLAN.md) | Dependency-ordered tasks with file, test and acceptance details |
-| [contracts/README.md](contracts/README.md) | Machine-readable target schemas and examples; not deployed routes |
+| [contracts/README.md](contracts/README.md) | Versioned schemas, structural examples and links to the actual standalone v1 API |
 | [docs/STATUS.md](docs/STATUS.md) | Implemented vs planned capability matrix |
 | [docs/PUBLISHING.md](docs/PUBLISHING.md) | GitHub publishing and release procedure |
 | [docs/PROVENANCE.md](docs/PROVENANCE.md) | Origin, retained code, exclusions and license boundaries |

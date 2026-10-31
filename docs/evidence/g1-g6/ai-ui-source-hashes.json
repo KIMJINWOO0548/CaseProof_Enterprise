@@ -1,0 +1,9 @@
+{
+  "source_sha256": {
+    "service/static/v1.html": "d3e6ec7b2500f7303db45d19430cb85688949a9762ccdbfbbf2ac0dfd5184696",
+    "service/static/v1.css": "7f7c18c38f9439a6bee72a24eb3938682380a1437c79e8b8be8d3b4323a9f932",
+    "service/static/v1.js": "6f7211e9f8a0782686b8b3f02d9d790e110a6715a8be8e2a9e59a5791aa9c72b",
+    "scripts/v1_ui_probe.js": "d9e8cb1e6b2720c1dbf2827c7e89a98650a72eaa56dd601f015330166e6c7063"
+  },
+  "scope": "AI UI native browser validation source; backend commit e9b67ac"
+}

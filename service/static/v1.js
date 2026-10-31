@@ -87,8 +87,10 @@
   function render(data, run) {
     current = data; syncSelectedRow(); $('detail').replaceChildren(); $('evidence').textContent = '선택 후 별도로 조회하세요.'; $('load-evidence').disabled = false;
     const target = $('detail'); target.append(node('h3', data.title, 'h3')); const id = node('p', data.change_id); id.id = 'change-id'; target.append(id);
-    const state = node('strong', data.status); state.id = 'change-status'; target.append(state, node('p', 'Revision ' + data.revision)); refs(data, target);
+    const state = node('strong', data.status); state.id = 'change-status';
+    const meta = node('div', undefined, 'change-meta'); meta.append(state, node('p', 'Revision ' + data.revision)); target.append(meta);
     const actions = node('div', undefined, 'btn-list'); target.append(actions);
+    refs(data, target);
     const own = workspace.actor.actor_id === data.requester_id;
     if (role('ANALYST') && data.status === 'REJECTED') button('correct-change', '반려 변경 시정', () => openCreate(data), actions);
     if (role('ANALYST') && own && data.status === 'DRAFT') {
@@ -114,8 +116,13 @@
     const q = $('search').value.toLowerCase(), state = $('status-filter').value;
     const filtered = rows.filter(r => (!state || r.status === state) && (r.title + r.change_id).toLowerCase().includes(q));
     $('queue').replaceChildren(); if (!filtered.length) { $('queue').append(node('p', '표시할 변경 요청이 없습니다.', 'p-3')); return; }
-    const table = node('table', undefined, 'table table-vcenter'), head = node('thead'), hr = node('tr'); ['변경', '팩', '상태', 'Revision'].forEach(t => hr.append(node('th', t))); head.append(hr); table.append(head); const body = node('tbody');
-    filtered.forEach(row => { const tr = node('tr'), td = node('td'), b = node('button', row.title, 'btn btn-link p-0 text-start'); b.type = 'button'; b.dataset.changeId = row.change_id; b.onclick = () => select(row.change_id); td.append(b); tr.append(td, node('td', row.pack_version_id), node('td', row.status), node('td', row.revision)); body.append(tr); }); table.append(body); $('queue').append(table); syncSelectedRow();
+    const table = node('table', undefined, 'table table-vcenter'), head = node('thead'), hr = node('tr'); hr.append(node('th', '변경 요청')); head.append(hr); table.append(head); const body = node('tbody');
+    filtered.forEach(row => {
+      const tr = node('tr'), td = node('td'), b = node('button', row.title, 'btn btn-link p-0 text-start');
+      b.type = 'button'; b.dataset.changeId = row.change_id; b.onclick = () => select(row.change_id);
+      const meta = node('div', undefined, 'queue-meta'); meta.append(node('span', row.pack_version_id), node('span', 'Revision ' + row.revision));
+      td.append(b, node('div', row.status, 'queue-status'), meta); tr.append(td); body.append(tr);
+    }); table.append(body); $('queue').append(table); syncSelectedRow();
   }
   async function refresh() {
     const e = epoch; $('queue').setAttribute('aria-busy', 'true'); $('queue').textContent = '불러오는 중…';

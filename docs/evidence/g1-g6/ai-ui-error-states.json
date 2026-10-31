@@ -1,0 +1,16 @@
+{
+  "result": "PASS",
+  "statuses": [
+    403,
+    404,
+    409,
+    422
+  ],
+  "empty": true,
+  "loading": true,
+  "storage": [
+    0,
+    0
+  ],
+  "note": "Playwright MCP native refresh clicks; synthetic intercepted GET responses, not server authorization validation."
+}

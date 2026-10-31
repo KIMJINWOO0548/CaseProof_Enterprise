@@ -1,5 +1,13 @@
 # 검증 결과 — 5.3.0.dev5
 
+## AI UI 및 후속 인수 검증 — 2026-11-01 KST
+
+Langfuse·LangSmith·Dify의 공식 자료를 조사하고 [적용 범위](AI_UI_REFERENCES.md)를 기록했다. 목록과 상세를 병렬 배치하고 닫힌 native dialog의 Tabler 표시 충돌을 수정했다. [Chrome 156 native 실행](evidence/g1-g6/ai-ui-browser.json)은 반려→시정→3인 승인·증거 VALID, 성공 commit 뒤 response abort와 같은 key 복구, XSS title/reason 비실행·WebStorage 비사용·Escape 초점 복귀를 통과했다. 1280/1440px 정렬과 390/375px 가로 넘침을 검사했다. [실측 대비/44px 표적](evidence/g1-g6/ai-ui-metrics.json), [GET 오류·로딩·빈 상태](evidence/g1-g6/ai-ui-error-states.json)는 각 검사 범위를 구분한다. 임의 GET 응답을 주입한 화면 시험을 서버 권한 검증으로 세지 않는다. 도구 setup 실패와 과거 click timeout은 PASS에 합산하지 않았다.
+
+추가 HTTP route/resource/expected-revision key 충돌·원본 replay 표적은 **33 passed**, exit 0이었다. Windows 소켓 초기화만 52회 재시도했다. 새 PG 서로 다른 변경 경합 검사는 수집했고 후속 CI를 기다린다. 선택적 Python Playwright는 여전히 미설치 skip이며 실제 MCP 실행과 구분한다.
+
+백엔드 커밋 `e9b67ac`의 [CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555)는 **9개 job success, PR 전용 1개 skipped**다. Linux Python 3.11/3.12/3.13·Windows 3.12, PG17 **459 passed**, 수치 통계·OSV·UI 문법·격리 배포물 설치를 실제 실행했다. 별도 로컬 fresh runtime-only wheel 설치도 exit 0이며 소켓 초기화 6회만 재시도했다. 후속 UI/검사 소스는 새 commit/CI로 별도 검증한다.
+
 ## G1–G6 로컬 구현 — 2026-10-31 KST
 
 [비 PG 전체 출력](evidence/g1-g6/ordinary-pytest.txt): 862 passed, 1 optional Python-browser skipped, 3 warnings, 22 subtests passed, exit 0. 실제 Chrome 156 MCP의 3인 반려→시정→승인, committed response 유실 뒤 같은 key 복구, XSS 비실행, WebStorage 비사용, 375px 및 focus 검사를 별도 실행했다. 후속 native-click 재실행 timeout은 성공에 합산하지 않는다. UI/UX Pro Max 검토와 AI 제품 레이아웃 조사는 후속 화면 변경으로 구분한다.

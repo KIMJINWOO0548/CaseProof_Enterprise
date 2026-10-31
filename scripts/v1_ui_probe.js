@@ -41,6 +41,27 @@ async function selfTest() {
   console.log('PASS: exact replay, actor isolation, immutable body, 503 recovery, uncertain-denial preservation, concurrency');
 }
 
+async function checkLayout(page) {
+  const original = page.viewportSize();
+  try {
+    for (const width of [1280, 1440, 390]) {
+      await page.setViewportSize({ width, height: 900 });
+      const layout = await page.evaluate(() => {
+        const queue = document.querySelector('.queue-panel').getBoundingClientRect();
+        const detail = document.querySelector('#detail-title').closest('section').getBoundingClientRect();
+        return { queue: { top: queue.top, right: queue.right, bottom: queue.bottom }, detail: { top: detail.top, left: detail.left }, overflow: document.documentElement.scrollWidth > innerWidth,
+          closedDialogVisible: [...document.querySelectorAll('dialog:not([open])')].some(dialog => getComputedStyle(dialog).display !== 'none') };
+      });
+      assert.equal(layout.overflow, false, `${width}px horizontal overflow`);
+      assert.equal(layout.closedDialogVisible, false, 'closed native dialogs stay hidden');
+      if (width >= 992) {
+        assert.ok(Math.abs(layout.queue.top - layout.detail.top) <= 1, `${width}px inspector must start beside queue`);
+        assert.ok(layout.queue.right <= layout.detail.left, `${width}px queue and inspector must not overlap`);
+      } else assert.ok(layout.queue.bottom <= layout.detail.top, 'mobile inspector follows queue');
+    }
+  } finally { if (original) await page.setViewportSize(original); }
+}
+
 async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDays = 24 }) {
   const login = async token => {
     if (await page.locator('#switch-role').isVisible()) await page.locator('#switch-role').click();
@@ -57,6 +78,7 @@ async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDay
   };
   await page.goto(baseURL + '/v1');
   await login(tokens.analyst);
+  await checkLayout(page);
   await page.locator('#new-change').click();
   await page.locator('#preset').selectOption({ index: presetIndex });
   await page.locator('#title').fill('<img src=x onerror="window.__xss=1">');
@@ -110,5 +132,5 @@ async function browserProbe(page, { baseURL, tokens, presetIndex = 2, passingDay
   return { original, corrected, browser: page.context().browser().version() };
 }
 
-module.exports = { browserProbe, selfTest };
+module.exports = { browserProbe, checkLayout, selfTest };
 if (require.main === module) selfTest().catch(error => { console.error(error); process.exitCode = 1; });

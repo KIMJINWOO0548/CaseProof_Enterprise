@@ -1,0 +1,80 @@
+{
+  "metrics": {
+    "pairs": [
+      {
+        "name": "ink",
+        "color": "rgb(37, 51, 71)",
+        "background": "rgb(255, 255, 255)",
+        "ratio": 12.78
+      },
+      {
+        "name": "muted",
+        "color": "rgb(82, 97, 116)",
+        "background": "rgb(255, 255, 255)",
+        "ratio": 6.32
+      },
+      {
+        "name": "link",
+        "color": "rgb(24, 89, 163)",
+        "background": "rgb(237, 244, 252)",
+        "ratio": 6.32
+      },
+      {
+        "name": "boundary",
+        "color": "rgb(70, 84, 104)",
+        "background": "rgb(237, 241, 245)",
+        "ratio": 6.78
+      }
+    ],
+    "storage": [
+      0,
+      0
+    ]
+  },
+  "mobile": {
+    "width": 390,
+    "scrollWidth": 375,
+    "targets": [
+      {
+        "text": "역할 전환",
+        "height": 44
+      },
+      {
+        "text": "새로고침",
+        "height": 44
+      },
+      {
+        "text": "새 변경 요청",
+        "height": 44
+      },
+      {
+        "text": "문의 기한 변경 검토 · 시정",
+        "height": 44
+      },
+      {
+        "text": "문의 기한 변경 검토",
+        "height": 44
+      },
+      {
+        "text": "문의 기한 변경 검토",
+        "height": 44
+      },
+      {
+        "text": "고정된 버전 참조",
+        "height": 44
+      },
+      {
+        "text": "출처·결과 해시 참조",
+        "height": 44
+      },
+      {
+        "text": "최신 증거 조회",
+        "height": 44
+      },
+      {
+        "text": "원본 JSON",
+        "height": 44
+      }
+    ]
+  }
+}
