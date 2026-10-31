@@ -1,0 +1,14 @@
+AssertionError [ERR_ASSERTION]: denial cannot prove the earlier request was uncommitted
++ actual - expected
+
++ undefined
+- '91f972d6-32c5-4a01-9542-b6eb488fbbb0'
+
+    at C:\Users\김진우\Desktop\CaseProof_Enterprise\scripts\check_uncertain_recovery.cjs:17:10 {
+  generatedMessage: false,
+  code: 'ERR_ASSERTION',
+  actual: undefined,
+  expected: '91f972d6-32c5-4a01-9542-b6eb488fbbb0',
+  operator: 'strictEqual',
+  diff: 'simple'
+}

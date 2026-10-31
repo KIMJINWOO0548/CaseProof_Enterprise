@@ -4,11 +4,13 @@ import hashlib
 import json
 from pathlib import Path
 import re
+import subprocess
 from urllib.parse import unquote, urlparse
 
 from jsonschema import Draft202012Validator, FormatChecker
 from referencing import Registry, Resource
 from VERIFY_PACKAGE import source_files
+from service.evaluation.datasets import assert_public_artifacts
 
 ROOT = Path(__file__).resolve().parents[1]
 REQUIRED = ['README.md', 'START_HERE.md', 'AGENTS.md', 'LICENSE', 'NOTICE',
@@ -20,6 +22,15 @@ REQUIRED = ['README.md', 'START_HERE.md', 'AGENTS.md', 'LICENSE', 'NOTICE',
 
 def checks(root=ROOT):
     problems = [f'Missing required file: {name}' for name in REQUIRED if not (root / name).is_file()]
+    if (root / '.git').exists():
+        tracked = subprocess.run(['git', 'ls-files', '-z'], cwd=root, capture_output=True)
+        if tracked.returncode:
+            problems.append('Could not inspect Git tracked files')
+        else:
+            try:
+                assert_public_artifacts(tracked.stdout.decode('utf-8').split('\0'))
+            except ValueError as exc:
+                problems.append(str(exc))
     paths = list(source_files(root))
     for p in paths:
         rel = p.relative_to(root).as_posix()
@@ -75,7 +86,7 @@ def main():
     if problems:
         raise SystemExit('PACKAGE_CHECK_FAIL\n' + '\n'.join(problems))
     print('PACKAGE_CHECK_PASS ' + json.dumps(counts, sort_keys=True))
-    print('Target schemas are PLANNED; this check does not implement /api/v1 or certify security.')
+    print('Schema checks verify structure; runtime behavior and operational assurance require their separate checks.')
 
 
 if __name__ == '__main__':

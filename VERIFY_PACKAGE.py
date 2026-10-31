@@ -3,6 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from pathlib import Path
+from service.evaluation.datasets import assert_public_artifacts
 
 MANIFEST = 'PACKAGE_MANIFEST_SHA256.json'
 IGNORED_DIRS = {'.git', '.venv', 'venv', '__pycache__', '.pytest_cache', '.ruff_cache',
@@ -13,6 +14,10 @@ def source_files(root: Path):
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
         if any(p in IGNORED_DIRS or p.endswith('.egg-info') for p in relative.parts):
+            continue
+        try:
+            assert_public_artifacts([relative.as_posix()])
+        except ValueError:
             continue
         if path.is_symlink():
             raise ValueError(f'Symlink is not a release source file: {relative}')

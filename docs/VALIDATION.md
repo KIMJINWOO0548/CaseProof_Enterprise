@@ -1,4 +1,21 @@
-# 검증 결과 — 5.3.0.dev4
+# 검증 결과 — 5.3.0.dev5
+
+## G1–G6 로컬 구현 — 2026-10-31 KST
+
+[비 PG 전체 출력](evidence/g1-g6/ordinary-pytest.txt): 862 passed, 1 optional Python-browser skipped, 3 warnings, 22 subtests passed, exit 0. 실제 Chrome 156 MCP의 3인 반려→시정→승인, committed response 유실 뒤 같은 key 복구, XSS 비실행, WebStorage 비사용, 375px 및 focus 검사를 별도 실행했다. 후속 native-click 재실행 timeout은 성공에 합산하지 않는다. UI/UX Pro Max 검토와 AI 제품 레이아웃 조사는 후속 화면 변경으로 구분한다.
+
+[복구 훈련](evidence/g1-g6/recovery-drill.json)은 실제 임시 server process 중지/재시작, token disablement, 변조 거부, 새 DB 복구의 4개 PASS다. 기존 target 덮어쓰기·손상 hash·빈 tenant head 이상·Windows connection close 회귀를 추가했다. 결과의 RTO/RPO는 해당 로컬 합성 환경의 측정이며 운영 보장 수치가 아니다.
+
+실제 PG17.11 표적 459 PASS 뒤, 물리 backend를 barrier 전 반환하는 시험 결함을 재현해 연결을 유지하도록 수정했다. 이후 Windows PG startup/socket 10014/timeout 실패를 보존했으며 최종 PG CI는 아직 확인 전이다. 초기화만 재시도하고 SQL mutation/assertion을 재실행하지 않는다. 기존 단위 시험과 원본 gold 답은 변경하지 않았다.
+
+OpenAPI Bearer 선언과 실제 HTTP/작업공간/수치 평가 표적 회귀는 **61 passed**, exit 0이다. 응답 유실 뒤 권한 거부가 와도 원래 미확정 키를 보존하도록 Node RED→GREEN 회귀를 추가했다.
+
+NumPy 2.4.6·psycopg 3.3.6은 승인된 프로젝트 환경에 별도 hash lock으로 설치했다. 공개/비공개 artifact 경로 거부, 모델 allowlist, split 연결 성분, paired/불완전 비교, 전체 case 모음 및 최신 incomplete veto를 검사했다. 외부 모델은 연결하지 않았다.
+
+재현 실패도 보존한다: 누락 모듈 RED, 기록-link와 중첩 FK 변조 재현, adapter timeout/UUID source bridge RED, 테스트 모듈 이름 충돌, private path RED, socket 초기화 64회 제한 재현. [초기화 회귀 RED](evidence/g1-g6/windows-initialization-red.txt) 후 128회·20ms의 bounded 초기화만 허용했고 다른 오류·module 재실행은 거부했다.
+
+G5.2 optional external job mode, 외부 anchor/독립 key custodian, 동의받은 보험 검수자와 독립 설치·사용자 관찰·운영 검증은 미실행이다. 사용자가 현재 자료·인프라가 없음을 확인했으며 외부 검수 bonus는 0이다.
+
 
 ## 5.3.0.dev4 — G1.2 불변 저장과 SQLite migration
 

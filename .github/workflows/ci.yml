@@ -80,6 +80,56 @@ jobs:
         with:
           python-version: "3.12"
       - run: python -m scripts.check_ui_syntax
+      - run: node --check service/static/v1.js
+      - run: node scripts/v1_ui_probe.js
+      - run: node scripts/check_uncertain_recovery.cjs
+
+  evaluation:
+    name: Paired evaluation statistics
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --require-hashes -r requirements-evaluation.lock
+      - run: python -m pytest -q tests/evaluation
+
+  postgres:
+    name: PostgreSQL 17 roles, RLS and concurrency
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17-bookworm
+        env:
+          POSTGRES_PASSWORD: caseproof_ephemeral_ci_only
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
+    env:
+      CASEPROOF_PG_ADMIN_URL: postgresql+psycopg://postgres:caseproof_ephemeral_ci_only@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+      - uses: actions/setup-python@6d4fd22b20465ccc0f7354476588e8df7c9ca0e0
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --require-hashes -r requirements-postgres.lock
+      - run: python -c "from pathlib import Path; Path('reports/ci').mkdir(parents=True, exist_ok=True)"
+      - run: python -m pytest -q tests/postgres --junitxml=reports/ci/postgres.xml
+      - name: Preserve PostgreSQL evidence
+        if: ${{ always() }}
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9
+        with:
+          name: postgres-17-verification
+          path: reports/ci/
+          if-no-files-found: warn
+          retention-days: 14
 
   distribution:
     name: Build and install distribution
@@ -126,12 +176,14 @@ jobs:
         run: |
           mkdir -p reports/ci
           python -m pip_audit --strict --disable-pip --require-hashes --vulnerability-service osv -r requirements-dev.lock --format json --output reports/ci/osv.json
+          python -m pip_audit --strict --disable-pip --require-hashes --vulnerability-service osv -r requirements-evaluation.lock --format json --output reports/ci/osv-evaluation.json
+          python -m pip_audit --strict --disable-pip --require-hashes --vulnerability-service osv -r requirements-postgres.lock --format json --output reports/ci/osv-postgres.json
       - name: Preserve audit result, including failures
         if: ${{ always() }}
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: osv-dependency-audit
-          path: reports/ci/osv.json
+          path: reports/ci/osv*.json
           if-no-files-found: warn
           retention-days: 14
 

@@ -13,6 +13,7 @@ from pathlib import Path, PurePosixPath
 import tarfile
 import tempfile
 import zipfile
+from service.evaluation.datasets import assert_public_artifacts
 
 
 RUNTIME_FILES = {
@@ -22,6 +23,29 @@ RUNTIME_FILES = {
     "service/domain/canonical.py",
     "service/domain/types.py",
     "service/models_v1.py",
+    "service/commands.py",
+    "service/repositories.py",
+    "service/idempotency_v1.py",
+    "service/auth.py",
+    "service/workspace.py",
+    "service/recovery.py",
+    "service/domain/gates.py",
+    "service/domain/evidence.py",
+    "service/evaluation/runner.py",
+    "service/evaluation/adapters.py",
+    "service/evaluation/metrics.py",
+    "service/evaluation/benchmark.py",
+    "service/evaluation/datasets.py",
+    "service/policies/schema.py",
+    "service/policies/resolver.py",
+    "service/policies/registry.py",
+    "service/api/v1.py",
+    "service/static/v1.html",
+    "service/static/v1.js",
+    "service/static/v1.css",
+    "datasets/packs/fictional_harbor.json",
+    "datasets/packs/fictional_orchard.json",
+    "datasets/packs/fictional_lantern.json",
     "service/domain/state_machine.py",
     "service/api/__init__.py",
     "service/api/schemas_v1.py",
@@ -46,6 +70,10 @@ def require(condition: bool, message: str) -> None:
 
 
 def check_paths(names: set[str]) -> None:
+    try:
+        assert_public_artifacts(names)
+    except ValueError as exc:
+        raise SystemExit(str(exc)) from None
     for name in names:
         path = PurePosixPath(name)
         require(not path.is_absolute() and ".." not in path.parts,
@@ -84,6 +112,9 @@ def check_archives(folder: Path) -> None:
             "THIRD_PARTY_NOTICES.md", "scripts/check_distribution.py",
             "alembic.ini", "migrations/env.py", "migrations/script.py.mako",
             "migrations/versions/0001_v1.py",
+            "alembic-postgres.ini", "compose.postgres-test.yaml", "scripts/pg_test_bootstrap.py",
+            "migrations/postgres/env.py", "migrations/postgres/versions/0001_pg.py",
+            "migrations/postgres/versions/0001_schema.sql",
         }
         require(required <= names,
                 f"Source distribution is missing files: {sorted(required - names)}")
@@ -132,7 +163,7 @@ def check_installed() -> None:
             # avoid introducing an HTTP test client as a runtime dependency.
             import asyncio
 
-            async def request(path: str) -> list[dict]:
+            async def request(path: str, application=app, headers=None) -> list[dict]:
                 messages: list[dict] = []
 
                 async def receive() -> dict:
@@ -145,10 +176,10 @@ def check_installed() -> None:
                     "type": "http", "asgi": {"version": "3.0", "spec_version": "2.4"},
                     "http_version": "1.1", "method": "GET", "scheme": "http",
                     "path": path, "raw_path": path.encode(), "query_string": b"",
-                    "root_path": "", "headers": [], "client": ("127.0.0.1", 12345),
+                    "root_path": "", "headers": headers or [], "client": ("127.0.0.1", 12345),
                     "server": ("127.0.0.1", 8000),
                 }
-                await app(scope, receive, send)
+                await application(scope, receive, send)
                 return messages
 
             for path in ("/", "/api/health", "/static/vendor/tabler-1.7.3/tabler.min.css"):
@@ -167,6 +198,29 @@ def check_installed() -> None:
                     require(b"Tabler v1.7.3" in body, "Installed open-source UI stylesheet was not served.")
             require(len(DATASET_HASH) == len(EVALUATOR_HASH) == 64,
                     "Installed source/dataset hashing failed.")
+            import hashlib
+            from service.db import make_engine, session_factory
+            from service.workspace import seed_workspace, create_workspace_app
+            engine = make_engine('sqlite:///' + str(Path(temporary) / 'v1.sqlite3'))
+            try:
+                BaseV1.metadata.create_all(engine)
+                factory = session_factory(engine)
+                with factory.begin() as db:
+                    seed_workspace(db)
+                token = b'Bearer installed-demo-check'
+                registry = {hashlib.sha256(token.removeprefix(b'Bearer ')).hexdigest():
+                            {'tenant_id': 'fictional', 'actor_id': 'analyst'}}
+                workspace = create_workspace_app(factory, registry)
+                for path in ('/v1', '/static/v1.js', '/api/v1/workspace'):
+                    messages = asyncio.run(request(path, workspace, [(b'authorization', token)]))
+                    require(any(m['type'] == 'http.response.start' and m['status'] == 200 for m in messages),
+                            f'Installed v1 workspace did not serve {path}')
+                    if path == '/api/v1/workspace':
+                        catalog = json.loads(b''.join(m.get('body', b'') for m in messages if m['type'] == 'http.response.body'))['data']
+                        require(len(catalog['presets']) == 3 and catalog['capabilities']['external_model'] is False,
+                                'Installed synthetic pack catalog is incomplete or advertises a real provider.')
+            finally:
+                engine.dispose()
         finally:
             app.state.db_engine.dispose()
     print(f"Installed-wheel assets, seed, HTML, and health checked: {importlib.metadata.version('caseproof-local-demo')}")

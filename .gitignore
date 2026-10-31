@@ -59,3 +59,7 @@ Thumbs.db
 .runtime/
 .playwright-mcp/
 current/
+private/
+holdout-private/
+private_gold/
+gold.private.*

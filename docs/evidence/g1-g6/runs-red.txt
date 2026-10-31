@@ -1,0 +1,84 @@
+....FF                                                                   [100%]
+================================== FAILURES ===================================
+________ test_adapter_timeout_commits_incomplete_and_vetoes_older_pass ________
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-237/test_adapter_timeout_commits_i0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x0000013D2C9492B0>
+
+    def test_adapter_timeout_commits_incomplete_and_vetoes_older_pass(tmp_path, monkeypatch):
+        from service.evaluation.adapters import FakeDeterministicAdapter
+        factory, actors, body = setup(tmp_path)
+        identity = execute_command(factory, actors['analyst'], command(body)).data['change_id']
+        execute_command(factory, actors['analyst'], command(inputs(body), 'evaluation-runs', identity, 1))
+        original = FakeDeterministicAdapter.execute
+
+        def timeout(self, case):
+            if case['case_id'] == 'case-b':
+                raise TimeoutError('Do not persist raw exception text')
+            return original(self, case)
+
+        monkeypatch.setattr(FakeDeterministicAdapter, 'execute', timeout)
+>       result = execute_command(factory, actors['analyst'], command(inputs(body), 'evaluation-runs', identity, 2))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\v1\test_runs.py:59:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+service\commands.py:73: in execute_command
+    return _execute(db, actor, command, kind, change, head)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+service\commands.py:113: in _execute
+    run = prepare_run(history, body, actor, str(uuid4()), now, revision + 1)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+service\evaluation\runner.py:32: in prepare_run
+    output = adapter.execute(case)
+             ^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+self = <service.evaluation.adapters.FakeDeterministicAdapter object at 0x0000013D2CD967E0>
+case = {'case_id': 'case-b', 'claim_days': 30, 'case_context': {'contract_date': None, 'incident_date': None, 'claim_date': None, 'consultation_date': None, ...}}
+
+    def timeout(self, case):
+        if case['case_id'] == 'case-b':
+>           raise TimeoutError('Do not persist raw exception text')
+E           TimeoutError: Do not persist raw exception text
+
+tests\v1\test_runs.py:55: TimeoutError
+_________ test_policy_source_registered_id_resolves_to_uuid_snapshot __________
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-237/test_policy_source_registered_0')
+
+    def test_policy_source_registered_id_resolves_to_uuid_snapshot(tmp_path):
+        import json
+        from pathlib import Path
+        factory, actors, body = setup(tmp_path)
+        identity = execute_command(factory, actors['analyst'], command(body)).data['change_id']
+        with factory() as db:
+            history = deepcopy(load_history(db, 'tenant-a', identity))
+        pack = json.loads((Path(__file__).parents[2] / 'datasets/packs/fictional_harbor.json').read_text())
+        pack.update(tenant_id='tenant-a', pack_id='pack', product_ids=['product'])
+        pack['workflows'][0]['workflow'] = 'claims'
+        pack['rules'][0].update(product_id='product', workflow='claims', rule_key='days', value=30)
+        source = history['refs']['sources'][0]
+        source.update(source_id='harbor-source', policy_version_id='v1', value=30)
+        history['refs']['sources'] = [source]
+        history['refs']['policies'][0]['pack_snapshot'] = pack
+        history['refs']['suite'].update(required_case_ids=['case-a'], case_policy_versions={'case-a': ['v1']},
+                                        minimum_distinct_policy_versions=1)
+        history['refs']['source_eligibility'][0]['source_refs'] = [dict(id=source['id'],
+            payload_sha256=content_hash('source', source), policy_version_id='v1', status='APPROVED')]
+        context = dict(contract_date='2025-02-01', incident_date='2025-02-02', rider_context_status='CONFIRMED',
+                       riders=[], recorded_as_of='2025-03-01T00:00:00.000000Z')
+        run = prepare_run(history, {'suite_version_id': body['suite_version_id'], 'case_inputs': [
+            {'case_id': 'case-a', 'claim_days': 30, 'case_context': context}]}, actors['analyst'],
+            str(uuid4()), '2026-10-31T00:00:00.000000Z', 2)
+>       assert run['gate_summary'] == 'PASS'
+E       AssertionError: assert 'BLOCK' == 'PASS'
+E
+E         - PASS
+E         + BLOCK
+
+tests\v1\test_runs.py:93: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/v1/test_runs.py::test_adapter_timeout_commits_incomplete_and_vetoes_older_pass
+FAILED tests/v1/test_runs.py::test_policy_source_registered_id_resolves_to_uuid_snapshot
+2 failed, 4 passed in 4.10s

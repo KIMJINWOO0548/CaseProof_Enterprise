@@ -1,0 +1,51 @@
+F.                                                                       [100%]
+================================== FAILURES ===================================
+____ test_socketpair_burst_retries_initialization_without_repeating_module ____
+
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x000001C5B9E74110>
+
+    def test_socketpair_burst_retries_initialization_without_repeating_module(monkeypatch):
+        calls = {'initialization': 0, 'module': 0}
+        def initialize():
+            calls['initialization'] += 1
+            if calls['initialization'] <= 70:
+                error = OSError('synthetic Windows startup burst')
+                error.winerror = 10014
+                raise error
+            return 'ready'
+        def run(*args, **kwargs):
+            calls['module'] += 1
+            assert windows_checks.socket.socketpair() == 'ready'
+        monkeypatch.setattr(windows_checks.socket, 'socketpair', initialize)
+        monkeypatch.setattr(windows_checks.sys, 'platform', 'win32')
+        monkeypatch.setattr(windows_checks.sys, 'argv', ['windows_checks', 'synthetic_module'])
+        monkeypatch.setattr(windows_checks.time, 'sleep', lambda _: None)
+        monkeypatch.setattr(windows_checks.runpy, 'run_module', run)
+>       windows_checks.main()
+
+tests\test_windows_checks.py:22:
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+scripts\windows_checks.py:35: in main
+    runpy.run_module(module, run_name='__main__', alter_sys=True)
+tests\test_windows_checks.py:16: in run
+    assert windows_checks.socket.socketpair() == 'ready'
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+scripts\windows_checks.py:23: in socketpair
+    return original(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+
+    def initialize():
+        calls['initialization'] += 1
+        if calls['initialization'] <= 70:
+            error = OSError('synthetic Windows startup burst')
+            error.winerror = 10014
+>           raise error
+E           OSError: synthetic Windows startup burst
+
+tests\test_windows_checks.py:12: OSError
+---------------------------- Captured stdout call -----------------------------
+Windows socketpair initialization retries: 63
+=========================== short test summary info ===========================
+FAILED tests/test_windows_checks.py::test_socketpair_burst_retries_initialization_without_repeating_module
+1 failed, 1 passed in 0.11s

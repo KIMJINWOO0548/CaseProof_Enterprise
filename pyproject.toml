@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "caseproof-local-demo"
-version = "5.3.0.dev4"
+version = "5.3.0.dev5"
 description = "Synthetic insurance-rule verification and human-review research prototype"
 readme = "README.md"
 requires-python = ">=3.11,<3.14"
@@ -32,6 +32,8 @@ dev = [
   "wheel>=0.45,<1",
 ]
 browser = ["playwright>=1.45,<2"]
+evaluation = ["numpy>=2.1,<2.5"]
+postgres = ["psycopg[binary]>=3.2,<4"]
 
 [project.scripts]
 caseproof-demo = "service.cli:main"
@@ -39,7 +41,7 @@ caseproof-demo = "service.cli:main"
 [tool.setuptools]
 # The runtime intentionally retains its original sibling-directory layout.
 # datasets is a data-only namespace directory; it is not a public Python API.
-packages = ["service", "service.api", "service.domain", "reference", "datasets"]
+packages = ["service", "service.api", "service.domain", "service.evaluation", "service.policies", "reference", "datasets"]
 include-package-data = false
 
 [tool.setuptools.dynamic]
@@ -47,7 +49,7 @@ dependencies = {file = ["requirements.txt"]}
 
 [tool.setuptools.package-data]
 service = ["static/*.html", "static/*.css", "static/*.js", "static/vendor/tabler-1.7.3/*"]
-datasets = ["*.json"]
+datasets = ["*.json", "packs/*.json"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

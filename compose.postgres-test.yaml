@@ -1,0 +1,16 @@
+services:
+  postgres-test:
+    image: postgres:17.11
+    environment:
+      POSTGRES_USER: caseproof_test_admin
+      POSTGRES_PASSWORD: ${CASEPROOF_PG_TEST_ADMIN_PASSWORD:?Generate a disposable password outside Git}
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1::5432"
+    tmpfs:
+      - /var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U caseproof_test_admin -d postgres"]
+      interval: 2s
+      timeout: 2s
+      retries: 20

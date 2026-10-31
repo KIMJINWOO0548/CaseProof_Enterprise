@@ -1,0 +1,897 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "CaseProof synthetic v1 workspace",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/v1/changes": {
+      "post": {
+        "summary": "V1 Changes",
+        "operationId": "v1_changes_api_v1_changes_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "201": {
+            "description": "Committed result or historical replay"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "503": {
+            "description": "Retry same key"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9_-]{12,128}\\z",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "title": {
+                    "title": "Title",
+                    "type": "string"
+                  },
+                  "pack_version_id": {
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                    "title": "Pack Version Id",
+                    "type": "string"
+                  },
+                  "product_id": {
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                    "title": "Product Id",
+                    "type": "string"
+                  },
+                  "workflow": {
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                    "title": "Workflow",
+                    "type": "string"
+                  },
+                  "rule_key": {
+                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                    "title": "Rule Key",
+                    "type": "string"
+                  },
+                  "candidate_snapshot_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Candidate Snapshot Id",
+                    "type": "string"
+                  },
+                  "source_bundle_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Source Bundle Id",
+                    "type": "string"
+                  },
+                  "dataset_version_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Dataset Version Id",
+                    "type": "string"
+                  },
+                  "suite_version_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Suite Version Id",
+                    "type": "string"
+                  },
+                  "evaluator_version_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Evaluator Version Id",
+                    "type": "string"
+                  },
+                  "parent_change_id": {
+                    "anyOf": [
+                      {
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Parent Change Id"
+                  },
+                  "parent_relation": {
+                    "anyOf": [
+                      {
+                        "enum": [
+                          "CORRECTS_REJECTED",
+                          "REPLACES_DRAFT",
+                          "FOLLOWS_APPROVED"
+                        ],
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "title": "Parent Relation"
+                  }
+                },
+                "required": [
+                  "title",
+                  "pack_version_id",
+                  "product_id",
+                  "workflow",
+                  "rule_key",
+                  "candidate_snapshot_id",
+                  "source_bundle_id",
+                  "dataset_version_id",
+                  "suite_version_id",
+                  "evaluator_version_id"
+                ],
+                "title": "CreateChange",
+                "type": "object"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Changes",
+        "operationId": "changes_api_v1_changes_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}/evaluation-runs": {
+      "post": {
+        "summary": "V1 Evaluation Runs",
+        "operationId": "v1_evaluation_runs_api_v1_changes__change_id__evaluation_runs_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "201": {
+            "description": "Committed result or historical replay"
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "503": {
+            "description": "Retry same key"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9_-]{12,128}\\z",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Expected-Revision",
+            "required": true,
+            "schema": {
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]*\\z",
+              "title": "X-Expected-Revision",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "suite_version_id": {
+                    "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                    "title": "Suite Version Id",
+                    "type": "string"
+                  },
+                  "case_inputs": {
+                    "items": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "case_id": {
+                          "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                          "title": "Case Id",
+                          "type": "string"
+                        },
+                        "claim_days": {
+                          "maximum": 9999,
+                          "minimum": 0,
+                          "title": "Claim Days",
+                          "type": "integer"
+                        },
+                        "case_context": {
+                          "additionalProperties": false,
+                          "properties": {
+                            "contract_date": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "title": "Contract Date"
+                            },
+                            "incident_date": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "title": "Incident Date"
+                            },
+                            "claim_date": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "title": "Claim Date"
+                            },
+                            "consultation_date": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "title": "Consultation Date"
+                            },
+                            "rider_context_status": {
+                              "default": "UNKNOWN",
+                              "enum": [
+                                "CONFIRMED",
+                                "UNKNOWN"
+                              ],
+                              "title": "Rider Context Status",
+                              "type": "string"
+                            },
+                            "riders": {
+                              "items": {
+                                "additionalProperties": false,
+                                "properties": {
+                                  "code": {
+                                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                                    "title": "Code",
+                                    "type": "string"
+                                  },
+                                  "enrolled_from": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "title": "Enrolled From"
+                                  },
+                                  "enrolled_to": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "title": "Enrolled To"
+                                  },
+                                  "confirmation_evidence_id": {
+                                    "anyOf": [
+                                      {
+                                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ],
+                                    "title": "Confirmation Evidence Id"
+                                  }
+                                },
+                                "required": [
+                                  "code",
+                                  "enrolled_from",
+                                  "enrolled_to",
+                                  "confirmation_evidence_id"
+                                ],
+                                "title": "Rider",
+                                "type": "object"
+                              },
+                              "title": "Riders",
+                              "type": "array"
+                            },
+                            "recorded_as_of": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ],
+                              "title": "Recorded As Of"
+                            }
+                          },
+                          "title": "CaseContext",
+                          "type": "object"
+                        }
+                      },
+                      "required": [
+                        "case_id",
+                        "claim_days",
+                        "case_context"
+                      ],
+                      "title": "CaseInput",
+                      "type": "object"
+                    },
+                    "minItems": 1,
+                    "title": "Case Inputs",
+                    "type": "array"
+                  }
+                },
+                "required": [
+                  "suite_version_id",
+                  "case_inputs"
+                ],
+                "title": "RecordEvaluation",
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}/submit": {
+      "post": {
+        "summary": "V1 Submit",
+        "operationId": "v1_submit_api_v1_changes__change_id__submit_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Committed result or historical replay",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "503": {
+            "description": "Retry same key"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9_-]{12,128}\\z",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Expected-Revision",
+            "required": true,
+            "schema": {
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]*\\z",
+              "title": "X-Expected-Revision",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {},
+                "title": "SubmitChange",
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}/domain-decision": {
+      "post": {
+        "summary": "V1 Domain Decision",
+        "operationId": "v1_domain_decision_api_v1_changes__change_id__domain_decision_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Committed result or historical replay",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "503": {
+            "description": "Retry same key"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9_-]{12,128}\\z",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Expected-Revision",
+            "required": true,
+            "schema": {
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]*\\z",
+              "title": "X-Expected-Revision",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "APPROVE",
+                      "REJECT"
+                    ],
+                    "title": "Decision",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "title": "Reason",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision",
+                  "reason"
+                ],
+                "title": "Decision",
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}/release-decision": {
+      "post": {
+        "summary": "V1 Release Decision",
+        "operationId": "v1_release_decision_api_v1_changes__change_id__release_decision_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Committed result or historical replay",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "422": {
+            "description": "Invalid request"
+          },
+          "503": {
+            "description": "Retry same key"
+          }
+        },
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "pattern": "^[A-Za-z0-9_-]{12,128}\\z",
+              "title": "Idempotency-Key",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Expected-Revision",
+            "required": true,
+            "schema": {
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]*\\z",
+              "title": "X-Expected-Revision",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "additionalProperties": false,
+                "properties": {
+                  "decision": {
+                    "enum": [
+                      "APPROVE",
+                      "REJECT"
+                    ],
+                    "title": "Decision",
+                    "type": "string"
+                  },
+                  "reason": {
+                    "title": "Reason",
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "decision",
+                  "reason"
+                ],
+                "title": "Decision",
+                "type": "object"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}": {
+      "get": {
+        "summary": "Current",
+        "operationId": "current_api_v1_changes__change_id__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "change_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Change Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/changes/{change_id}/evidence": {
+      "get": {
+        "summary": "Evidence",
+        "operationId": "evidence_api_v1_changes__change_id__evidence_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "change_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Change Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/mutations/{key}": {
+      "get": {
+        "summary": "Mutation Result",
+        "operationId": "mutation_result_api_v1_mutations__key__get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "key",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workspace": {
+      "get": {
+        "summary": "Workspace",
+        "operationId": "workspace_api_v1_workspace_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    },
+    "securitySchemes": {
+      "HTTPBearer": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

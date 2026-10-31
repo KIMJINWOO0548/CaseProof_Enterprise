@@ -1,0 +1,71 @@
+{
+  "schema_version": "caseproof.policy-pack.v1",
+  "synthetic": true,
+  "tenant_id": "fictional",
+  "pack_id": "harbor",
+  "pack_version": "v1",
+  "business_timezone": "UTC",
+  "product_ids": [
+    "paper"
+  ],
+  "workflows": [
+    {
+      "workflow": "review",
+      "date_basis_version": "basis-v1",
+      "date_basis": "incident_date",
+      "required_dates": [
+        "contract_date",
+        "incident_date"
+      ]
+    }
+  ],
+  "retroactivity_policy_id": "retro-v1",
+  "retroactivity_policies": [
+    {
+      "policy_id": "retro-v1",
+      "reviewed": true,
+      "evidence_id": "fictional-review-1"
+    }
+  ],
+  "priorities": {
+    "version": "priority-v1",
+    "approved": true,
+    "evidence_id": "fictional-priority-review",
+    "ranks": {
+      "base": 10,
+      "rider": 20
+    }
+  },
+  "sources": [
+    {
+      "source_id": "harbor-source",
+      "policy_version": "v1",
+      "approval_history": [
+        {
+          "recorded_at": "2025-01-01T00:00:00Z",
+          "status": "APPROVED",
+          "evidence_id": "fictional-source-review"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "harbor-base",
+      "product_id": "paper",
+      "workflow": "review",
+      "rule_key": "window",
+      "source_id": "harbor-source",
+      "clause_id": "H-1",
+      "valid_from": "2025-01-01",
+      "valid_to": null,
+      "recorded_from": "2025-01-01T00:00:00Z",
+      "recorded_to": null,
+      "rider_code": null,
+      "priority_key": "base",
+      "retroactive": false,
+      "value": 12,
+      "unit": "days"
+    }
+  ]
+}

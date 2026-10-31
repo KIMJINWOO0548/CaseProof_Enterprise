@@ -44,3 +44,5 @@ The Docker image incorporates the separately maintained Python/Debian base image
 ## Rights-review record
 
 Before public release, record for each imported or adapted file: source or supplier, author/rightsholder if known, version/hash, license or written permission, retained notices, and reviewer/date. Unresolved material must be removed or held from public distribution; do not fill gaps with guessed authors or licenses. Store confidential permission records privately and record only a non-sensitive summary in the repository.
+
+Optional evaluation uses NumPy and PostgreSQL testing uses psycopg/psycopg-binary with platform dependencies, all obtained separately under their own licenses and recorded distribution hashes. They are not vendored. PostgreSQL test binaries stay in ignored local runtime folders; product UI references contribute no copied code or brand assets.

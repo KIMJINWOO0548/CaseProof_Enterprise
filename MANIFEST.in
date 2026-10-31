@@ -3,7 +3,8 @@ include README.md CHANGELOG.md LICENSE NOTICE THIRD_PARTY_NOTICES.md
 include CONTRIBUTING.md SECURITY.md CODE_OF_CONDUCT.md
 include pyproject.toml requirements*.txt requirements*.lock
 include alembic.ini
-recursive-include migrations *.py *.mako
+include alembic-postgres.ini compose.postgres-test.yaml
+recursive-include migrations *.py *.mako *.sql
 include Dockerfile compose.yaml .dockerignore .editorconfig .gitattributes .gitignore
 recursive-include service *.py *.html *.css *.js *.txt *.json
 recursive-include reference *.py
@@ -15,6 +16,10 @@ recursive-include docs *.md *.json *.yaml *.yml *.csv *.log *.txt *.jpg
 recursive-include prebuild *.md *.json *.yaml *.yml *.csv
 recursive-include .github *.yml *.yaml *.md
 global-exclude __pycache__ *.py[cod] *.sqlite* *.db .env .env.*
+global-exclude gold.private.* */private/* */holdout-private/* */private_gold/*
+prune private
+prune holdout-private
+prune private_gold
 prune reports
 prune evidence
 prune .venv

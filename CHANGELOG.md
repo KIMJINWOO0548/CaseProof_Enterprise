@@ -1,5 +1,13 @@
 # Changelog
 
+## 5.3.0.dev5 — 2026-10-31
+
+- Add the independent v1 command, HTTP, full-suite evaluation, frozen evidence and linked review workspace.
+- Add frozen PostgreSQL 17 schema, non-owner privileges/RLS and physical-session concurrency tests; preserve baseline idempotency and digest bytes.
+- Add three fictional policy packs, bitemporal/rider resolution, exact optional NumPy paired statistics and public/private artifact guards.
+- Add explicit disposable workspace profiles and safe new-file backup/restore with local process, token and tamper drills. External providers, independent anchors and human review remain unavailable.
+
+
 ## 5.3.0.dev4 — 2026-10-31
 
 - Add isolated v1 record tables, tenant-composite foreign keys, revision/uniqueness checks, canonical-byte storage and SQLite append-only triggers. Keep baseline metadata and its evidence digest separate.

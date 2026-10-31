@@ -9,7 +9,7 @@
 
 This repository root contains `service/`, `reference/`, `tests/`, and `datasets/`.
 There is no active `current/` subtree. `/api` is the hardened baseline demo;
-`/api/v1` is a planned, deliberately distinct contract. Do not silently change
+`/api/v1` is an explicit standalone workspace profile with distinct schema/authentication. Do not silently change
 one into the other or claim the planned API already exists.
 
 Integration note (2026-10-30): `docs/V53_INTEGRATION.md` and current

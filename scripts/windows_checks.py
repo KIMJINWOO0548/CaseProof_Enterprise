@@ -18,14 +18,14 @@ def main():
 
     def socketpair(*args, **kwargs):
         nonlocal retries
-        for attempt in range(64):
+        for attempt in range(128):
             try:
                 return original(*args, **kwargs)
             except OSError as exc:
-                if getattr(exc, 'winerror', None) != 10014 or attempt == 63:
+                if getattr(exc, 'winerror', None) != 10014 or attempt == 127:
                     raise
                 retries += 1
-                time.sleep(0.01)
+                time.sleep(0.02)
 
     if sys.platform == 'win32':
         socket.socketpair = socketpair
