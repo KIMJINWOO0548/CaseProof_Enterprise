@@ -18,7 +18,7 @@ def build(root: Path, output: Path):
     issues, _ = checks(root)
     if issues:
         raise ValueError('\n'.join(issues))
-    manifest = {'schema': 'caseproof.source-manifest.v1', 'package_version': '5.3.0.dev1',
+    manifest = {'schema': 'caseproof.source-manifest.v1', 'package_version': '5.3.0.dev4',
                 'sha256': snapshot(root), 'notice': 'Byte integrity only; not a signature, audit, or runtime guarantee.'}
     (root / MANIFEST).write_text(json.dumps(manifest, ensure_ascii=False, sort_keys=True, indent=2) + '\n', encoding='utf-8')
     issues, _ = verify(root)

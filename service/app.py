@@ -280,7 +280,7 @@ def create_app(database_url:str|None=None, demo_mode:bool|None=None):
         url='sqlite:///./caseproof_demo.sqlite3'
     engine=make_engine(url)
     SessionLocal=session_factory(engine)
-    app=FastAPI(title='CaseProof (Synthetic Demo)',version='5.3.0.dev0',
+    app=FastAPI(title='CaseProof (Synthetic Demo)',version='5.3.0.dev4',
                 description='Local demonstration API, NOT insurance or regulatory certification')
     app.state.db_engine=engine
     app.state.session_factory=SessionLocal

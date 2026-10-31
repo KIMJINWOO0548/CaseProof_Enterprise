@@ -1,0 +1,69 @@
+{
+  "package_version": "5.3.0.dev4",
+  "base_commit": "c5716d640b019c1817b25f40a76603e8d4a55c25",
+  "prechange_manifest_sha256": "86f7d2c0b66e58fcca1ae8dfeb9382cfec4f15f08516f8a0725934b5da76beee",
+  "prechange_manifest": "Observed console PASS:223 files; original stdout was not preserved",
+  "python": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "platform": "Windows-11-10.0.26200-SP0",
+  "database": "disposable synthetic SQLite; one worker",
+  "fresh_environment": ".runtime/g12-check",
+  "baseline": {
+    "passed": 456,
+    "subtests": 22,
+    "exit_code": 0
+  },
+  "schema": {
+    "passed": 223,
+    "warnings": 2,
+    "exit_code": 0
+  },
+  "full_suite": {
+    "passed": 679,
+    "subtests": 22,
+    "warnings": 3,
+    "exit_code": 0,
+    "socketpair_initialization_retries": 230
+  },
+  "smoke": {
+    "passed": 12,
+    "total": 12,
+    "exit_code": 0
+  },
+  "ui_syntax": 0,
+  "ui_retry_contract": 0,
+  "distribution_contents": 0,
+  "installed_wheel": {
+    "version": "5.3.0.dev4",
+    "exit_code": 0,
+    "socketpair_initialization_retries": 1
+  },
+  "dependencies_added": {
+    "alembic": "1.20.1",
+    "mako": "1.4.3",
+    "markupsafe": "3.0.4"
+  },
+  "existing_dependency_version_changes": {},
+  "review": "Internal AI-assisted review; DDL rollback and OR REPLACE bypass independently reproduced, failing regressions observed, then corrected",
+  "failures_preserved": [
+    "initial missing module",
+    "fixture tenant order",
+    "five review regressions",
+    "duplicate constraint names during roundtrip"
+  ],
+  "unrun": [
+    "PostgreSQL/RLS/application-role/concurrency",
+    "new browser run (UI unchanged)",
+    "independent Python browser CLI",
+    "external human review",
+    "production DB/real provider"
+  ],
+  "source_sha256": {
+    "service/models_v1.py": "889b0b899757fa8c3227fa053e8e5e57c9ff5a59b036ff88bf5726865cbabca4",
+    "migrations/env.py": "3134de1a125c502d955182cfa4f5d65ee4e6466f45cfcb32582e9147ffbf4b15",
+    "migrations/versions/0001_v1.py": "ca5ad6cf8d39f13e43ffb8fb0458adc6f8798963460edb8939ac4aaf59439d42",
+    "tests/v1/test_schema.py": "ed7539c70064256f432e452583aeb77f26ad72dd950c6ffb3727f43024036252",
+    "requirements-dev.lock": "7c1fd2caa65b65de34a8193034e31df9e21300ebc56189dbdc128e11467b09d1",
+    "requirements-browser.lock": "14fd86671ffb9e5fd3f821f1bed1d82124b3ad7fe2a3e5cba6b615a748024ff9"
+  },
+  "public_log_format": "Line endings normalized to LF; trailing spaces removed from review-red copy. Original reports are preserved locally."
+}

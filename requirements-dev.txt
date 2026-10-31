@@ -5,3 +5,4 @@ jsonschema>=4.23,<5
 build>=1.2,<2
 setuptools>=77,<85
 wheel>=0.45,<1
+alembic>=1.15,<2

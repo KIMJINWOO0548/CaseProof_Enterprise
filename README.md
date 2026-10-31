@@ -4,7 +4,7 @@
 
 CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
 
-**Release: `5.3.0.dev3` — review workspace + v1 domain foundation.** The `/api` demo runs today. Strict DTOs and a pure state machine begin the future `/api/v1` system specified in [prebuild](prebuild/01_TARGET_DESIGN.md); its HTTP routes and persistence are not implemented yet. “Enterprise” in the original package name is an ambition, not a support or compliance claim.
+**Release: `5.3.0.dev4` — review workspace + isolated v1 schema.** The `/api` demo runs today. Strict DTOs, a pure state machine and a separate immutable SQLite schema support the future `/api/v1` system specified in [prebuild](prebuild/01_TARGET_DESIGN.md). Its command executor and HTTP routes remain unimplemented. See the [disposable migration boundary](docs/G12_SCHEMA.md). “Enterprise” in the original package name is an ambition, not a support or compliance claim.
 
 합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
 

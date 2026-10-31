@@ -21,6 +21,7 @@ RUNTIME_FILES = {
     "service/cli.py",
     "service/domain/canonical.py",
     "service/domain/types.py",
+    "service/models_v1.py",
     "service/domain/state_machine.py",
     "service/api/__init__.py",
     "service/api/schemas_v1.py",
@@ -81,6 +82,8 @@ def check_archives(folder: Path) -> None:
         required = RUNTIME_FILES | {
             "pyproject.toml", "requirements.txt", "README.md", "LICENSE", "NOTICE",
             "THIRD_PARTY_NOTICES.md", "scripts/check_distribution.py",
+            "alembic.ini", "migrations/env.py", "migrations/script.py.mako",
+            "migrations/versions/0001_v1.py",
         }
         require(required <= names,
                 f"Source distribution is missing files: {sorted(required - names)}")
@@ -101,9 +104,14 @@ def check_installed() -> None:
         require((runtime / name).is_file(), f"Installed runtime asset is missing: {name}")
     from service.api.schemas_v1 import Decision, parse_body
     from service.domain.state_machine import apply_transition
+    from service.models_v1 import BaseV1
+    from service.models import Base
 
     require(parse_body(Decision, b'{"decision":"APPROVE","reason":"Synthetic review complete."}').decision == 'APPROVE'
             and callable(apply_transition), "Installed v1 foundation could not be imported.")
+    require(BaseV1.metadata is not Base.metadata and bool(BaseV1.metadata.tables)
+            and all(name.startswith("v1_") for name in BaseV1.metadata.tables),
+            "Installed v1 schema must remain isolated from baseline metadata.")
     for name in ("synthetic_rules.json", "resolver_test_cases.json", "synthetic_impact_graph.json"):
         json.loads((runtime / "datasets" / name).read_text(encoding="utf-8"))
 

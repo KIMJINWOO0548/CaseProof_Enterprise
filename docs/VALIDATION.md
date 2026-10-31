@@ -1,4 +1,40 @@
-# 검증 결과 — 5.3.0.dev0
+# 검증 결과 — 5.3.0.dev4
+
+## 5.3.0.dev4 — G1.2 불변 저장과 SQLite migration
+
+2026-10-31 KST. Windows / Python 3.12.10 / SQLAlchemy 2.1.6 /
+Alembic 1.20.1 / 임시 합성 SQLite / 단일 worker. 새 프로젝트 검증 환경과
+체크아웃 밖의 별도 wheel 환경을 사용했다. [공개 실행 증거](evidence/g12/verification.json),
+[전체 pytest 출력](evidence/g12/full-pytest.txt), [실제 CLI 기록](evidence/g12/migration-cli.json).
+
+| 검사 | 관찰 결과 |
+| --- | --- |
+| 변경 전 manifest | 콘솔 PASS 223개; 원본 stdout 보존본으로 가장하지 않음 |
+| 새 환경 hash lock 설치·pip check | exit 0; 기존 버전 유지, Alembic/Mako/MarkupSafe 추가 |
+| 기존 baseline 재현 | 456 passed + 22 subtests, exit 0 |
+| 신규 schema 검사 | **223 passed**, exit 0; FK·UNIQUE·정수·불변 기록·rollback·baseline 보존 |
+| 최종 전체 pytest | **679 passed + 22 subtests**, exit 0, 경고 3개 |
+| 실제 Alembic CLI | upgrade → check → downgrade → upgrade → check 모두 exit 0 |
+| baseline smoke | **12/12**, exit 0 |
+| JS 문법·실제 요청 재시도 함수 | 각각 exit 0; 새 브라우저 실행과 구별 |
+| wheel/sdist·격리 wheel 설치 실행 | **5.3.0.dev4 PASS**, runtime model·migration source·Tabler notices 포함; import·seed·HTML·health·CSS 확인 |
+
+초기 [누락 모듈 실패](evidence/g12/schema-red.txt), fixture tenant 삽입 순서 오류,
+독립 검토에서 재현한 [5개 실패](evidence/g12/review-red.txt), constraint 이름 충돌로
+인한 Alembic roundtrip 실패를 보존했다. DDL에 실제 BEGIN을 적용하고 immutable
+PK/UNIQUE 충돌을 INSERT 전에 거부해 실패 도중 partial DDL과 OR REPLACE 우회를
+차단했다. 제약 이름을 전체 열 조합으로 고정한 뒤 [최종 schema 검사](evidence/g12/schema-green.txt)가 통과했다.
+
+전체 suite는 `scripts.windows_checks`의 소켓 초기화만 230회 재시도했다.
+HTTP/assertion 재시도는 없다. 기존 Starlette deprecation 1개와 Alembic의 순환
+FK 정렬 경고 2개가 남는다. Alembic 자동 diff만으로 순환 FK 전체를 검증했다고
+주장하지 않으며 실제 FK 삽입·tenant 참조 거부·commit/rollback 검사와 구분한다.
+체크아웃 밖 wheel 실행은 초기화 1회 재시도했다.
+
+이번 변경은 baseline UI를 수정하지 않아 새 브라우저 실행을 하지 않았다.
+G1.3 executor/이력 재구성, G1.4 HTTP, G1.5/1.6 gate/봉인 검증,
+G2 PostgreSQL 권한/RLS/경합, 독립 사용자·전문가 검수와 운영 검증은 미완료다.
+SQLite owner의 전체 재작성에 대한 외부 보증도 제공하지 않는다.
 
 ## 5.3.0.dev3 — Tabler 검토 화면
 

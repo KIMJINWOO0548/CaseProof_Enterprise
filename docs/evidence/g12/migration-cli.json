@@ -1,0 +1,32 @@
+[
+  {
+    "command": "python -m alembic upgrade head",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "python -m alembic check",
+    "exit_code": 0,
+    "stdout": "No new upgrade operations detected.\n",
+    "stderr": "C:\\Users\\김진우\\Desktop\\CaseProof_Enterprise\\migrations\\env.py:38: SAWarning: Cannot correctly sort tables; there are unresolvable cycles between tables \"v1_approval_envelope, v1_assessment, v1_audit_event, v1_change, v1_change_revision, v1_change_transition, v1_decision_note, v1_evaluation_run\", which is usually caused by mutually dependent foreign key constraints.  Foreign key constraints involving these tables will not be considered; this warning may raise an error in a future release.\n  context.run_migrations()\n"
+  },
+  {
+    "command": "python -m alembic downgrade base",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "python -m alembic upgrade head",
+    "exit_code": 0,
+    "stdout": "",
+    "stderr": ""
+  },
+  {
+    "command": "python -m alembic check",
+    "exit_code": 0,
+    "stdout": "No new upgrade operations detected.\n",
+    "stderr": "C:\\Users\\김진우\\Desktop\\CaseProof_Enterprise\\migrations\\env.py:38: SAWarning: Cannot correctly sort tables; there are unresolvable cycles between tables \"v1_approval_envelope, v1_assessment, v1_audit_event, v1_change, v1_change_revision, v1_change_transition, v1_decision_note, v1_evaluation_run\", which is usually caused by mutually dependent foreign key constraints.  Foreign key constraints involving these tables will not be considered; this warning may raise an error in a future release.\n  context.run_migrations()\n"
+  }
+]

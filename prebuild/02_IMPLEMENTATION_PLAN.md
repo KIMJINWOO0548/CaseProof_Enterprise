@@ -51,10 +51,10 @@
 
 **Files:** existing `requirements*.lock`, `scripts/check_package.py`, `tests/`, `docs/STATUS.md`.
 
-- [ ] Run `python VERIFY_PACKAGE.py` before changing the package; record source SHA. Once edited, the original manifest is expected to differ.
-- [ ] Create a fresh venv; install `python -m pip install --require-hashes -r requirements-dev.lock`; run `python -m pip check`.
-- [ ] Run `python -m pytest -q`, `python -m scripts.smoke`, `python -m scripts.check_ui_syntax`, `python -m scripts.check_package` and save actual exit codes.
-- [ ] Read `docs/VALIDATION.md` for earlier observations, but do not reuse them as this run's result. Record platform/DB/role/worker and source hashes.
+- [x] Run `python VERIFY_PACKAGE.py` before changing the package; record source SHA. Once edited, the original manifest is expected to differ.
+- [x] Create a fresh venv; install `python -m pip install --require-hashes -r requirements-dev.lock`; run `python -m pip check`.
+- [x] Run `python -m pytest -q`, `python -m scripts.smoke`, `python -m scripts.check_ui_syntax`, `python -m scripts.check_package` and save actual exit codes.
+- [x] Read `docs/VALIDATION.md` for earlier observations, but do not reuse them as this run's result. Record platform/DB/role/worker and source hashes.
 
 **Done:** baseline reproduces; failures are investigated before v1 work. Original approved-row bypass regression remains green.
 
@@ -76,10 +76,10 @@
 **Create:** `service/models_v1.py`, `migrations/env.py`, `migrations/versions/0001_v1.py`, `tests/v1/test_schema.py`.
 **Consumes:** G1.1 types. **Produces:** tables in 08 §5.
 
-- [ ] Test `(tenant,change,revision_to)` and `(tenant,change,stage)` uniqueness, revision bounds, tenant composite FKs and no partial genesis records after rollback.
-- [ ] Test baseline DB import stays legacy-unverified; no fabricated DOMAIN events or automatic approval.
-- [ ] Implement Alembic on disposable DBs. Choose **no latest_revision FK** as fixed in 08; keep child FKs and verify projection in every command. Do not mix the alternate cyclic FK design.
-- [ ] Run `python -m pytest tests/v1/test_schema.py -q`, blank-DB `alembic upgrade head`, `downgrade base`, `upgrade head`, and whole suite.
+- [x] Test `(tenant,change,revision_to)` and `(tenant,change,stage)` uniqueness, revision bounds, tenant composite FKs and no partial genesis records after rollback.
+- [x] Test baseline DB import stays legacy-unverified; no fabricated DOMAIN events or automatic approval. No import API is provided; baseline migration is refused without changing its bytes.
+- [x] Implement Alembic on disposable DBs. Choose **no latest_revision FK** as fixed in 08; keep child FKs. Per-command projection verification remains G1.3, not a G1.2 DB-only guarantee.
+- [x] Run `python -m pytest tests/v1/test_schema.py -q`, blank-DB `alembic upgrade head`, `downgrade base`, `upgrade head`, and whole suite.
 - [ ] Commit `feat: add immutable change record schema` with actual migration logs.
 
 **Done:** empty SQLite migration and integrity tests pass; PG behavior still unverified until G2. Production data rollback is not tested by dropping an empty test schema.

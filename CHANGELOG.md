@@ -1,5 +1,12 @@
 # Changelog
 
+## 5.3.0.dev4 — 2026-10-31
+
+- Add isolated v1 record tables, tenant-composite foreign keys, revision/uniqueness checks, canonical-byte storage and SQLite append-only triggers. Keep baseline metadata and its evidence digest separate.
+- Add frozen Alembic DDL requiring an explicit disposable SQLite URL. Refuse baseline/unversioned databases and populated downgrade targets; no history import or automatic approval is provided.
+- Lock Alembic and its two new development dependencies without changing existing dependency versions. Include migration sources and the new runtime model in distribution checks.
+- Command execution/history reconstruction, v1 HTTP routes and PostgreSQL privileges/RLS remain separate implementation gates.
+
 ## 5.3.0.dev3 — 2026-10-30
 
 - Adopt the actual Tabler 1.7.3 MIT stylesheet and standard tables, forms, cards, badges, steps and modal markup; serve assets locally with retained notices and published integrity metadata.

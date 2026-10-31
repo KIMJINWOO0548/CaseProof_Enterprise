@@ -40,6 +40,10 @@ digest. Approval additionally requires matching source and assessment references
 This is a caller assertion and binding, not cryptographic authentication or a
 replacement for verification. Never construct it from client assertions.
 
+G1.2 adds a separate persistence model and disposable SQLite migrations; see
+[schema boundaries](G12_SCHEMA.md). Importing the model opens no database, and
+baseline startup does not run v1 migrations or seed approval history.
+
 G1.3 must reconstruct and verify the complete stored history, authorize parent
 access, and perform all side-record writes atomically. G1.5 must independently
 compute suite coverage, current gate and source eligibility; G1.6 must build and

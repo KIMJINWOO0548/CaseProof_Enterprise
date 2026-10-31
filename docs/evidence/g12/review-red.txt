@@ -1,0 +1,131 @@
+FFFFF                                                                    [100%]
+================================== FAILURES ===================================
+____________________ test_migration_ddl_failure_rolls_back ____________________
+
+tmp_path = WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-216/test_migration_ddl_failure_rol0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x00000239591F4A40>
+
+    def test_migration_ddl_failure_rolls_back(tmp_path, monkeypatch):
+        from sqlalchemy.engine import Engine
+        path = tmp_path / 'interrupted.db'
+        monkeypatch.setenv('CASEPROOF_V1_DATABASE_URL', 'sqlite:///' + path.as_posix())
+        monkeypatch.setenv('CASEPROOF_V1_MIGRATION_MODE', 'disposable')
+        count = 0
+
+        def fail_third_create(conn, cursor, statement, parameters, context, executemany):
+            nonlocal count
+            if statement.lstrip().upper().startswith('CREATE TABLE'):
+                count += 1
+                if count == 3:
+                    raise RuntimeError('injected DDL failure')
+
+        event.listen(Engine, 'before_cursor_execute', fail_third_create)
+        try:
+            with pytest.raises(RuntimeError, match='injected DDL'):
+                command.upgrade(config(), 'head')
+        finally:
+            event.remove(Engine, 'before_cursor_execute', fail_third_create)
+        with sqlite3.connect(path) as connection:
+>           assert connection.execute("SELECT name FROM sqlite_master WHERE type='table'").fetchall() == []
+E           AssertionError: assert [('caseproof_...l_envelope',)] == []
+E
+E             Left contains 2 more items, first extra item: ('caseproof_v1_alembic_version',)
+E             Use -v to get more diff
+
+tests\v1\test_schema.py:301: AssertionError
+__ test_insert_or_replace_cannot_erase_records[v1_source_snapshot-changes0] ___
+
+database = (Engine(sqlite:///C%3A/Users/%EA%B9%80%EC%A7%84%EC%9A%B0/AppData/Local/Temp/pytest-of-%EA%B9%80%EC%A7%84%EC%9A%B0/pyte... WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-216/test_insert_or_replace_cannot_0/disposable.db'))
+name = 'v1_source_snapshot'
+changes = {'canonical_payload': b'{"tampered":true}'}
+
+    @pytest.mark.parametrize('name,changes', [
+        ('v1_source_snapshot', {'canonical_payload': b'{"tampered":true}'}),
+        ('v1_change_transition', {'id': 'replacement'}),
+        ('v1_decision_note', {'id': 'replacement'}),
+        ('v1_change', {'status': 'APPROVED_FOR_DEMO'}),
+    ])
+    def test_insert_or_replace_cannot_erase_records(database, name, changes):
+        engine, _ = database
+        seed(engine)
+>       with pytest.raises(IntegrityError, match='append-only'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE IntegrityError
+
+tests\v1\test_schema.py:314: Failed
+_ test_insert_or_replace_cannot_erase_records[v1_change_transition-changes1] __
+
+database = (Engine(sqlite:///C%3A/Users/%EA%B9%80%EC%A7%84%EC%9A%B0/AppData/Local/Temp/pytest-of-%EA%B9%80%EC%A7%84%EC%9A%B0/pyte... WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-216/test_insert_or_replace_cannot_1/disposable.db'))
+name = 'v1_change_transition', changes = {'id': 'replacement'}
+
+    @pytest.mark.parametrize('name,changes', [
+        ('v1_source_snapshot', {'canonical_payload': b'{"tampered":true}'}),
+        ('v1_change_transition', {'id': 'replacement'}),
+        ('v1_decision_note', {'id': 'replacement'}),
+        ('v1_change', {'status': 'APPROVED_FOR_DEMO'}),
+    ])
+    def test_insert_or_replace_cannot_erase_records(database, name, changes):
+        engine, _ = database
+        seed(engine)
+>       with pytest.raises(IntegrityError, match='append-only'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'append-only'
+E         Actual message: '(sqlite3.IntegrityError) FOREIGN KEY constraint failed\n(Background on this error at: https://sqlalche.me/e/21/gkpj)'
+
+tests\v1\test_schema.py:314: AssertionError
+___ test_insert_or_replace_cannot_erase_records[v1_decision_note-changes2] ____
+
+database = (Engine(sqlite:///C%3A/Users/%EA%B9%80%EC%A7%84%EC%9A%B0/AppData/Local/Temp/pytest-of-%EA%B9%80%EC%A7%84%EC%9A%B0/pyte... WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-216/test_insert_or_replace_cannot_2/disposable.db'))
+name = 'v1_decision_note', changes = {'id': 'replacement'}
+
+    @pytest.mark.parametrize('name,changes', [
+        ('v1_source_snapshot', {'canonical_payload': b'{"tampered":true}'}),
+        ('v1_change_transition', {'id': 'replacement'}),
+        ('v1_decision_note', {'id': 'replacement'}),
+        ('v1_change', {'status': 'APPROVED_FOR_DEMO'}),
+    ])
+    def test_insert_or_replace_cannot_erase_records(database, name, changes):
+        engine, _ = database
+        seed(engine)
+>       with pytest.raises(IntegrityError, match='append-only'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AssertionError: Regex pattern did not match.
+E         Expected regex: 'append-only'
+E         Actual message: '(sqlite3.IntegrityError) FOREIGN KEY constraint failed\n(Background on this error at: https://sqlalche.me/e/21/gkpj)'
+
+tests\v1\test_schema.py:314: AssertionError
+_______ test_insert_or_replace_cannot_erase_records[v1_change-changes3] _______
+
+database = (Engine(sqlite:///C%3A/Users/%EA%B9%80%EC%A7%84%EC%9A%B0/AppData/Local/Temp/pytest-of-%EA%B9%80%EC%A7%84%EC%9A%B0/pyte... WindowsPath('C:/Users/김진우/AppData/Local/Temp/pytest-of-김진우/pytest-216/test_insert_or_replace_cannot_3/disposable.db'))
+name = 'v1_change', changes = {'status': 'APPROVED_FOR_DEMO'}
+
+    @pytest.mark.parametrize('name,changes', [
+        ('v1_source_snapshot', {'canonical_payload': b'{"tampered":true}'}),
+        ('v1_change_transition', {'id': 'replacement'}),
+        ('v1_decision_note', {'id': 'replacement'}),
+        ('v1_change', {'status': 'APPROVED_FOR_DEMO'}),
+    ])
+    def test_insert_or_replace_cannot_erase_records(database, name, changes):
+        engine, _ = database
+        seed(engine)
+>       with pytest.raises(IntegrityError, match='append-only'):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE IntegrityError
+
+tests\v1\test_schema.py:314: Failed
+============================== warnings summary ===============================
+tests/v1/test_schema.py::test_migration_ddl_failure_rolls_back
+tests/v1/test_schema.py::test_insert_or_replace_cannot_erase_records[v1_source_snapshot-changes0]
+  C:\Users\김진우\Desktop\CaseProof_Enterprise\.venv\Lib\site-packages\alembic\config.py:604: DeprecationWarning: No path_separator found in configuration; falling back to legacy splitting on spaces, commas, and colons for prepend_sys_path.  Consider adding path_separator=os to Alembic config.
+    util.warn_deprecated(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ===========================
+FAILED tests/v1/test_schema.py::test_migration_ddl_failure_rolls_back - Asser...
+FAILED tests/v1/test_schema.py::test_insert_or_replace_cannot_erase_records[v1_source_snapshot-changes0]
+FAILED tests/v1/test_schema.py::test_insert_or_replace_cannot_erase_records[v1_change_transition-changes1]
+FAILED tests/v1/test_schema.py::test_insert_or_replace_cannot_erase_records[v1_decision_note-changes2]
+FAILED tests/v1/test_schema.py::test_insert_or_replace_cannot_erase_records[v1_change-changes3]
+5 failed, 218 deselected, 2 warnings in 1.73s
+Windows socketpair initialization retries: 0
