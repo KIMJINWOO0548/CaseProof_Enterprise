@@ -31,7 +31,7 @@ $env:CASEPROOF_DEMO_MODE = '1'
 
 ## 검증과 후속 개발
 
-실행 가능한 CI는 이미 존재합니다. `e9b67ac`의 [backend CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555)와 `651a5bc`의 [UI 변경 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41216084641)는 각각 9개 job 성공과 push에서의 PR 전용 1개 skip을 확인했습니다. **이 결과는 후속 dev6 변경의 CI 통과를 의미하지 않습니다.** 최종 소스의 실행 결과는 [VALIDATION](docs/VALIDATION.md)에서 commit과 함께 확인합니다.
+실행 가능한 CI는 이미 존재합니다. dev6 구현 `643e25f`의 [실제 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392)는 9개 job 성공, push의 PR 전용 1개 skip을 확인했습니다. 새 환경의 wheel 설치·V2 평가·근거 조회도 통과했습니다. 후속 문서 변경은 같은 구현을 유지하며 commit별 최종 검증은 [VALIDATION](docs/VALIDATION.md)에서 확인합니다.
 
 개발을 이어갈 때는 [AGENTS.md](AGENTS.md), [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md), [진행 체크리스트](prebuild/02_IMPLEMENTATION_PLAN.md)를 읽고 첫 미완료 인수 항목부터 진행합니다. 원본 테스트·합성 정답·기존 기록을 보존하고 새 결과는 `reports/runs/<run-id>/`에 남깁니다. 선택적 도구나 외부 검수 자료가 없으면 해당 검사를 SKIPPED로 기록합니다.
 

@@ -228,7 +228,7 @@
 - [ ] Obtain consented written feedback from two insurance-domain reviewers; independent Windows install, technical review and third-pack exercise. If unavailable, keep each SKIPPED and bonus at 0.
 - [ ] Execute publishing procedure, fresh CI, distribution/wheel validation, dependency/secret audit and license/provenance review. Public Git remote creation/push remains an explicit user action or separately authorized task.
 
-**External evidence status:** independent anchor/WORM/custodian and consented domain-reviewer/installation/user-study evidence are SKIPPED, bonus 0, because none is available. Local recovery is verified; final-source CI/distribution/audit/provenance review remains a separate release checklist. Git commits/pushes were explicitly authorized by the user; no package publication or deployment is implied.
+**External evidence status:** independent anchor/WORM/custodian and consented domain-reviewer/installation/user-study evidence are SKIPPED, bonus 0, because none is available. Local recovery is verified; final-source CI/distribution/audit/provenance review remains a separate release checklist. Implementation643e25f has actual9-job CI, fresh runtime-only installed wheel/sourceZIP, dependency/secret-scan and reference-license evidence. Complete inherited-rights clearance remains unverified, so the broader release checkbox stays partial. Git commits/pushes were explicitly authorized by the user; no package publication or deployment is implied.
 
 ## Per-task report
 

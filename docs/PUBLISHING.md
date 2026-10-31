@@ -2,7 +2,7 @@
 
 공개 Git 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)이며 기존 `main`과 `origin`을 사용합니다. 새 저장소 초기화나 remote 재생성은 필요하지 않습니다. 현재 개발 소스는 **`5.3.0.dev6`**이고 PyPI 업로드·GitHub 패키지 release·서비스 배포는 수행하지 않았습니다.
 
-`e9b67ac`의 [backend CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555)와 `651a5bc`의 [UI CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41216084641)는 각각 9개 job 성공, push의 PR 전용 1개 skip을 확인했습니다. 후속 dev6 소스는 별도 검증 대상입니다. 이전 green CI를 새 commit의 결과로 재사용하지 않으며 최종 상태는 [VALIDATION](VALIDATION.md)에 기록합니다.
+dev6 구현 `643e25f`의 [실제 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392)는 9개 job 성공, push의 PR 전용 1개 skip을 확인했습니다. [격리 wheel·소스 ZIP 검사](evidence/g1-g6/installed-643e25f-wheel.json)도 실행했습니다. 후속 문서-only HEAD는 같은 구현을 유지하며 CI를 별도로 확인합니다. 변경한 코드는 해당 SHA의 새 결과로 검증하고 [VALIDATION](VALIDATION.md)에 기록합니다.
 
 ## 변경 전후의 Git 확인
 

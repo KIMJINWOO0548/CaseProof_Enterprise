@@ -2,6 +2,8 @@
 
 ## 5.3.0.dev6 — 2026-11-01
 
+- Keep validation errors inside the review dialog with linked field guidance and keyboard focus; use an opaque surface and distinguish error alerts from neutral notices. Record primary reference licenses and actual visual audit evidence.
+
 - Bind the complete evaluation configuration, including dataset and source bundle, with a versioned execution digest; preserve earlier stored bytes and fail closed on legacy runs.
 - Recheck selected adapter/model/prompt content against execution-time configuration before submission or historical evidence validation; unrelated registrations leave a seal unchanged.
 - Start the local demo with an explicit loopback listener and bounded Windows10014 initialization recovery; verify authenticated startup without rewriting an existing DB.

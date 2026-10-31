@@ -1,0 +1,449 @@
+{
+  "schema": "caseproof.secret-scan.v1",
+  "head_sha": "643e25f003ed17f14875f5ab82f8aac8bc2bfa5f",
+  "verified_utc": "2026-10-31T17:01:55.501645+00:00",
+  "tool": {
+    "tool": "gitleaks",
+    "license": "MIT",
+    "release": "v8.30.1",
+    "version_output": "8.30.1",
+    "release_url": "https://github.com/gitleaks/gitleaks/releases/tag/v8.30.1",
+    "archive_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_windows_x64.zip",
+    "checksums_url": "https://github.com/gitleaks/gitleaks/releases/download/v8.30.1/gitleaks_8.30.1_checksums.txt",
+    "archive_sha256": "d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e",
+    "published_sha256": "d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e",
+    "github_api_digest": "sha256:d29144deff3a68aa93ced33dddf84b7fdc26070add4aa0f4513094c8332afc4e",
+    "checksum_verified_before_extract": true,
+    "binary_sha256": "17157e2ee8b76fc8b1d8bee607a250e34b8a8023c8bc81822d4b5ee4d78fcb7c",
+    "installed_utc": "2026-10-31T15:50:20.724305+00:00",
+    "install_scope": "project .runtime only; no hook or global setting",
+    "license_file": "LICENSE",
+    "license_sha256": "e3884b252b3bfc045e55be43a34d1e80da070bc6f804ac95bf4660e97d62ebc6",
+    "license_url": "https://github.com/gitleaks/gitleaks/blob/v8.30.1/LICENSE"
+  },
+  "working_source_files": 626,
+  "working_source_hashes_sha256": "1c5078ea2cf290a10e1b2fb28d5ab9c7d549d761775405f351e25d23d4d68608",
+  "scans": [
+    {
+      "scope": "git-history",
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\tools\\gitleaks-v8.30.1\\gitleaks.exe",
+        "git",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise",
+        "--log-opts=--all --full-history",
+        "--redact=100",
+        "--no-banner",
+        "--no-color",
+        "--ignore-gitleaks-allow",
+        "--report-format",
+        "json",
+        "--report-path",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\reports\\runs\\20261031T033349Z-f8916c1a\\gitleaks-643e25f-git-history-redacted.json"
+      ],
+      "exit_code": 1,
+      "findings_count": 23,
+      "findings": [
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 114,
+          "rule": "generic-api-key",
+          "commit": "de1fc5e47c656db6b970f49f267a471c9150b99a",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 123,
+          "rule": "generic-api-key",
+          "commit": "de1fc5e47c656db6b970f49f267a471c9150b99a",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "tests/v1/test_execution_config.py",
+          "line": 52,
+          "rule": "generic-api-key",
+          "commit": "de1fc5e47c656db6b970f49f267a471c9150b99a",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 111,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 237,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 288,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "tests/v1/test_http.py",
+          "line": 77,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Idempotency-Key request header in isolated synthetic regression, separate from authentication."
+        },
+        {
+          "path": "tests/v1/test_idempotency.py",
+          "line": 50,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        },
+        {
+          "path": "tests/v1/test_idempotency.py",
+          "line": 52,
+          "rule": "generic-api-key",
+          "commit": "e9b67ac97b64876a3f72769113431b356bf2fd66",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        },
+        {
+          "path": "reports/runs/20261030T142434Z-a01caa29/tabler_workflow.json",
+          "line": 22,
+          "rule": "generic-api-key",
+          "commit": "e328d01e6a9abc6ffdd9426e79b848ed179377a7",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "UUID response-recovery request key in recorded synthetic browser workflow; not a login token."
+        },
+        {
+          "path": "reports/runs/20261030T142434Z-a01caa29/tabler_workflow.json",
+          "line": 28,
+          "rule": "generic-api-key",
+          "commit": "e328d01e6a9abc6ffdd9426e79b848ed179377a7",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "UUID response-recovery request key in recorded synthetic browser workflow; not a login token."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/preserved_tests.json",
+          "line": 3,
+          "rule": "generic-api-key",
+          "commit": "92059ab52d80daaa46f0d7bdad88d5d8da6d91a5",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 84,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 86,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 194,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "docs/provenance/v5_3_input_manifest.json",
+          "line": 83,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "docs/provenance/v5_3_input_manifest.json",
+          "line": 85,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 80,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 82,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 190,
+          "rule": "generic-api-key",
+          "commit": "c7d3d29a5bbf092ab46553b8c29f8ca6e4efe5c1",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "current/reports/runs/20261029T142554Z-0b8c51e9/artifact_hashes.json",
+          "line": 29,
+          "rule": "generic-api-key",
+          "commit": "0f7ed2ebdc43e1919ec7f94458a235d40f944afe",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "current/reports/runs/20261029T142554Z-0b8c51e9/idempotency_red.txt",
+          "line": 101,
+          "rule": "generic-api-key",
+          "commit": "0f7ed2ebdc43e1919ec7f94458a235d40f944afe",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Idempotency-Key request header in isolated synthetic regression, separate from authentication."
+        },
+        {
+          "path": "current/reports/runs/20261029T140529Z-40f1af3f/artifact_hashes.json",
+          "line": 27,
+          "rule": "generic-api-key",
+          "commit": "9a42368f02894d9fd7438ffc62c3416cb50d4a64",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        }
+      ],
+      "report_sha256": "7ad6a32dc2df6f69cb81d8ea9adc6f8ab10013296cdc9069f35b044e20fd84ed",
+      "log_path": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\reports\\runs\\20261031T033349Z-f8916c1a\\gitleaks-643e25f-git-history-redacted.log",
+      "disposition_counts": {
+        "NON_SECRET_FILE_OR_SOURCE_DIGEST": 16,
+        "NON_SECRET_IDEMPOTENCY_TEST_KEY": 7
+      }
+    },
+    {
+      "scope": "working-source",
+      "args": [
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\tools\\gitleaks-v8.30.1\\gitleaks.exe",
+        "dir",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\.runtime\\g1-g6\\gitleaks-643e25f\\working-source",
+        "--redact=100",
+        "--no-banner",
+        "--no-color",
+        "--ignore-gitleaks-allow",
+        "--report-format",
+        "json",
+        "--report-path",
+        "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\reports\\runs\\20261031T033349Z-f8916c1a\\gitleaks-643e25f-working-source-redacted.json"
+      ],
+      "exit_code": 1,
+      "findings_count": 22,
+      "findings": [
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 76,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 78,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 114,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 124,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 283,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 335,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "PACKAGE_MANIFEST_SHA256.json",
+          "line": 344,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T142554Z-0b8c51e9/artifact_hashes.json",
+          "line": 29,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 80,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 82,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/artifact_hashes.json",
+          "line": 190,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261029T142554Z-0b8c51e9/idempotency_red.txt",
+          "line": 101,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Idempotency-Key request header in isolated synthetic regression, separate from authentication."
+        },
+        {
+          "path": "reports/runs/20261029T140529Z-40f1af3f/artifact_hashes.json",
+          "line": 27,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "docs/provenance/v5_3_input_manifest.json",
+          "line": 83,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "docs/provenance/v5_3_input_manifest.json",
+          "line": 85,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "reports/runs/20261030T142434Z-a01caa29/tabler_workflow.json",
+          "line": 22,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "UUID response-recovery request key in recorded synthetic browser workflow; not a login token."
+        },
+        {
+          "path": "reports/runs/20261030T142434Z-a01caa29/tabler_workflow.json",
+          "line": 28,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "UUID response-recovery request key in recorded synthetic browser workflow; not a login token."
+        },
+        {
+          "path": "reports/runs/20261029T151200Z-a53be001/preserved_tests.json",
+          "line": 3,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_FILE_OR_SOURCE_DIGEST",
+          "reason": "SHA-256 file/source digest in structured manifest/evidence; not an authentication value."
+        },
+        {
+          "path": "tests/v1/test_execution_config.py",
+          "line": 52,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        },
+        {
+          "path": "tests/v1/test_http.py",
+          "line": 77,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Idempotency-Key request header in isolated synthetic regression, separate from authentication."
+        },
+        {
+          "path": "tests/v1/test_idempotency.py",
+          "line": 50,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        },
+        {
+          "path": "tests/v1/test_idempotency.py",
+          "line": 52,
+          "rule": "generic-api-key",
+          "commit": "",
+          "disposition": "NON_SECRET_IDEMPOTENCY_TEST_KEY",
+          "reason": "Command request key in isolated idempotency/legacy-evaluation regression; authenticated actor supplied separately."
+        }
+      ],
+      "report_sha256": "39d8da549742295db898deacb5b6f3d8fe81aa86acfbc92fbd2e1a7686b2ad96",
+      "log_path": "C:\\Users\\\uae40\uc9c4\uc6b0\\Desktop\\CaseProof_Enterprise\\reports\\runs\\20261031T033349Z-f8916c1a\\gitleaks-643e25f-working-source-redacted.log",
+      "disposition_counts": {
+        "NON_SECRET_FILE_OR_SOURCE_DIGEST": 15,
+        "NON_SECRET_IDEMPOTENCY_TEST_KEY": 7
+      }
+    }
+  ],
+  "confirmed_credentials": 0,
+  "unresolved_candidates": 0,
+  "disposition_method": "Local original source/history context inspected without printing matched values; raw scanner exits/findings preserved.",
+  "limitations": [
+    "Default Gitleaks rules; detection is not proof of absence of all credentials.",
+    "Working-source snapshot copied Git cached and nonignored file inventory; local runtime/venvs excluded.",
+    "No hooks, global configuration, allowlist or baseline suppressions added."
+  ]
+}

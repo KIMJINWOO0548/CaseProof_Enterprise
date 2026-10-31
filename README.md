@@ -18,7 +18,7 @@ CaseProof checks a numeric claim against versioned synthetic rules, records the 
 
 ## Review workspace
 
-The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), with the MIT stylesheet and notices included locally. Searchable request tables, evaluation results, decision forms and evidence checks use its standard components. No CDN or external font is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. The v1 layout adapts list/detail inspection patterns from Langfuse, LangSmith and Dify; see [official references and design decisions](docs/AI_UI_REFERENCES.md).
+The interface uses [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started), with the MIT stylesheet and notices included locally. Searchable request tables, evaluation results, decision forms and evidence checks use its standard components. No CDN or external font is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. The v1 layout adapts list/detail inspection patterns from Langfuse, LangSmith and Dify; see [official references and design decisions](docs/AI_UI_REFERENCES.md), plus the [captured error and focus audit](docs/UI_FOCUS_AUDIT.md).
 
 ![CaseProof review workspace with a filtered synthetic change and verified evidence](docs/images/v1-workspace-desktop.jpg)
 

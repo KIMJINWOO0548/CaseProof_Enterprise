@@ -1,5 +1,15 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 검증된 최종 구현 `643e25f` — 2026-11-01 KST
+
+[실제 CI41222223392](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392), [명령·JUnit·checksum](evidence/g1-g6/ci-643e25f.json): **9 success / push의 PR 전용1skip**. Linux3.11/3.12/3.13·Windows3.12 각각 **911 passed,459 optional skipped,22 subtests,3 warnings**다. 459skip은 PG457+NumPy1+Python-browser1이며 별도 job에서 실제 PG17.11 **460 PASS/0skip**, NumPy **34 PASS**를 실행했다. 빈 collection을 성공으로 세지 않았다. OSV는 dev35/evaluation36/postgres37 dependencies에서 known vulnerability record0/skipped dependency0이었다.
+
+[643e25f 배포물](evidence/g1-g6/installed-643e25f-wheel.json)은 새 runtime-only hash 환경·pipcheck·체크아웃 밖 설치 후 baseline assets와 실제 V2 생성→전체 평가 PASS→VALID 근거·immutable refs를 통과했다. 소켓 초기화만5회 재시도했다. wheel/sdist 내용·license notice·private/runtime 제외, 소스ZIP 내부379개 source hash와 committed manifest의 일치를 확인했다. de1fc5e와 비교한 runtime 변경은 v1 HTML/CSS/JS뿐이며 Python/reference/dataset bytes는 같다. 독립 Windows 설치로 집계하지 않는다.
+
+[Gitleaks 최신 결과](evidence/g1-g6/gitleaks-643e25f-summary.json)는 이력23개/작업소스22개 원본 후보(exit1)를 보존했다. 각각 digest16/15개와 합성멱등성키7개로 판별했고 실제credential/미해결0이다. 예외·suppress 규칙을 추가하지 않았으며 비밀의 완전한 부재를 보증하지 않는다. 라이선스·출처의 확정 범위와 미확정 소유권은 THIRD_PARTY_NOTICES에 남긴다.
+
+후속 완료 기록 commit은 문서/증거만 바꾸고 구현 bytes를 보존한다. 해당 HEAD의 CI도 별도로 확인하며, 이전 commit의 결과를 새 코드의 결과라고 바꾸어 기록하지 않는다.
+
 ## 후속 UI 오류 회복·라이선스 감사 — 2026-11-01 KST
 
 [현재 화면 7단계 감사](UI_FOCUS_AUDIT.md)와 [도구/스킬 실행](evidence/g1-g6/ux-tools-skills.json)을 기록했다. UI/UX Pro Max 실제 검색, Product Design preflight, Frontend Design/Uncodixfy 검토, GitHub MCP의 고정 LICENSE 원문, Context7의 Playwright 공식 초점/Escape 문서와 IAB/Playwright 실제 관찰을 구분한다. Langfuse MIT core/상용 ee, Dify 추가 조건부 수정 Apache2, LangSmith 상용 제품을 같은 라이선스로 취급하지 않았다. 코드·자산 복제는 없었다.
