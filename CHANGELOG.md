@@ -1,5 +1,9 @@
 # Changelog
 
+## Local portfolio increment — 2026-11-01
+
+- Add one explicitly loaded, synthetic securities document-review pack with two invented internal day-window versions and independent scope/time/source regression tests. Preserve the existing schema, resolver, insurance packs, default workspace and submission UI; document the legacy date-field mapping and unverified integration boundary.
+
 ## 5.3.0.dev6 — 2026-11-01
 
 - Give the review workspace a distinct ink/iris/peach identity, local OFL-1.1 SUIT typography, responsive queue/detail/evidence panels and an accessible current-stage rail. Preserve raw statuses, actor-scoped recovery and evidence boundaries; serve the font with a portable explicit MIME type.

@@ -16,7 +16,7 @@
     "AGENTS.md": "916bc1060ae2422dc49bc1810ece8a3475725c42aca6c1aff57d7870d39ed866",
     "alembic-postgres.ini": "84e16a7c2265cf31795483f3139c9c4b8ae78da350d47a6dff3522e1bf4d6ee1",
     "alembic.ini": "e7955a0ffb9c32a9c5067d7885ee9197328f17a4a12fb4a5bb556c2b85763aa2",
-    "CHANGELOG.md": "1027648deef35ecc756970ac8e01b02d2085da0956955e56acc00ecf4280bbe7",
+    "CHANGELOG.md": "5828a79e2c82f2445f1c66af00be8233f3b07a6affe12b5879428a7d51979ffe",
     "CODE_OF_CONDUCT.md": "452fc20fbed808d25bf55a146ebe9d5966a42e79dcaf250023b892ab75fd9d1e",
     "compose.postgres-test.yaml": "de2dd18423f99258916bd98f0e4b92726b712db5dc23bc65862ad73df9cc33c0",
     "compose.yaml": "747995be0dcc837e781a7fd33ca5bb029c75fd07edc4932c43c01d3708f587f9",
@@ -218,13 +218,13 @@
     "docs/PUBLISHING.md": "06e93c3d65b9a5a715e92e9da4a29f47af31e7da5380cb71a4f91e58e8511f9b",
     "docs/SCORECARD_105.csv": "a3615a2043d3ac3d30d05f4d45ec1ba5ec6bd06815f81071dfb69ad1797f0668",
     "docs/SOURCES.md": "ad72041d03d225262536089c3311bab77f8b2f4e2e6be32318871d2180e7703e",
-    "docs/STATUS.md": "24150743a9ac1e36821d52b7497b92730dc50bbc7bc7565b40f6b3c54940fdbe",
+    "docs/STATUS.md": "4789c1b2f190db0d142c7187132f1157210ad334c5b5bef5a8969cafa276404c",
     "docs/UI_FOCUS_AUDIT.md": "6010d57605aad6ee0e2dfad6cf1d64e783692e0f39972b8f7b53ba84a55f936e",
     "docs/UI_UX_PRO_MAX_REVIEW.md": "7efcecc012898ac28bbeef5d49c5867c898ee486512cac8b9eb1c927bb3f8e8c",
     "docs/UI_WORKSPACE.md": "1d68e32b62cdd105f5a6174b1616b0de1332ad5dba0b0cb4d10c567febc11464",
     "docs/V1_FOUNDATION.md": "7b95128af11a98b46a853a65aae659679a94088c9c7e715925999edb9ca5b57f",
     "docs/V53_INTEGRATION.md": "ec66899a7b0af0e3bd2f5b748242923590cf6973c72c4a86bb0cecfd76f7b321",
-    "docs/VALIDATION.md": "043b5390db658b73b53b88babb0460f32fe392e088ef5a8ef1f7a515fa580502",
+    "docs/VALIDATION.md": "a08edaeb429ae04ac35c15bda0bcf9b803bafdf87ac265edcf843e7cf1f78d4f",
     "docs/VISUAL_DESIGN.md": "588f15b1c1760720d0cd2252cdd326e330b1199147cff3f681c1ad0c1ba076b3",
     "LICENSE": "cfc7749b96f63bd31c3c42b5c471bf756814053e847c10f3eb003417bc523d30",
     "MANIFEST.in": "765bc2160d36cad7cccc767fdef9c2f9353ec55589231de44827772d114fd3a8",
@@ -394,6 +394,9 @@
     "tests/v1/test_transactions.py": "2aa7128956fecad652a37ee6812d31e2a383a6f008d8e35ffabe9bb4e69eae32",
     "tests/v1/test_workspace.py": "272447294dfb927fe26609e1ce7bc96f41c70540cdddadc8e65ba64a1f7bc762",
     "THIRD_PARTY_NOTICES.md": "df16d4b5991d78f6de5693895b6319191b4f6385d6eea87680da525ad7d29e78",
-    "VERIFY_PACKAGE.py": "143138f75d2710293f73621745d66cd7c0f1056e6aae80b497ca35a376a61fc8"
+    "VERIFY_PACKAGE.py": "143138f75d2710293f73621745d66cd7c0f1056e6aae80b497ca35a376a61fc8",
+    "datasets/packs/synthetic_securities_review.json": "520cd46123bc664dd7d55822a05219085b65ee5866c2a1dfb7cce1eae91bf9b2",
+    "docs/SYNTHETIC_SECURITIES_REVIEW.md": "939b2d1bd8968c4d4087a6d0079d6ad877996df22594cb438ec38a92041fac86",
+    "tests/policies/test_synthetic_securities.py": "12208e4a27b638cd6d26062b17f965271aebdca9ef10c938c744789c6c37c25d"
   }
 }

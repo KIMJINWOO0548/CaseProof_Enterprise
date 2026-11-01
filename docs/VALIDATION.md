@@ -1,5 +1,22 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 로컬 합성 증권 팩 증분 — 2026-11-01 UTC
+
+Linux / Python 3.12.14 / 기존 `requirements-dev.lock` hash 설치 / 임시 SQLite에서 실행했다.
+기준선 `f586b6f`의 전체 결과는 **912 passed, 459 skipped, 22 subtests passed**였고,
+새 팩과 전용 검사 추가 후 **929 passed, 459 skipped, 22 subtests passed**였다. 양쪽 모두 기존 경고 3개와 exit 0이다.
+설정 파일 부재로 전용 검사 17개가 RED(설정 fixture 오류, exit 1)를 보인 뒤,
+팩 추가 후 기존 정책 검사와 함께 **45 passed**였다. 기존 테스트·보험 데이터·runtime 122개 파일의 bytes는 보존됐다.
+
+baseline smoke와 최종 smoke는 각각 **12/12**, UI 문법·실제 요청 복구 Node 검사 2개도 통과했다.
+459 skip은 실제 PG17 미구성 457개, 선택 NumPy 검사 1개, 선택 Python Playwright 1개다.
+원격 CI·Windows·실제 PG·외부 검수는 이번 브랜치에서 실행하지 않았다.
+증분은 [명시적 PackRegistry 사용](SYNTHETIC_SECURITIES_REVIEW.md)까지이며 새 팩의 HTTP/UI 흐름을 완료했다고 주장하지 않는다.
+
+원본 UI의 로컬 Chromium 캡처는 이미지 없이 정지해 중지했고, 30초 제한 재시도도 exit 124로 실패했다.
+이 결과를 브라우저 PASS로 집계하지 않는다. 보존한 기존 committed UI 이미지는 새 캡처가 아니다.
+명령·exit·버전·해시·원본 출력은 이번 `reports/runs/*-synthetic-securities/`와 별도 복원 패키지에 보존한다.
+
 ## 추가 시각 개편 — 2026-11-01 KST
 
 구현 `b0c3d64`의 [CI41226797390](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는 **9 success / PR 전용1skip**이다. Linux Python3.11/3.12/3.13·Windows3.12 각각 **912 PASS,459 optional SKIP,22 subtests PASS,3 warnings**이며, 별도 실제 PG17.11은 **460 PASS/0skip**, NumPy는 **34 PASS**다. [명령·JUnit·checksum](evidence/g1-g6/ci-b0c3d64.json), [정확한 source ZIP·wheel·저장소 밖 설치·Gitleaks](evidence/g1-g6/installed-b0c3d64.json)을 기록했다. 소스 ZIP은390개 source hash+manifest를 검증했다. Gitleaks 원시 종료값은1이며, 이력23/작업 소스22 후보를 해시·합성 요청키로 분류했고 자격 증명/미해결은0이었다. 보안 인증으로 해석하지 않는다.
