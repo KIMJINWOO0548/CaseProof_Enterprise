@@ -137,7 +137,57 @@
     const result = node('div'); result.id = 'run-result';
     if (run) { result.append(node('h3', '최신 평가 결과', 'h3'), node('p', `${run.completion} · ${run.gate_summary} · ${run.id}`)); const table = node('table', undefined, 'table'); const header = node('thead'), tr = node('tr'); ['사례', '판정', '해석 상태'].forEach(v => tr.append(node('th', v))); header.append(tr); table.append(header); const body = node('tbody'); (run.case_results || []).forEach(c => { const row = node('tr'); [c.case_id, c.verdict, c.resolution_status].forEach(v => row.append(node('td', v))); body.append(row); }); table.append(body); result.append(table); const disclosure = node('details'); disclosure.append(node('summary', '출처·결과 해시 참조'), node('pre', JSON.stringify({ run_id: run.id, case_results: run.case_results }, null, 2))); result.append(disclosure); }
     else result.append(node('p', '평가 결과가 없습니다.'));
-    target.append(result); lock();
+    target.append(result); runHistory(target, data.change_id); lock();
+  }
+  function runHistory(target, id) {
+    const e = epoch, s = selection, section = node('section', undefined, 'mt-4');
+    section.setAttribute('aria-labelledby', 'run-history-title');
+    const title = node('h3', '저장된 평가 비교', 'h3'); title.id = 'run-history-title';
+    const history = node('div'); history.id = 'run-history'; history.setAttribute('aria-live', 'polite');
+    section.append(title);
+    history.append(node('p', '최근 100개 실행을 조회한 뒤 기준·대상 실행을 선택하세요. 이 비교는 최신 평가나 제출 조건을 바꾸지 않습니다.'));
+    const valid = () => e === epoch && s === selection && current?.change_id === id;
+    const load = button('load-run-history', '평가 이력 조회', async () => {
+      load.disabled = true; history.textContent = '평가 이력 불러오는 중…'; history.setAttribute('aria-busy', 'true');
+      try {
+        const data = await client.get('/api/v1/changes/' + id + '/evaluation-runs');
+        if (!valid()) return;
+        history.replaceChildren(node('p', `전체 ${data.total_runs}개 · 최근 ${data.limit}개까지 표시${data.truncated ? ' · 이전 실행은 목록에서 생략되었습니다.' : ''}`));
+        if (data.runs.length < 2) { history.append(node('p', '비교하려면 저장된 평가가 2개 이상 필요합니다. 전체 사례를 다시 평가한 뒤 조회하세요.')); return; }
+        let request = 0;
+        const controls = node('div', undefined, 'run-compare-controls');
+        function selector(key, label, index) {
+          const group = node('div'), caption = node('label', label, 'form-label'), select = node('select');
+          caption.htmlFor = key; select.id = key; select.className = 'form-select';
+          data.runs.forEach(run => { const option = node('option', `revision ${run.recorded_revision} · ${run.completion}/${run.gate_summary} · ${run.id}`); option.value = run.id; select.append(option); });
+          select.value = data.runs[index].id; group.append(caption, select); controls.append(group); return select;
+        }
+        const baseline = selector('baseline-run', '기준 실행', 1), candidate = selector('candidate-run', '대상 실행', 0);
+        const output = node('div'); output.id = 'run-comparison'; output.setAttribute('aria-live', 'polite');
+        const compare = button('compare-runs', '선택한 실행 비교', async () => {
+          const sequence = ++request;
+          output.textContent = '평가 비교 조회 중…'; output.setAttribute('aria-busy', 'true'); compare.disabled = true;
+          try {
+            const result = await client.get('/api/v1/changes/' + id + '/evaluation-runs/compare?baseline_run_id=' + encodeURIComponent(baseline.value) + '&candidate_run_id=' + encodeURIComponent(candidate.value));
+            if (!valid() || sequence !== request) return;
+            const warning = node('p', `${result.mode} · ${result.context_reasons.length ? result.context_reasons.join(', ') : '입력·출처·설정 문맥이 같습니다.'}`, result.mode === 'SAME_CONTEXT' ? '' : 'alert alert-warning');
+            output.replaceChildren(warning, node('p', '저장된 결과와 해시만 비교합니다. 입력·출처·설정이 다르면 결과의 원인을 단정할 수 없습니다. 모델 품질 평가나 자동 승인 권고가 아닙니다.'), node('p', `변경 사례 ${result.changed_counts.any_changed}개 · 각 변경 항목 수는 중복 집계될 수 있습니다.`));
+            const wrap = node('div', undefined, 'table-responsive'), table = node('table', undefined, 'table'), head = node('thead'), header = node('tr');
+            ['사례', '기준 결과', '대상 결과', '변경 항목'].forEach(label => header.append(node('th', label))); head.append(header); table.append(head);
+            const body = node('tbody');
+            const state = side => side ? `${side.verdict} · ${side.complete ? 'COMPLETE' : 'INCOMPLETE'} · ${side.resolution_status}${side.error_code ? ' · ' + side.error_code : ''}` : '없음';
+            result.rows.forEach(row => { const tr = node('tr'); [row.case_id, state(row.baseline), state(row.candidate), Object.keys(row.changes).filter(key => row.changes[key]).join(', ') || '변경 없음'].forEach(value => tr.append(node('td', value))); body.append(tr); });
+            table.append(body); wrap.append(table);
+            const details = node('details'); details.append(node('summary', '실행·입출력·출처 해시 참조'), node('pre', JSON.stringify(result, null, 2))); output.append(wrap, details);
+          } catch (error) { if (valid() && sequence === request) { output.textContent = '평가 비교 조회 실패. 선택을 확인하고 다시 조회하세요.'; message(error); } }
+          finally { if (valid() && sequence === request) { compare.disabled = false; output.setAttribute('aria-busy', 'false'); } }
+        }, controls, false);
+        baseline.onchange = candidate.onchange = () => { ++request; output.textContent = '선택이 바뀌었습니다. 다시 비교하세요.'; output.setAttribute('aria-busy', 'false'); compare.disabled = false; };
+        history.append(controls, output);
+      } catch (error) { if (valid()) { history.textContent = '평가 이력 조회 실패. 다시 조회하세요.'; message(error); } }
+      finally { if (valid()) { load.disabled = false; history.setAttribute('aria-busy', 'false'); } }
+    }, section, false);
+    section.append(history); target.append(section);
   }
   function renderQueue() {
     const q = $('search').value.toLowerCase(), state = $('status-filter').value;

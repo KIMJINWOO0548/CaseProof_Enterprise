@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Descriptive saved-run comparison v1",
+  "x-contract-status": "IMPLEMENTED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "evaluation_comparison_v1"
+    },
+    "baseline": {
+      "$ref": "evaluation-run-history-v1.schema.json#/$defs/RunSummary"
+    },
+    "candidate": {
+      "$ref": "evaluation-run-history-v1.schema.json#/$defs/RunSummary"
+    },
+    "mode": {
+      "enum": [
+        "SAME_CONTEXT",
+        "CONTEXT_CHANGED",
+        "INCOMPLETE"
+      ]
+    },
+    "context_reasons": {
+      "type": "array",
+      "uniqueItems": true,
+      "items": {
+        "enum": [
+          "CASE_SET_CHANGED",
+          "CONFIG_CHANGED",
+          "INPUT_CHANGED",
+          "SOURCE_REFS_CHANGED",
+          "VERSION_CHANGED"
+        ]
+      }
+    },
+    "changed_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "presence_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "input_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "output_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "source_refs_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "result_state_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        },
+        "any_changed": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 1000
+        }
+      },
+      "required": [
+        "presence_changed",
+        "input_changed",
+        "output_changed",
+        "source_refs_changed",
+        "result_state_changed",
+        "any_changed"
+      ]
+    },
+    "rows": {
+      "type": "array",
+      "maxItems": 1000,
+      "items": {
+        "$ref": "#/$defs/Row"
+      }
+    }
+  },
+  "required": [
+    "schema",
+    "baseline",
+    "candidate",
+    "mode",
+    "context_reasons",
+    "changed_counts",
+    "rows"
+  ],
+  "$defs": {
+    "CaseSide": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "verdict": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "INCONCLUSIVE"
+          ]
+        },
+        "complete": {
+          "type": "boolean"
+        },
+        "resolution_status": {
+          "$ref": "common.schema.json#/$defs/RegisteredId"
+        },
+        "error_code": {
+          "anyOf": [
+            {
+              "$ref": "common.schema.json#/$defs/RegisteredId"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "critical_failure": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "input_sha256": {
+          "$ref": "common.schema.json#/$defs/SHA256"
+        },
+        "output_sha256": {
+          "$ref": "common.schema.json#/$defs/SHA256"
+        },
+        "source_refs": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "$ref": "common.schema.json#/$defs/PayloadRef"
+          }
+        }
+      },
+      "required": [
+        "verdict",
+        "complete",
+        "resolution_status",
+        "error_code",
+        "critical_failure",
+        "input_sha256",
+        "output_sha256",
+        "source_refs"
+      ]
+    },
+    "Row": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "case_id": {
+          "$ref": "common.schema.json#/$defs/RegisteredId"
+        },
+        "baseline": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CaseSide"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "candidate": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/CaseSide"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "changes": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "presence_changed": {
+              "type": "boolean"
+            },
+            "input_changed": {
+              "type": "boolean"
+            },
+            "output_changed": {
+              "type": "boolean"
+            },
+            "source_refs_changed": {
+              "type": "boolean"
+            },
+            "result_state_changed": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "presence_changed",
+            "input_changed",
+            "output_changed",
+            "source_refs_changed",
+            "result_state_changed"
+          ]
+        }
+      },
+      "required": [
+        "case_id",
+        "baseline",
+        "candidate",
+        "changes"
+      ]
+    }
+  }
+}

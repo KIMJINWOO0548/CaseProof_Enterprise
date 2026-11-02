@@ -1,5 +1,52 @@
 # 검증 결과 — 5.3.0.dev6
 
+## Local saved-run comparison — 2026-11-02 UTC
+
+The isolated feature worktree uses Python 3.12.14, SQLite 3.53.1, FastAPI 0.162.0,
+SQLAlchemy 2.1.6, Pydantic 2.14.1, pytest 9.2.0 and Node 24.19.0 on Linux.
+Imports were checked against this worktree, using the existing task venv rather
+than an editable original checkout. No dependency installation was required.
+
+Independent HTTP RED was 14 failures for missing GET behavior; pure projection
+RED was 7 failures for the missing module; real JS-handler RED was 7 failures for
+the absent controls; response-schema RED was 1 failure for the absent contract.
+Two early GREEN attempts exposed test-fixture mistakes (frozen command payloads
+and immutable/FK protections); their failures were preserved and the fixtures
+corrected. An additive OpenAPI path-count expectation was updated from 8 to 9.
+Browser QA's run-option readability correction had its own 1-fail/6-pass RED
+before the revision/status-first label change.
+
+The affected tests passed **61/61** with one existing dependency warning. The
+complete suite passed **961 tests, 459 optional skips, 22 subtests**, three
+existing warnings, exit 0. Optional skips cover unavailable Python Playwright,
+NumPy and real PG17/RLS/concurrency; those are not reported as passing checks.
+The real JS-handler harness additionally passed **10/10** scenarios, including
+delayed history/comparison after role/change selection, changed run selectors,
+read failure/retry, literal untrusted identifiers and latest incomplete veto.
+
+The tests persist corrected FAIL→PASS runs normally and compare every v1 table
+before/after GETs. They check authentication/revocation, wrong tenant/change/run,
+exact duplicate-free UUID query parameters, legacy/tampered history, original
+payload digests, sorted rows and zero-change same-run output. A real 101-run
+history proves full validation before the 100-summary slice, old-ID comparison
+and rejection of tampering outside the displayed slice. A normally persisted
+1001-case run proves safe 422 bounds without writes. Pure fixtures exercise
+configuration/version/case-set differences without weakening same-change
+immutable-reference validation. A latest incomplete saved run remains the
+submission gate even while inspecting an older PASS.
+
+`python -m scripts.smoke` passed 12/12; `scripts.check_ui_syntax` and
+`scripts.check_package` passed. The two additive schemas/examples are checked
+against actual HTTP output. Source manifest regeneration and byte verification
+are part of the local delivery checks. Exact logs, command outcomes and source
+hashes are retained in the separate task delivery folder; generated runtime
+evidence is not inserted into source fixtures.
+
+The parent task owns the actual local HTTP browser run and independent internal
+review. Their reports are separate from the Node DOM-handler checks and this
+worker's Python suite. No new browser dependency, real model, Windows run,
+external expert review or production-capacity claim is made here.
+
 ## 로컬 제출 안내·409 시정 문맥 — 2026-11-02 UTC
 
 현재 화면에서 평가 전/BLOCK에도 제출이 활성화되고 실제 409 뒤 상세·평가·입력이 사라지는 흐름을 재현했다.

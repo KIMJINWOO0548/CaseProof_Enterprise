@@ -26,6 +26,11 @@ The interface combines locally included [Tabler 1.7.3](https://docs.tabler.io/ui
 
 ## Versioned workspace
 
+Saved v2 evaluations can be inspected through the workspace's lazy history and
+baseline/candidate comparison controls. Comparison describes saved results and
+input/context hashes; it does not change the latest evaluation or recommend
+approval. See [saved-run comparison and bounds](docs/RUN_COMPARISON.md).
+
 ```powershell
 py -3.12 -m venv .venv
 $env:CASEPROOF_DEMO_MODE = '1'

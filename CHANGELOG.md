@@ -1,5 +1,9 @@
 # Changelog
 
+## Local saved-run comparison — 2026-11-02
+
+- Add authenticated same-change saved-run history and descriptive comparison GETs, pure bounded projections and lazy workspace controls. Preserve original run digests, immutable version IDs, latest-run gates and recovery. Report input/source/configuration context separately from outcomes; expose no raw historical values or model-quality claim.
+
 ## Local submission flow correction — 2026-11-02
 
 - Explain and disable normal submission until the latest evaluation is COMPLETE/PASS. For known actionable 409 conflicts, refresh authorized current detail, preserve same-suite typed corrections and selection, and synchronize only that queue row. Keep unauthorized/error clearing, server gates and the exact pending-request recovery separate.

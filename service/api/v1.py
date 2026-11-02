@@ -15,6 +15,7 @@ from service.domain.canonical import content_hash
 from service.domain.types import CommandContext, json_payload
 from service.idempotency_v1 import lookup, replay
 from service.repositories import decode, get_change, load_history, require
+from service.evaluation.run_comparison import compare_runs, summarize_history
 
 
 def _headers(request, create):
@@ -146,6 +147,46 @@ def build_router(session_factory, authenticator):
                     integrity = 'LEGACY_UNVERIFIED' if error.code == 'EXECUTION_CONFIG_UNVERIFIED' else 'INVALID'
                     data.update(historical_integrity=integrity, latest_run=None)
                 return JSONResponse({'data': data})
+        return await respond(request, action)
+
+    def run_history(db, actor, change_id):
+        actor = current_actor(db, actor)
+        require(bool(actor.roles), 'FORBIDDEN')
+        get_change(db, actor.tenant_id, change_id)
+        # Validate all runs, immutable references and the ledger before slicing.
+        return load_history(db, actor.tenant_id, change_id)
+
+    @router.get('/changes/{change_id}/evaluation-runs', description=(
+        'Read-only saved v2 run summaries, newest revision first, latest 100 after full history validation. '
+        'Payload hashes refer to the original evaluation-run payload. No query parameters.'))
+    async def evaluation_runs(change_id: str, request: Request):
+        async def action():
+            actor = actor_for(request)
+            _identity(change_id)
+            require(not request.query_params, 'INVALID_REQUEST')
+            with session_factory() as db, db.begin():
+                history = run_history(db, actor, change_id)
+                return JSONResponse({'data': summarize_history(history['runs'])})
+        return await respond(request, action)
+
+    @router.get('/changes/{change_id}/evaluation-runs/compare', description=(
+        'Read-only descriptive comparison of two UUIDv4 run IDs from the fully validated authorized change. '
+        'Exactly baseline_run_id and candidate_run_id, once each. At most 1000 union cases. '
+        'Per-dimension counts overlap; any_changed counts union rows. No model-quality verdict.'),
+        openapi_extra={'parameters': [dict(name=name, **{'in': 'query'}, required=True,
+            schema=TypeAdapter(UUIDv4).json_schema()) for name in ('baseline_run_id', 'candidate_run_id')]})
+    async def evaluation_comparison(change_id: str, request: Request):
+        async def action():
+            actor = actor_for(request)
+            _identity(change_id)
+            query = request.query_params.multi_items()
+            require(len(query) == 2 and {key for key, value in query} == {'baseline_run_id', 'candidate_run_id'}, 'INVALID_REQUEST')
+            identities = {key: _identity(value) for key, value in query}
+            with session_factory() as db, db.begin():
+                history = run_history(db, actor, change_id)
+                runs = {run['id']: run for run in history['runs']}
+                require(all(identity in runs for identity in identities.values()), 'NOT_FOUND')
+                return JSONResponse({'data': compare_runs(runs[identities['baseline_run_id']], runs[identities['candidate_run_id']])})
         return await respond(request, action)
 
     @router.get('/changes/{change_id}/evidence', description=(

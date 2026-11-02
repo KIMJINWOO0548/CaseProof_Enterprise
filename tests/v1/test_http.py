@@ -89,7 +89,9 @@ def test_mutation_revision_headers(tmp_path, revision):
 def test_openapi_actual_routes_and_forbidden_extras(tmp_path):
     app, factory, body = client_app(tmp_path)
     schema = app.openapi()
-    assert len(schema['paths']) == 8
+    assert len(schema['paths']) == 9  # additive saved-run GET plus comparison path
+    assert 'get' in schema['paths']['/api/v1/changes/{change_id}/evaluation-runs']
+    assert 'get' in schema['paths']['/api/v1/changes/{change_id}/evaluation-runs/compare']
     create = schema['paths']['/api/v1/changes']['post']
     assert create['requestBody']['content']['application/json']['schema']['additionalProperties'] is False
     assert [p['name'] for p in create['parameters']] == ['Idempotency-Key']

@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Validated saved-run history v1",
+  "x-contract-status": "IMPLEMENTED",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "schema": {
+      "const": "evaluation_run_history_v1"
+    },
+    "runs": {
+      "type": "array",
+      "maxItems": 100,
+      "items": {
+        "$ref": "#/$defs/RunSummary"
+      }
+    },
+    "total_runs": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "limit": {
+      "const": 100
+    },
+    "truncated": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "schema",
+    "runs",
+    "total_runs",
+    "limit",
+    "truncated"
+  ],
+  "$defs": {
+    "RunSummary": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "recorded_revision": {
+          "$ref": "common.schema.json#/$defs/Revision"
+        },
+        "created_at": {
+          "$ref": "common.schema.json#/$defs/UTCTimestamp"
+        },
+        "completion": {
+          "enum": [
+            "COMPLETE",
+            "INCOMPLETE"
+          ]
+        },
+        "gate_summary": {
+          "enum": [
+            "PASS",
+            "BLOCK"
+          ]
+        },
+        "run_input_sha256": {
+          "$ref": "common.schema.json#/$defs/SHA256"
+        },
+        "run_config_sha256": {
+          "$ref": "common.schema.json#/$defs/SHA256"
+        },
+        "candidate_snapshot_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "source_bundle_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "dataset_version_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "suite_version_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "evaluator_version_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "adapter_version_id": {
+          "$ref": "common.schema.json#/$defs/UUIDv4"
+        },
+        "payload_sha256": {
+          "$ref": "common.schema.json#/$defs/SHA256"
+        }
+      },
+      "required": [
+        "id",
+        "recorded_revision",
+        "created_at",
+        "completion",
+        "gate_summary",
+        "run_input_sha256",
+        "run_config_sha256",
+        "candidate_snapshot_id",
+        "source_bundle_id",
+        "dataset_version_id",
+        "suite_version_id",
+        "evaluator_version_id",
+        "adapter_version_id",
+        "payload_sha256"
+      ]
+    }
+  }
+}

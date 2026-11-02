@@ -10,7 +10,7 @@ STATUS = {
     'EXECUTION_CONFIG_UNVERIFIED': 409,
     'EVALUATION_INCOMPLETE': 409, 'RELEASE_GATE_BLOCKED': 409, 'SOURCE_NOT_ELIGIBLE': 409,
     'SNAPSHOT_MISMATCH': 409, 'INVALID_REQUEST': 422, 'RETRYABLE_CONFLICT': 503,
-    'OUTCOME_UNKNOWN': 503, 'INTERNAL_ERROR': 500,
+    'OUTCOME_UNKNOWN': 503, 'INTERNAL_ERROR': 500, 'COMPARISON_LIMIT_EXCEEDED': 422,
 }
 FIELDS = frozenset(('Idempotency-Key', 'X-Expected-Revision', 'candidate_snapshot_id', 'case_context',
                    'case_id', 'case_inputs', 'claim_days', 'dataset_version_id', 'decision',

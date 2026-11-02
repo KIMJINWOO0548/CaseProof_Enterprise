@@ -189,3 +189,10 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
 }
+/* Saved-run reads remain separate from the latest-run evaluation form. */
+.run-compare-controls { display: grid; gap: 1rem; margin: 1rem 0; }
+.run-compare-controls > div { min-width: 0; }
+.run-compare-controls .form-select { width: 100%; }
+#run-history, #run-comparison { min-width: 0; overflow-wrap: anywhere; }
+#run-comparison pre { max-width: 100%; overflow: auto; }
+#run-comparison .table { min-width: 36rem; }

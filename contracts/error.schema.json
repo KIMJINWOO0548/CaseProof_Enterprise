@@ -30,7 +30,8 @@
             "INVALID_REQUEST",
             "RETRYABLE_CONFLICT",
             "OUTCOME_UNKNOWN",
-            "INTERNAL_ERROR"
+            "INTERNAL_ERROR",
+            "COMPARISON_LIMIT_EXCEEDED"
           ]
         },
         "message": {"type": "string"},
@@ -159,6 +160,7 @@
     "INVALID_REQUEST": 422,
     "RETRYABLE_CONFLICT": 503,
     "OUTCOME_UNKNOWN": 503,
-    "INTERNAL_ERROR": 500
+    "INTERNAL_ERROR": 500,
+    "COMPARISON_LIMIT_EXCEEDED": 422
   }
 }

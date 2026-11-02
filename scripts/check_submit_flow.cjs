@@ -49,7 +49,7 @@ function state(kind, revision = kind === 'NO_RUN' ? 1 : 2) {
   return { historical_integrity: 'VALID', snapshot, latest_run: run };
 }
 
-async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, uncertainEvaluation = false } = {}) {
+async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, uncertainEvaluation = false, extraGet = null } = {}) {
   const roots = new Map(), created = [], calls = [];
   for (const match of html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const element = new Element(match[1], true); element.id = match[3];
@@ -101,6 +101,7 @@ async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, un
       }
       return { ok: true, status: 200, json: async () => ({ data: current }) };
     }
+    if (extraGet) return extraGet(url, options);
     throw new Error('Unexpected URL ' + url);
   };
   vm.runInNewContext(javascript, { document, fetch, crypto: webcrypto });
@@ -180,7 +181,8 @@ async function uncertainEvaluation() {
   assert.equal(ui.get('submit-change').disabled, false, 'normal readiness follows the recovered passing evaluation');
 }
 
-(async () => {
+module.exports = { app, Element, settle };
+if (require.main === module) (async () => {
   const checks = [
     ...['NO_RUN', 'BLOCK', 'INCOMPLETE', 'PASS'].map(kind => [kind + ' readiness', () => readiness(kind)]),
     ...['RELEASE_GATE_BLOCKED', 'EVALUATION_INCOMPLETE', 'SOURCE_NOT_ELIGIBLE', 'STALE_REVISION'].map(code => [code + ' refresh', () => safeRejection(code)]),
