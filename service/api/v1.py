@@ -151,7 +151,8 @@ def build_router(session_factory, authenticator):
     @router.get('/changes/{change_id}/evidence', description=(
         'Returns integrity diagnostics and immutable_refs containing only canonical identities and purpose-separated '
         'payload_sha256 hashes for the selected change. immutable_refs is null when historical integrity is INVALID '
-        'or LEGACY_UNVERIFIED.'))
+        'or LEGACY_UNVERIFIED. The legacy current_approval_eligibility field reports source eligibility only; '
+        'ELIGIBLE does not authorize approval. Evaluation gates, workflow state and role separation remain independent checks.'))
     async def evidence(change_id: str, request: Request):
         async def action():
             actor = actor_for(request)

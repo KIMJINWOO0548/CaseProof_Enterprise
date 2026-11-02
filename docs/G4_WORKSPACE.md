@@ -16,7 +16,12 @@ inputs, evaluate the entire suite and submit. A rejected change opens a new
 `CORRECTS_REJECTED` request. Neither evaluations nor approvals are copied.
 Distinct domain and release reviewers record 8–500-character reasons. Server
 authorization remains authoritative. Evidence is requested separately and displays
-historical integrity, current eligibility and external anchor status separately.
+historical integrity, current source eligibility and external anchor status separately.
+The legacy JSON field `current_approval_eligibility` describes source eligibility
+only. The UI labels it `현재 출처 적격성`: an ELIGIBLE source verdict does not
+authorize approval or replace the evaluation gate, workflow state or role separation.
+For example, a complete failed evaluation can retain eligible sources while submission
+returns `RELEASE_GATE_BLOCKED`. The JSON field name and domain predicate are preserved.
 Pack, candidate, source, suite and run-result hash references remain readable.
 
 Bearer tokens never enter browser persistent storage. An uncertain mutation keeps
@@ -39,6 +44,12 @@ client: exact replay, actor isolation, immutable original body, 503 recovery,
 known-error cleanup and concurrent-mutation refusal. Its initial execution failed
 because the client file did not exist; after implementation it passed (exit 0).
 `node --check service/static/v1.js` also passed (exit 0).
+
+`node scripts/check_evidence_labels.cjs` exercises the actual evidence click handler
+with synthetic responses in a small DOM harness. It checks that a BLOCK evaluation
+and source-only ELIGIBLE remain distinct, the displayed label is precise, the visible
+qualifier explains the other approval conditions, and raw evidence JSON is preserved.
+This is not a browser layout or accessibility observation.
 
 `scripts/v1_ui_probe.js` exports `browserProbe(page, config)` for an existing
 Playwright session. Config contains `baseURL`, runtime-only `tokens` with

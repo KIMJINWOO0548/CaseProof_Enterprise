@@ -1,5 +1,24 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 로컬 출처 적격성 표시 정정 — 2026-11-02 UTC
+
+정상 API의 29일 주장/30일 합성 근거 사례에서 run은 BLOCK, 제출은 409 `RELEASE_GATE_BLOCKED`인데
+증거의 출처 전용 `current_approval_eligibility=ELIGIBLE`이 UI에서 `현재 승인 적격성`으로 표시됐다.
+이는 승인 우회가 아니라 출처 진단의 표시·설명 혼동이다. 기존 JSON 필드·출처 판정·승인 gate·seal·replay는 보존했다.
+화면은 `현재 출처 적격성`과 별도 승인 조건을 표시하고, 실제 OpenAPI 설명도 같은 의미를 명시한다.
+
+Linux/Python 3.12.14/기존 hash lock 환경의 기준선은 **929 passed, 459 skipped, 22 subtests passed**였다.
+새 검사 2개는 실제 evidence 클릭 handler의 라벨과 OpenAPI의 의미 설명에서 RED였고,
+BLOCK 평가·제출 거부·출처 ELIGIBLE의 기존 HTTP 동작은 RED 실행에서도 이미 통과했다.
+수정 후 관련 **44 passed**, 전체 **931 passed, 459 skipped, 22 subtests passed**, 기존 경고 3개, exit 0이다.
+smoke 12/12·JS 문법·기존 응답 유실 복구·새 DOM handler 검사도 통과했다.
+
+새 Node 검사는 실제 UI handler를 작은 DOM harness에서 실행한 것이며 브라우저·레이아웃·접근성 관찰이 아니다.
+실제 PG457·선택 NumPy1·선택 Python Playwright1은 이번 일반 실행에서 skip이다.
+도메인/SQL/역할 코드와 API handler AST(해당 OpenAPI 설명 제외)가 동일함을 대조했으므로 PG는 재실행하지 않았다.
+이전 f95ed024의 실제 PG17.11 460 PASS는 별도 증거이며 새 브랜치 실행으로 바꾸어 기록하지 않는다.
+원격 GitHub/CI·Windows·외부 사람 검수는 미실행이다. 새 로그·재현 명령은 `reports/runs/*-evidence-source-label/`와 별도 복원 패키지에 보존한다.
+
 ## 로컬 합성 증권 팩 증분 — 2026-11-01 UTC
 
 Linux / Python 3.12.14 / 기존 `requirements-dev.lock` hash 설치 / 임시 SQLite에서 실행했다.
