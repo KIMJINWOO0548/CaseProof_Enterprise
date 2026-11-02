@@ -1,5 +1,38 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 로컬 제출 안내·409 시정 문맥 — 2026-11-02 UTC
+
+현재 화면에서 평가 전/BLOCK에도 제출이 활성화되고 실제 409 뒤 상세·평가·입력이 사라지는 흐름을 재현했다.
+수정 후 최신 COMPLETE/PASS에만 일반 제출을 열고, 그 외에는 평가/수정 안내를 표시한다.
+알려진 409는 새 권한 조회를 통과한 최신 상세·동일 모음 입력·선택 행 요약을 복원한다.
+권한/조회 실패는 이전 상세를 지우며, 원래 키·body·revision의 미확정 복구는 별도 유지한다.
+서버 gate·API JSON·인증/권한·합성 어댑터·출처 판정은 변경하지 않았다.
+
+이번 기준선은 source manifest **398개 PASS**, 표적 **11 PASS**였다.
+새 실제 JS handler 검사는 초기 15개 중 **3 PASS/12 FAIL**로 RED였고,
+선택 행의 이전 revision을 별도로 확인한 뒤 **11 PASS/4 FAIL** RED를 보존했다.
+최종 handler는 **15/15 PASS**, 표적 pytest는 **15 passed/1 optional skipped**,
+전체는 **932 passed, 459 skipped, 22 subtests passed**, 기존 경고 3개, exit 0이다.
+smoke 12/12·JS 문법·원래 요청/불확정 복구 검사도 통과했다.
+
+Browser 플러그인/스킬이 없어 `frontend-testing-debugging`의 허용 경로로 세션에 이미 있던
+Node Playwright 1.62.1과 system Chromium 154.0.8037.57을 사용했다. 새 설치는 없다.
+이는 저장소 선택 Python Playwright lock 1.64.1 실행이 아니다. 정확한 주소는
+`http://127.0.0.1:8766/v1`, caller-owned 임시 SQLite와 공개 합성 test identity만 사용했다.
+1440x1000·390x844의 현재 화면에서 평가 전/BLOCK 차단, PASS 제출, 실제 stale PASS→409,
+최신 revision/입력 11/선택/오류 ID 보존, 정상 시정 제출을 확인했다.
+성공 commit 응답만 중단한 평가도 동일 키·본문·revision으로 재생했고, 중복 run 없이 revision 2였다.
+page error·framework overlay는 0, 검사한 모바일 가로 넘침은 0이다.
+기존 favicon 404·시험한 409·의도적 response abort console 항목은 별도로 설명한다.
+
+첫 브라우저 사후 probe는 두 번째 create의 이전 ID/일시적 요청 banner를 기다리는 시험 조정 오류로 실패했다.
+`after-attempt-1`에 실패를 보존했으며 통과로 집계하지 않는다. 행 동기화 이전 통과 화면도 그대로 보존했다.
+최종 행 동기화 후 화면/결과는 외부 증거의 별도 `after-final/`에 저장·검토했다.
+정식 Product Design screenshot audit, 전체 접근성/스크린리더, 독립 사용자 검수는 수행하지 않았다.
+일반 suite의 PG457·NumPy1·선택 Python browser1 skip과 별도 실제 Node browser 실행을 구분한다.
+백엔드/SQL 변경이 없어 PG는 재실행하지 않았고, 원격 GitHub/CI·Windows 검증도 이번에는 하지 않았다.
+이번 로그와 소스 해시는 새 `reports/runs/*-submit-guidance/`에 보존한다.
+
 ## 로컬 출처 적격성 표시 정정 — 2026-11-02 UTC
 
 정상 API의 29일 주장/30일 합성 근거 사례에서 run은 BLOCK, 제출은 409 `RELEASE_GATE_BLOCKED`인데

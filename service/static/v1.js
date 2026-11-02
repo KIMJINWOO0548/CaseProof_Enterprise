@@ -8,10 +8,11 @@
     async get(path, token = this.token) {
       const response = await this.fetcher(path, { headers: { Authorization: 'Bearer ' + token }, cache: 'no-store' });
       const payload = await response.json();
-      if (!response.ok) throw new Error(this.error(response.status, payload));
+      if (!response.ok) throw this.responseError(response.status, payload);
       return payload.data;
     }
     error(status, payload) { const e = payload?.error; return `${status} ${e?.code || 'INVALID_RESPONSE'}: ${e?.message || '요청 실패'}${e?.request_id ? ' · 요청 ' + e.request_id : ''}`; }
+    responseError(status, payload) { return Object.assign(new Error(this.error(status, payload)), { status, code: payload?.error?.code || 'INVALID_RESPONSE' }); }
     async mutate(path, body, revision) {
       if (this.busy) throw new Error('다른 요청이 진행 중입니다.');
       if (this.pending()) throw new Error('결과가 미확정인 원래 요청을 먼저 복구하세요.');
@@ -34,7 +35,7 @@
         if (!response.ok) {
           // A server failure can follow a commit. Retain the exact request until known.
           if (response.status < 500 && !wasUncertain) this.requests.delete(scope);
-          throw new Error(this.error(response.status, payload));
+          throw this.responseError(response.status, payload);
         }
         if (!payload || !payload.data) throw new Error('처리 결과를 확인하지 못했습니다. 원래 요청을 복구하세요.');
         this.requests.delete(scope);
@@ -66,7 +67,7 @@
   function role(name) { return workspace?.actor.roles.includes(name); }
   function lock() {
     const blocked = client.busy || !!client.pending();
-    document.querySelectorAll('[data-mutation]').forEach(el => { el.disabled = blocked; });
+    document.querySelectorAll('[data-mutation]').forEach(el => { el.disabled = blocked || el.dataset.unavailable === 'true'; });
     $('recovery').hidden = !client.pending();
     $('pending-key').textContent = client.pending()?.key || '';
     $('retry-request').disabled = client.busy;
@@ -121,7 +122,14 @@
         form.onsubmit = event => { event.preventDefault(); const case_inputs = preset.case_inputs.map((item, i) => ({ ...item, claim_days: Number($('case-' + i).value) })); mutate('/api/v1/changes/' + data.change_id + '/evaluation-runs', { suite_version_id: data.suite_version_id, case_inputs }, data.revision); };
         target.append(form);
       } else target.append(node('p', '등록된 평가 입력을 찾지 못했습니다. 서버 팩 설정을 확인하세요.'));
-      button('submit-change', '현업 검토 제출', () => mutate('/api/v1/changes/' + data.change_id + '/submit', {}, data.revision), actions);
+      const ready = run?.completion === 'COMPLETE' && run.gate_summary === 'PASS';
+      const submit = button('submit-change', '현업 검토 제출', () => mutate('/api/v1/changes/' + data.change_id + '/submit', {}, data.revision), actions);
+      submit.dataset.unavailable = String(!ready); submit.setAttribute('aria-describedby', 'submit-help');
+      const guidance = !run ? '전체 사례를 평가한 뒤 PASS 결과를 확인하면 제출할 수 있습니다.'
+        : run.completion !== 'COMPLETE' ? '최신 평가가 완료되지 않았습니다. 원인을 확인하고 전체 모음을 다시 평가하세요.'
+        : !ready ? '최신 평가가 BLOCK입니다. 사례를 수정하고 전체 모음을 다시 평가하세요.'
+        : '최신 평가가 PASS입니다. 서버가 현재 출처·검토 단계·권한 조건을 다시 확인한 뒤 제출합니다.';
+      const help = node('p', guidance, 'w-100 mb-0'); help.id = 'submit-help'; actions.append(help);
     }
     const actor = workspace.actor.actor_id;
     const stage = data.status === 'PENDING_DOMAIN_REVIEW' && role('DOMAIN_REVIEWER') ? 'domain-decision' : data.status === 'PENDING_RELEASE' && role('RELEASE_APPROVER') && actor !== data.domain_reviewer_id ? 'release-decision' : null;
@@ -154,9 +162,30 @@
     catch (error) { if (e === epoch && s === selection) { clearDetail('변경을 불러오지 못했습니다.'); message(error); } } finally { if (e === epoch && s === selection) $('detail').setAttribute('aria-busy', 'false'); }
   }
   async function mutate(path, body, revision, retry = false) {
-    const e = epoch; ++selection; message(); const promise = retry ? client.retry() : client.mutate(path, body, revision); lock();
+    const e = epoch, s = ++selection, previous = current;
+    const inputs = new Map([...document.querySelectorAll('[data-case-input]')].map(input => [input.dataset.caseInput, input.value]));
+    message(); const promise = retry ? client.retry() : client.mutate(path, body, revision); lock();
     try { const result = await promise; if (e !== epoch) return; document.querySelectorAll('dialog[open]').forEach(d => d.close()); const data = result.data; message(result.replayed ? '원래 요청의 확정 결과를 복구했습니다.' : '기록했습니다.'); await refresh(); if (e === epoch) await select(data.change_id); }
-    catch (error) { if (e === epoch) { document.querySelectorAll('dialog[open]').forEach(d => d.close()); clearDetail(client.pending() ? '처리 결과가 미확정입니다. 원래 요청 복구를 이용하세요.' : '요청을 처리하지 못했습니다. 최신 변경을 다시 선택하세요.'); message(error); } } finally { if (e === epoch) lock(); }
+    catch (error) { if (e === epoch) {
+      document.querySelectorAll('dialog[open]').forEach(d => d.close());
+      const actionable = error.status === 409 && ['RELEASE_GATE_BLOCKED', 'EVALUATION_INCOMPLETE', 'SOURCE_NOT_ELIGIBLE', 'STALE_REVISION'].includes(error.code);
+      if (actionable && !client.pending() && previous && current?.change_id === previous.change_id && s === selection) {
+        // Reauthorize the read before preserving correction context; never restore an old snapshot.
+        const refresh = select(previous.change_id), refreshedSelection = selection;
+        await refresh;
+        if (e === epoch && refreshedSelection === selection && current?.change_id === previous.change_id) {
+          const summary = { title: current.title, status: current.status, revision: current.revision, pack_version_id: current.pack_version_id };
+          rows = rows.map(row => row.change_id === current.change_id ? { ...row, ...summary } : row);
+          renderQueue();
+          if (current.suite_version_id === previous.suite_version_id) document.querySelectorAll('[data-case-input]').forEach(input => {
+            if (inputs.has(input.dataset.caseInput)) input.value = inputs.get(input.dataset.caseInput);
+          });
+          message(error);
+        }
+      } else {
+        clearDetail(client.pending() ? '처리 결과가 미확정입니다. 원래 요청 복구를 이용하세요.' : '요청을 처리하지 못했습니다. 최신 변경을 다시 선택하세요.'); message(error);
+      }
+    } } finally { if (e === epoch) lock(); }
   }
   function showDialog(id) { message(); if (id === 'decision-dialog') clearDecisionError(); opener = document.activeElement; $(id).showModal(); }
   function openCreate(source) {

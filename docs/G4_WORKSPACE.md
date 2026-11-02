@@ -31,8 +31,24 @@ that request. Recovery explicitly retries the same request, with no automatic ne
 key. Another role cannot recover it; switching back to the original actor can.
 A first known 4xx clears that failed request. After an uncertain outcome, a later 4xx retains the original key until its committed result is resolved. Both report the server code/request ID.
 Mutations cannot overlap. Session and selection counters discard stale responses.
-Failed reads/mutations clear prior detail/evidence instead of leaving a stale verdict.
+Failed reads and unauthorized or unhandled mutation failures clear prior detail/evidence instead of leaving a stale verdict.
 Page reload clears pending recovery; durable cross-reload recovery is outside scope.
+
+Normal submission is enabled only for the existing owned DRAFT/ANALYST UI path
+with a latest COMPLETE/PASS run. Missing, blocked or incomplete runs have visible
+evaluation guidance beside the disabled button. This is an affordance; current
+source, workflow, role and gate checks remain authoritative on the server.
+
+A first known 409 with `RELEASE_GATE_BLOCKED`, `EVALUATION_INCOMPLETE`,
+`SOURCE_NOT_ELIGIBLE` or `STALE_REVISION` triggers one fresh authorized current
+read for the still-selected change. Only a valid response restores same-suite
+typed inputs and updates that selected queue row's summary. Other rows and filters
+are preserved. The original error/request ID stays visible and the UI never
+automatically resubmits the rejected mutation. A 401/403/404 or invalid current
+history clears the old detail and does not restore typed data. Pending uncertain
+requests do not take this known-conflict path: their original serialized request
+remains available through the separate recovery control even while normal
+submission is disabled.
 
 Server-controlled strings use `textContent`/text nodes. Native dialog Escape and
 focus restoration, explicit form labels, keyboard-visible focus, live status,
@@ -50,6 +66,14 @@ with synthetic responses in a small DOM harness. It checks that a BLOCK evaluati
 and source-only ELIGIBLE remain distinct, the displayed label is precise, the visible
 qualifier explains the other approval conditions, and raw evidence JSON is preserved.
 This is not a browser layout or accessibility observation.
+
+`node scripts/check_submit_flow.cjs` checks the actual handlers with a small DOM
+and transport harness: four readiness states, four known 409 conflicts, mutation
+and recovery-read 401/403/404 clearing, and exact uncertain evaluation replay.
+Its 15 scenarios also check current queue revision, correction input, selected
+state and original error visibility. The separate regular Playwright run records
+actual HTTP, desktop/mobile screenshots and deliberate response-loss recovery;
+that rendered evidence is not inferred from the harness.
 
 `scripts/v1_ui_probe.js` exports `browserProbe(page, config)` for an existing
 Playwright session. Config contains `baseURL`, runtime-only `tokens` with

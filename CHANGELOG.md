@@ -1,5 +1,9 @@
 # Changelog
 
+## Local submission flow correction — 2026-11-02
+
+- Explain and disable normal submission until the latest evaluation is COMPLETE/PASS. For known actionable 409 conflicts, refresh authorized current detail, preserve same-suite typed corrections and selection, and synchronize only that queue row. Keep unauthorized/error clearing, server gates and the exact pending-request recovery separate.
+
 ## Local evidence wording correction — 2026-11-02
 
 - Label the existing source-only eligibility result as `현재 출처 적격성` and explain that evaluation, workflow and role checks still govern approval. Clarify the legacy JSON field in OpenAPI without changing its name, predicate, approval gates, seals or replay semantics. Add HTTP and actual DOM-handler regressions for a blocked evaluation with eligible sources.
