@@ -69,3 +69,9 @@ Current local verification is recorded in [VALIDATION.md](VALIDATION.md).
 
 Synthetic local demo only. No real-model execution, external expert assessment,
 production capacity guarantee or Windows validation is implied by these checks.
+
+## Case triage filters (2026-11-06)
+
+After comparison, use **변경 항목** to show all cases, any change, or one of the five change dimensions. **사례 ID 검색** performs case-insensitive literal substring matching; both filters intersect. The visible/total count and empty-state guidance describe the filtered table. Summary counts, context warnings and the full hash disclosure still describe the entire comparison. Filtering sends no requests, changes no stored data, and does not alter latest-run submission readiness. Selecting another run clears the old comparison and its filters.
+
+The scoped public reference, observed/inferred boundaries and executed feature matrix are in [recon](../replica/recon.md) and [parity](../replica/parity.md). This is a local workflow adaptation, not a model-quality ranking or trace reconstruction.

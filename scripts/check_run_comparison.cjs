@@ -50,6 +50,38 @@ async function smallHistory(count) {
   assert.equal(ui.get('compare-runs'), null);
 }
 
+async function filterComparison() {
+  const unchanged = { ...comparison.rows[0], case_id: 'stable-case', changes: {} };
+  const result = { ...comparison, rows: [...comparison.rows, unchanged] };
+  const ui = await app({ initial: 'INCOMPLETE', extraGet: url => response(url.includes('/compare?') ? result : history) });
+  await ui.get('load-run-history').onclick();
+  await ui.get('compare-runs').onclick();
+  const calls = ui.calls.length;
+  const filter = ui.get('comparison-filter'), search = ui.get('comparison-search');
+  assert.ok(filter && search, 'comparison offers dimension and case-ID filters');
+  assert.equal(ui.get('comparison-rows').children.length, 2);
+  filter.value = 'any_changed'; filter.onchange();
+  assert.equal(ui.get('comparison-rows').children.length, 1);
+  assert.match(ui.get('comparison-rows').textContent, /<img/);
+  filter.value = 'source_refs_changed'; filter.onchange();
+  assert.equal(ui.get('comparison-rows').children.length, 0);
+  assert.match(ui.get('comparison-visible').textContent, /0.*2/);
+  assert.equal(ui.get('comparison-empty').hidden, false);
+  filter.value = 'all'; filter.onchange();
+  search.value = ' STABLE '; search.oninput();
+  assert.equal(ui.get('comparison-rows').children.length, 1);
+  assert.match(ui.get('comparison-rows').textContent, /stable-case/);
+  filter.value = 'input_changed'; filter.onchange();
+  assert.equal(ui.get('comparison-rows').children.length, 0, 'filters intersect');
+  search.value = ''; search.oninput();
+  assert.equal(ui.get('comparison-rows').children.length, 1);
+  assert.match(ui.get('run-comparison').textContent, /INCOMPLETE.*INPUT_CHANGED/);
+  assert.equal(ui.calls.length, calls, 'filtering never sends requests');
+  assert.equal(ui.get('submit-change').disabled, true);
+  ui.get('baseline-run').onchange();
+  assert.equal(ui.get('comparison-filter'), null, 'new selection clears old filters/results');
+}
+
 async function historyError() {
   const ui = await app({ extraGet: () => ({ ok: false, status: 409, json: async () => ({ error: { code: 'EVIDENCE_RECORD_TAMPERED', message: 'Rejected' } }) }) });
   await ui.get('load-run-history').onclick();
@@ -111,6 +143,7 @@ async function comparisonErrorRetry() {
 
 (async () => {
   const checks = [['lazy read-only comparison and latest veto', lazyAndReadOnly],
+    ['dimension and case-ID filters preserve context and latest veto', filterComparison],
     ['zero runs', () => smallHistory(0)], ['one run', () => smallHistory(1)],
     ['history error', historyError], ['history after role change', () => staleHistory(true)],
     ['history after selection change', () => staleHistory(false)], ['comparison after selector change', staleComparison],

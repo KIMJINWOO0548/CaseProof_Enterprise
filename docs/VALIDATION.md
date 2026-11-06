@@ -331,3 +331,7 @@ Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwr
 - 외부 SME 검수, 비공개 holdout 연구, production 인증과 실제 보험 의사결정 적용은 수행하지 않았다.
 
 이 결과는 기록된 로컬 실행의 증거이며 공개 저장소 CI green, 보안 인증 또는 배포 승인을 뜻하지 않는다.
+
+## 2026-11-06 comparison triage
+
+Host Python 3.12 existing virtual environment: full suite **962 passed / 458 skipped / 22 subtests passed**, 3 existing warnings, exit 0. Skips are 457 unavailable PostgreSQL checks and one optional Playwright browser check. Initialization-only Windows wrapper retries: 0. Smoke 12/12, baseline JS syntax and structural package checks each exit 0. Actual modified comparison-handler harness: RED 10/1 → GREEN 11/0; v1.js Node syntax exit 0. [Commands, source evidence and limitations](../replica/verification.md). No real browser visual or external/production acceptance claim.

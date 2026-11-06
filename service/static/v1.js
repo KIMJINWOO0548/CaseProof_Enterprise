@@ -174,11 +174,32 @@
             output.replaceChildren(warning, node('p', '저장된 결과와 해시만 비교합니다. 입력·출처·설정이 다르면 결과의 원인을 단정할 수 없습니다. 모델 품질 평가나 자동 승인 권고가 아닙니다.'), node('p', `변경 사례 ${result.changed_counts.any_changed}개 · 각 변경 항목 수는 중복 집계될 수 있습니다.`));
             const wrap = node('div', undefined, 'table-responsive'), table = node('table', undefined, 'table'), head = node('thead'), header = node('tr');
             ['사례', '기준 결과', '대상 결과', '변경 항목'].forEach(label => header.append(node('th', label))); head.append(header); table.append(head);
-            const body = node('tbody');
+            const body = node('tbody'); body.id = 'comparison-rows';
             const state = side => side ? `${side.verdict} · ${side.complete ? 'COMPLETE' : 'INCOMPLETE'} · ${side.resolution_status}${side.error_code ? ' · ' + side.error_code : ''}` : '없음';
-            result.rows.forEach(row => { const tr = node('tr'); [row.case_id, state(row.baseline), state(row.candidate), Object.keys(row.changes).filter(key => row.changes[key]).join(', ') || '변경 없음'].forEach(value => tr.append(node('td', value))); body.append(tr); });
+            const filters = node('div', undefined, 'run-compare-controls');
+            const caption = node('label', '변경 항목', 'form-label'), filter = node('select', undefined, 'form-select');
+            filter.id = 'comparison-filter'; caption.htmlFor = filter.id;
+            for (const [value, label] of [['all', '전체 사례'], ['any_changed', '변경된 사례'], ['presence_changed', '사례 추가·누락'], ['input_changed', '입력 변경'], ['output_changed', '출력 변경'], ['source_refs_changed', '출처 변경'], ['result_state_changed', '결과 상태 변경']]) {
+              const option = node('option', label); option.value = value; filter.append(option);
+            }
+            filter.value = 'all';
+            const searchLabel = node('label', '사례 ID 검색', 'form-label'), search = node('input', undefined, 'form-control');
+            search.id = 'comparison-search'; search.type = 'search'; searchLabel.htmlFor = search.id;
+            const visible = node('p'); visible.id = 'comparison-visible'; visible.setAttribute('role', 'status');
+            const empty = node('p', '조건에 맞는 사례가 없습니다. 변경 항목이나 사례 ID 검색을 조정하세요.'); empty.id = 'comparison-empty';
+            function renderRows() {
+              const query = search.value.trim().toLowerCase();
+              const rows = result.rows.filter(row => row.case_id.toLowerCase().includes(query) &&
+                (filter.value === 'all' || (filter.value === 'any_changed' ? Object.values(row.changes).some(Boolean) : row.changes[filter.value] === true)));
+              body.replaceChildren();
+              rows.forEach(row => { const tr = node('tr'); [row.case_id, state(row.baseline), state(row.candidate), Object.keys(row.changes).filter(key => row.changes[key]).join(', ') || '변경 없음'].forEach(value => tr.append(node('td', value))); body.append(tr); });
+              visible.textContent = `표시 ${rows.length} / 전체 ${result.rows.length}개 · 요약과 해시 참조는 전체 비교 기준입니다.`;
+              empty.hidden = rows.length !== 0;
+            }
+            filter.onchange = search.oninput = renderRows;
+            filters.append(caption, filter, searchLabel, search); renderRows();
             table.append(body); wrap.append(table);
-            const details = node('details'); details.append(node('summary', '실행·입출력·출처 해시 참조'), node('pre', JSON.stringify(result, null, 2))); output.append(wrap, details);
+            const details = node('details'); details.append(node('summary', '실행·입출력·출처 해시 참조'), node('pre', JSON.stringify(result, null, 2))); output.append(filters, visible, empty, wrap, details);
           } catch (error) { if (valid() && sequence === request) { output.textContent = '평가 비교 조회 실패. 선택을 확인하고 다시 조회하세요.'; message(error); } }
           finally { if (valid() && sequence === request) { compare.disabled = false; output.setAttribute('aria-busy', 'false'); } }
         }, controls, false);

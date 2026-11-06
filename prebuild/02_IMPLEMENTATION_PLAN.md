@@ -235,3 +235,9 @@
 `task ID | changed files/behavior | red-test evidence | green commands/exit | environment/DB/role | regressions | skipped checks | evidence path | remaining limitation | next task`.
 
 Only mark a checkbox after its assertions pass. Update status and release notes to the final behavior, not the initial plan. An internal coding-agent review is useful engineering review and is never an external SME/security certification.
+
+### 2026-11-06 scoped comparison follow-up
+
+- [x] Add read-only dimension and case-ID filters with explicit visible/total count and empty state.
+- [x] Observe missing-control RED, then actual-handler GREEN (11 scenarios); preserve full context warnings and latest-run gate.
+- [x] Run full host suite (962 passed, 458 explicit optional skips, 22 subtests) and smoke/JS/package checks; record [limits](../replica/verification.md).

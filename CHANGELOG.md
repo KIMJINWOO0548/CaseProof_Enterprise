@@ -93,3 +93,7 @@ study and external security/insurance reviews remain future work.
 Imported from the user-provided CaseProof Enterprise Prebuild v5.2, whose runtime
 was a v5.1 local prototype. Historical releases/scores are not reissued as current
 verification. Original archive/file hashes are recorded in docs/PROVENANCE.md.
+
+## Unreleased — 2026-11-06
+
+- Saved-run comparison now narrows cases by change dimension and case-ID search, with visible/total counts and empty-result guidance. Filtering preserves full-comparison context warnings and latest-run readiness.

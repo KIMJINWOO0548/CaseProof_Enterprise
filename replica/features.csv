@@ -1,0 +1,6 @@
+feature,area,priority,original,clone,notes
+Compare saved runs at case level,comparison,must,yes,yes,Existing authorized baseline and candidate comparison
+Narrow comparison to changed cases,triage,must,yes,yes,Local dimension selector preserves full comparison context
+Inspect exact trace details,trace,could,yes,skip,Raw historical model inputs and trace bodies outside projection contract
+Case-ID text search,triage,should,no,yes,Local enhancement intersected with dimension selector
+Keep context warnings while filtering,safety,must,no,yes,INCOMPLETE and changed-context warnings retained
