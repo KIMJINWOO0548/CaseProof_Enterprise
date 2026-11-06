@@ -196,3 +196,15 @@ button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible
 #run-history, #run-comparison { min-width: 0; overflow-wrap: anywhere; }
 #run-comparison pre { max-width: 100%; overflow: auto; }
 #run-comparison .table { min-width: 36rem; }
+
+/* Case review keeps full-run warnings above bounded results and provenance. */
+.comparison-pager { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; margin: 16px 0; }
+.comparison-pager .btn, .comparison-case { min-height: 44px; }
+.comparison-case { text-align: left; white-space: normal; overflow-wrap: anywhere; }
+.comparison-inspector { border: 1px solid var(--cp-border, #d6d9e3); border-radius: 12px; padding: 20px; background: var(--cp-surface, #fff); }
+.comparison-inspector:focus { outline: 3px solid #5141a6; outline-offset: 3px; }
+.comparison-sides { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.comparison-sides > div { min-width: 0; }
+.comparison-sides dl { display: block; }
+.comparison-sides dd, .comparison-sides code { display: block; overflow-wrap: anywhere; white-space: normal; }
+@media (max-width: 640px) { .comparison-sides { grid-template-columns: minmax(0, 1fr); gap: 16px; } }

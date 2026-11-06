@@ -49,7 +49,7 @@ function state(kind, revision = kind === 'NO_RUN' ? 1 : 2) {
   return { historical_integrity: 'VALID', snapshot, latest_run: run };
 }
 
-async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, uncertainEvaluation = false, extraGet = null } = {}) {
+async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, uncertainEvaluation = false, extraGet = null, javascriptOverride = null } = {}) {
   const roots = new Map(), created = [], calls = [];
   for (const match of html.matchAll(/<([a-z][a-z0-9]*)\b([^>]*\bid="([^"]+)"[^>]*)>/gi)) {
     const element = new Element(match[1], true); element.id = match[3];
@@ -104,7 +104,7 @@ async function app({ initial = 'PASS', rejection = null, refreshStatus = 200, un
     if (extraGet) return extraGet(url, options);
     throw new Error('Unexpected URL ' + url);
   };
-  vm.runInNewContext(javascript, { document, fetch, crypto: webcrypto });
+  vm.runInNewContext(javascriptOverride ?? javascript, { document, fetch, crypto: webcrypto });
   get('token').value = 'synthetic-fixture-only';
   await get('login-form').onsubmit({ preventDefault() {}, submitter: new Element('button') });
   await connected().find(e => e.dataset.changeId === 'synthetic-change').onclick();

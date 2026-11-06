@@ -187,19 +187,56 @@
             search.id = 'comparison-search'; search.type = 'search'; searchLabel.htmlFor = search.id;
             const visible = node('p'); visible.id = 'comparison-visible'; visible.setAttribute('role', 'status');
             const empty = node('p', '조건에 맞는 사례가 없습니다. 변경 항목이나 사례 ID 검색을 조정하세요.'); empty.id = 'comparison-empty';
+            const pager = node('nav', undefined, 'comparison-pager'); pager.setAttribute('aria-label', '사례 비교 페이지');
+            let page = 0;
+            const pageSize = 50;
+            const inspector = node('section', undefined, 'comparison-inspector'); inspector.id = 'comparison-case-detail';
+            inspector.setAttribute('aria-label', '선택한 사례 근거'); inspector.tabIndex = -1;
+            const resetInspector = () => { inspector.replaceChildren(node('p', '사례 ID를 선택하면 기준과 후보의 근거 해시를 나란히 확인합니다.')); };
+            function inspectCase(row) {
+              inspector.replaceChildren(node('h4', row.case_id), node('p', '저장된 투영 · 원문과 모델 응답은 포함하지 않습니다. 비교 조건 경고는 전체 실행 기준입니다.'));
+              const sides = node('div', undefined, 'comparison-sides');
+              for (const [label, side] of [['기준', row.baseline], ['후보', row.candidate]]) {
+                const panel = node('div'); panel.append(node('h5', label));
+                if (!side) panel.append(node('p', '이 실행에 사례 없음'));
+                else {
+                  panel.append(node('p', state(side)));
+                  const fields = node('dl');
+                  for (const field of ['input_sha256', 'output_sha256', 'critical_failure']) fields.append(node('dt', field), node('dd', String(side[field] ?? '미확인')));
+                  panel.append(fields, node('h6', '출처 참조'));
+                  if (!side.source_refs.length) panel.append(node('p', '참조 없음'));
+                  side.source_refs.forEach(ref => { const entry = node('p'); entry.append(node('strong', ref.id), node('code', ref.payload_sha256)); panel.append(entry); });
+                }
+                sides.append(panel);
+              }
+              inspector.append(sides); inspector.focus();
+            }
+            const previous = button('comparison-previous', '이전 50개', () => { page--; renderRows(); }, pager, false);
+            const position = node('span'); position.id = 'comparison-page'; position.setAttribute('role', 'status'); pager.append(position);
+            const next = button('comparison-next', '다음 50개', () => { page++; renderRows(); }, pager, false);
             function renderRows() {
               const query = search.value.trim().toLowerCase();
               const rows = result.rows.filter(row => row.case_id.toLowerCase().includes(query) &&
                 (filter.value === 'all' || (filter.value === 'any_changed' ? Object.values(row.changes).some(Boolean) : row.changes[filter.value] === true)));
-              body.replaceChildren();
-              rows.forEach(row => { const tr = node('tr'); [row.case_id, state(row.baseline), state(row.candidate), Object.keys(row.changes).filter(key => row.changes[key]).join(', ') || '변경 없음'].forEach(value => tr.append(node('td', value))); body.append(tr); });
-              visible.textContent = `표시 ${rows.length} / 전체 ${result.rows.length}개 · 요약과 해시 참조는 전체 비교 기준입니다.`;
+              const pages = Math.max(1, Math.ceil(rows.length / pageSize)); page = Math.max(0, Math.min(page, pages - 1));
+              const start = page * pageSize, shown = rows.slice(start, start + pageSize);
+              body.replaceChildren(); resetInspector();
+              shown.forEach(row => {
+                const tr = node('tr'), cell = node('td'), inspect = node('button', row.case_id, 'btn btn-link comparison-case');
+                inspect.type = 'button'; inspect.setAttribute('aria-controls', inspector.id); inspect.onclick = () => inspectCase(row); cell.append(inspect); tr.append(cell);
+                [state(row.baseline), state(row.candidate), Object.keys(row.changes).filter(key => row.changes[key]).join(', ') || '변경 없음'].forEach(value => tr.append(node('td', value))); body.append(tr);
+              });
+              visible.textContent = `표시 ${rows.length} / 전체 ${result.rows.length}개 · 현재 ${shown.length}개 · 비교 맥락 경고는 전체 실행 기준입니다.`;
+              position.textContent = `${page + 1} / ${pages} 페이지 · ${rows.length ? start + 1 : 0}–${start + shown.length}`;
+              previous.disabled = page === 0; next.disabled = page >= pages - 1;
               empty.hidden = rows.length !== 0;
             }
-            filter.onchange = search.oninput = renderRows;
+            filter.onchange = search.oninput = () => { page = 0; renderRows(); };
             filters.append(caption, filter, searchLabel, search); renderRows();
             table.append(body); wrap.append(table);
-            const details = node('details'); details.append(node('summary', '실행·입출력·출처 해시 참조'), node('pre', JSON.stringify(result, null, 2))); output.append(filters, visible, empty, wrap, details);
+            const details = node('details'); details.append(node('summary', '실행·입출력·출처 해시 참조')); let rawLoaded = false;
+            details.ontoggle = () => { if (details.open && !rawLoaded) { details.append(node('pre', JSON.stringify(result, null, 2))); rawLoaded = true; } };
+            output.append(filters, visible, empty, wrap, pager, inspector, details);
           } catch (error) { if (valid() && sequence === request) { output.textContent = '평가 비교 조회 실패. 선택을 확인하고 다시 조회하세요.'; message(error); } }
           finally { if (valid() && sequence === request) { compare.disabled = false; output.setAttribute('aria-busy', 'false'); } }
         }, controls, false);

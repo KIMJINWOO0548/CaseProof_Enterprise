@@ -1,0 +1,21 @@
+{
+  "scope": "actual Chromium UI with synthetic intercepted local API; not backend E2E",
+  "browser": "156.0.8078.80",
+  "viewports": [
+    {
+      "viewport": 1440,
+      "overflow": 0,
+      "buttonHeight": 60,
+      "focus": "comparison-case-detail"
+    },
+    {
+      "viewport": 390,
+      "overflow": 0,
+      "buttonHeight": 60,
+      "focus": "comparison-case-detail"
+    }
+  ],
+  "errors": [],
+  "posts": [],
+  "status": "PASS"
+}

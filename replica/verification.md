@@ -26,3 +26,22 @@ The modified v1.js also passed its independent Node syntax check and all 11 comp
 Raw evidence: task workspace verification/CaseProof_Enterprise/{0,1,2,3}-validation.log and summary.json. Smoke report: reports/runs/20261106T150958Z-756cda09/integration_smoke.json. Package source count is the observed run count, not a fixed release manifest. No release distribution was generated; the original 410-file source manifest is deliberately retained as baseline and would require regeneration for a new distribution.
 
 Acceptance: focused local behavior and automated regressions verified. Real browser visual execution, PostgreSQL, external human review and production/model evaluation remain unrun. No claim of whole-product or visual parity.
+
+## Phase 2
+See [depth review](depth-review.md) for new RED/GREEN, own-only measurement, merge preservation and explicitly remaining external checks. Prior phase1 results do not validate phase2.
+
+## Phase2 host verification — completed
+Parent host logs were read directly from phase2/verification/CaseProof_Enterprise. `python -m scripts.windows_checks pytest -q --basetemp=<owned tmp>`: **962 passed,458 skipped,22 subtests**,3 existing warnings,exit0,247.58s wall time. Optional skips include unavailable real PostgreSQL and optional evaluation/browser dependencies; these are not passes. Initialization-only Windows socketpair wrapper reported **0 retries**. `scripts.windows_checks scripts.smoke`:12/12 PASS (1.81s); UI inline syntax exit0; package structural check421files PASS. Added real-handler tests12/12 and submit/recovery15/15 pass; v1.js syntax exit0.
+
+Executed `scripts/check_comparison_browser.cjs` against Chrome156 with intercepted local synthetic API; see the browser verification below. This remains distinct from backend E2E and competitor interaction evidence.
+
+## Phase2 actual browser verification — completed
+
+Chrome156.0.8078.80 executed the real source UI with synthetic intercepted API responses. At1440px and390px the document had0px horizontal overflow and no page exceptions. This is actual browser behavior/layout evidence, not live-backend E2E, assistive-technology certification or competitor testing. Backend behavior is covered separately by the full host suite.
+
+Native Enter on a case moved focus to `comparison-case-detail`. Paging/search preserved the global warning and latest incomplete gate; comparison rows remained bounded and no POST occurred. Case control measured60px at both widths. Mobile screenshot reviewed: provenance stacks and hashes wrap; the comparison table uses contained horizontal scrolling. [Result](evidence/browser/result.json), [desktop](evidence/browser/case-review-1440.png), [mobile](evidence/browser/case-review-390.png).
+
+## Actual public reference interaction — account gate
+Independent REA capture opened https://langfuse.com/cloud/demo?utm_campaign=demo_project, rejected optional cookies and clicked the Europe demo link. The destination displayed account creation/sign-in; no account, credentials or form submission was attempted. The comparison application was therefore inaccessible within the authorized public-only scope. This is evidence of portal navigation and an account gate, not validation of experiment comparison or trace behavior.
+
+[Capture summary](evidence/langfuse/summary.json) (SHA256 `ac1a4115498d1e2448da3c7eb4b73d3d72b68dea03ecd9aff2a1ecc1fbc66cf3`) and local destination accessibility snapshot (SHA256 `4f640bc846e4151d843f0ceb88bc70d2ee7f2544908532fa82910b426598e042`; retained only under task `phase2/refs/langfuse-europe-demo-flow/5-accessibility.txt`). Five initial actions completed; the final destination wait failed because `main, h1, form` matched multiple elements. CLI exit0 does not override `completeness=incomplete` and `equality_eligible=false`. The captured destination still establishes the account gate. Owned Chromium process cleanup completed. Equal-condition competitor tests remain NOT_RUN.

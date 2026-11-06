@@ -1,0 +1,31 @@
+{
+  "scope": "own-only synthetic DOM harness, not browser paint/network/competitor",
+  "node": "v24.22.1",
+  "platform": "win32",
+  "fixture_sha256": "5cba8584122cf4878e94162282a937ddb4d613c258b05e2ce94578111a2b91d3",
+  "response_bytes": 663276,
+  "records": [
+    {
+      "name": "before",
+      "source_sha256": "b443cf9d5f50e730728214571d056725a8b2b5930de02907fe6d076667676e05",
+      "samples": 20,
+      "warmup": 5,
+      "median_ms": 4.794900000000013,
+      "p95_ms": 11.071699999999964,
+      "rowCount": 1000,
+      "nodeCount": 5151,
+      "textBytes": 976113
+    },
+    {
+      "name": "after",
+      "source_sha256": "07961295d2aea868a223fea8bd6e7af320d7b6d98cb4af2e78642e327cdb095d",
+      "samples": 20,
+      "warmup": 5,
+      "median_ms": 0.3546999999999798,
+      "p95_ms": 0.5863000000000511,
+      "rowCount": 50,
+      "nodeCount": 456,
+      "textBytes": 4848
+    }
+  ]
+}

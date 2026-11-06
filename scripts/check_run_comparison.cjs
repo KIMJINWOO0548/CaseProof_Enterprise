@@ -82,6 +82,43 @@ async function filterComparison() {
   assert.equal(ui.get('comparison-filter'), null, 'new selection clears old filters/results');
 }
 
+async function boundedCaseReview() {
+  const rows = Array.from({ length: 1000 }, (_, i) => ({ ...comparison.rows[0], case_id: 'case-' + String(i).padStart(4, '0') }));
+  rows[0] = { ...rows[0], candidate: null, changes: { presence_changed: true } };
+  const ui = await app({ initial: 'INCOMPLETE', extraGet: url => response(url.includes('/compare?') ? { ...comparison, rows } : history) });
+  await ui.get('load-run-history').onclick(); await ui.get('compare-runs').onclick();
+  assert.equal(ui.get('comparison-rows').children.length, 50, 'render at most 50 of 1000 cases');
+  const raw = ui.get('run-comparison').children.find(e => e.tagName === 'DETAILS');
+  assert.equal(raw.children.length, 1, 'raw JSON serialization is deferred until requested');
+  raw.open = true; raw.ontoggle();
+  assert.equal(raw.children.length, 2);
+  raw.ontoggle(); assert.equal(raw.children.length, 2, 'raw projection is appended once');
+
+  assert.equal(ui.get('comparison-previous').disabled, true);
+  assert.equal(ui.get('comparison-next').disabled, false);
+  const inspect = () => ui.get('comparison-rows').children[0].children[0].children[0];
+  inspect().onclick();
+  assert.match(ui.get('comparison-case-detail').textContent, /case-0000/);
+  assert.match(ui.get('comparison-case-detail').textContent, /input_sha256/);
+  assert.match(ui.get('comparison-case-detail').textContent, /없음/);
+  ui.get('comparison-next').onclick();
+  assert.match(ui.get('comparison-rows').textContent, /case-0050/);
+  assert.doesNotMatch(ui.get('comparison-case-detail').textContent, /case-0000/, 'page change clears stale inspection');
+  for (let i = 1; i < 19; i++) ui.get('comparison-next').onclick();
+  assert.equal(ui.get('comparison-next').disabled, true);
+  assert.match(ui.get('comparison-rows').textContent, /case-0999/);
+  ui.get('comparison-search').value = 'case-000'; ui.get('comparison-search').oninput();
+  assert.equal(ui.get('comparison-rows').children.length, 10);
+  assert.equal(ui.get('comparison-previous').disabled, true, 'search resets page');
+  assert.equal(ui.get('comparison-next').disabled, true);
+  ui.get('comparison-search').value = 'missing'; ui.get('comparison-search').oninput();
+  assert.equal(ui.get('comparison-rows').children.length, 0);
+  assert.equal(ui.get('comparison-empty').hidden, false);
+  assert.match(ui.get('run-comparison').textContent, /INCOMPLETE.*INPUT_CHANGED/);
+  assert.equal(ui.get('submit-change').disabled, true);
+  assert.equal(ui.calls.filter(c => c.method === 'POST').length, 0);
+}
+
 async function historyError() {
   const ui = await app({ extraGet: () => ({ ok: false, status: 409, json: async () => ({ error: { code: 'EVIDENCE_RECORD_TAMPERED', message: 'Rejected' } }) }) });
   await ui.get('load-run-history').onclick();
@@ -142,7 +179,7 @@ async function comparisonErrorRetry() {
 }
 
 (async () => {
-  const checks = [['lazy read-only comparison and latest veto', lazyAndReadOnly],
+  const checks = [['bounded case review and provenance', boundedCaseReview], ['lazy read-only comparison and latest veto', lazyAndReadOnly],
     ['dimension and case-ID filters preserve context and latest veto', filterComparison],
     ['zero runs', () => smallHistory(0)], ['one run', () => smallHistory(1)],
     ['history error', historyError], ['history after role change', () => staleHistory(true)],

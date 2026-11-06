@@ -63,3 +63,9 @@ dev6의 고정된 실행·HTTP·UI 소스에 대한 로컬 전체 회귀는 **90
 ## 2026-11-06 — saved comparison triage
 
 Added change-dimension filtering and literal case-ID search to the existing read-only comparison table. Whole-comparison warnings, hash references and latest-run approval gates remain visible and unchanged. Actual JavaScript handlers: RED 10 passed / 1 failed, GREEN 11 passed / 0 failed; full verification is recorded in replica/verification.md. [Scope and source](../replica/recon.md).
+
+2026-11-06 phase2: bounded 50-case paging, per-case provenance inspection and lazy raw JSON rendering. Twelve real-handler scenarios and fifteen submit/recovery scenarios pass; full HTTP suite962 passed/458 optional skips. See replica/depth-review.md for own-only benchmark and remaining gaps.
+
+Phase2 host verification completed:962pytest PASS/458optional SKIP/22subtests; smoke12/12, syntax and package421files PASS. Windows initialization wrapper0retries. See replica/depth-review.md for measured scope and remaining gaps.
+
+Phase2 Chromium156 verification completed: native keyboard flow,1440/390px document overflow0, no page exceptions. Synthetic API interception; backend tests separate. Evidence and remaining professional accessibility/production gaps: replica/depth-review.md.

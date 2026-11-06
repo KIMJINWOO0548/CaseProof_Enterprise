@@ -335,3 +335,7 @@ Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwr
 ## 2026-11-06 comparison triage
 
 Host Python 3.12 existing virtual environment: full suite **962 passed / 458 skipped / 22 subtests passed**, 3 existing warnings, exit 0. Skips are 457 unavailable PostgreSQL checks and one optional Playwright browser check. Initialization-only Windows wrapper retries: 0. Smoke 12/12, baseline JS syntax and structural package checks each exit 0. Actual modified comparison-handler harness: RED 10/1 → GREEN 11/0; v1.js Node syntax exit 0. [Commands, source evidence and limitations](../replica/verification.md). No real browser visual or external/production acceptance claim.
+
+Phase2 host verification completed:962pytest PASS/458optional SKIP/22subtests; smoke12/12, syntax and package421files PASS. Windows initialization wrapper0retries. See replica/depth-review.md for measured scope and remaining gaps.
+
+Phase2 Chromium156 verification completed: native keyboard flow,1440/390px document overflow0, no page exceptions. Synthetic API interception; backend tests separate. Evidence and remaining professional accessibility/production gaps: replica/depth-review.md.

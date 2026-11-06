@@ -1,0 +1,99 @@
+{
+  "source_url": "https://langfuse.com/cloud/demo?utm_campaign=demo_project",
+  "command": "node <local rea 6.8.0 CLI> capture-browser-scenario scenario.json --format json",
+  "exit_code": 0,
+  "top_keys": [
+    "evidence_id",
+    "subject",
+    "provider",
+    "analysis_profile",
+    "predicate_type",
+    "operation",
+    "parameters",
+    "raw_result",
+    "normalized_result",
+    "confidence",
+    "authority",
+    "environment",
+    "limitations",
+    "relationship_coverage",
+    "locations",
+    "evidence_links"
+  ],
+  "browser": {
+    "mode": "launch",
+    "process_ownership": "provider-owned",
+    "cleanup": "terminated-owned-process",
+    "product": "Chromium",
+    "version": "156.0.8078.80"
+  },
+  "status": null,
+  "error": null,
+  "completeness": {
+    "status": "incomplete",
+    "equality_eligible": false,
+    "missing_sections": [
+      "action"
+    ],
+    "truncated_sections": []
+  },
+  "step_statuses": [
+    {
+      "step_id": "scenario_start",
+      "action": "goto_start",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "step_id": "cookie_notice_ready",
+      "action": "wait_for",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "step_id": "reject_optional_cookies",
+      "action": "click",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "step_id": "region_portal_ready",
+      "action": "wait_for",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "step_id": "open_public_europe_demo",
+      "action": "click",
+      "status": "completed",
+      "error": null
+    },
+    {
+      "step_id": "destination_ready",
+      "action": "wait_for",
+      "status": "failed",
+      "error": "locator.waitFor: Error: strict mode violation: locator('main, h1, form') resolved to 2 elements:\n    1) <main class=\"min-h-dvh w-full overflow-y-auto p-3 px-4 py-4 sm:px-6 lg:px-8\">…</main> aka getByRole('main')\n    2) <form class=\"space-y-6\">…</form> aka getByText('NameEmailContinue')\n\nCall log:\n\u001b[2m  - waiting for locator('main, h1, form') to be visible\u001b[22m\n"
+    }
+  ],
+  "evidence": {
+    "0-accessibility.txt": "329523b7bdd1fc1ac53658ab1f6ba96cc4633134a1c6b2736d13a7d6e917868a",
+    "0-dom.txt": "b510d7fae5b07c8e63b61dcfeb5a3ca6826d0eeca08a8a9e6deb6672410037f8",
+    "0-screenshot.png": "5fd0cc5425046b43642f3bb2fd2aec16a870ae53a7496c302a27eec2c3774ae1",
+    "1-accessibility.txt": "329523b7bdd1fc1ac53658ab1f6ba96cc4633134a1c6b2736d13a7d6e917868a",
+    "1-dom.txt": "b510d7fae5b07c8e63b61dcfeb5a3ca6826d0eeca08a8a9e6deb6672410037f8",
+    "1-screenshot.png": "5fd0cc5425046b43642f3bb2fd2aec16a870ae53a7496c302a27eec2c3774ae1",
+    "2-accessibility.txt": "a54af8f77068593327562a88ea7bc1b5959b17bc080dffbab703b63a9f7adc35",
+    "2-dom.txt": "70658838fb4c154cf0ffdd1fa02df8d95cd76ad6d0c4a37c25b0f56581ed2031",
+    "2-screenshot.png": "f001a2302594ff7dcb8ed8630eeffb7c3eb4dfa71a82305dda52357b83369200",
+    "3-accessibility.txt": "a54af8f77068593327562a88ea7bc1b5959b17bc080dffbab703b63a9f7adc35",
+    "3-dom.txt": "aeac2f4283267988f02eefc64fcdd9fe1772417892d5f33a7e73df6b0eca0bba",
+    "3-screenshot.png": "f001a2302594ff7dcb8ed8630eeffb7c3eb4dfa71a82305dda52357b83369200",
+    "4-accessibility.txt": "4f640bc846e4151d843f0ceb88bc70d2ee7f2544908532fa82910b426598e042",
+    "4-dom.txt": "ac7fc0fe6e44cbf868c80aa17e415911e96b7307e516ecec00ffafdc5d96fa08",
+    "4-screenshot.png": "239481922c0a3039b77c968259a0e4ed7441d4fd90a790a8e6eb7482408e4bef",
+    "5-accessibility.txt": "4f640bc846e4151d843f0ceb88bc70d2ee7f2544908532fa82910b426598e042",
+    "5-dom.txt": "27962862c1d9dca51de15a7c0e9b3928776a06c25c2e41853c619d3dfdbb9851",
+    "5-screenshot.png": "f9cdb7c01ba81fde544290c80051bf761c5e303f165259113111192cadcf6faf",
+    "stderr.txt": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  }
+}
