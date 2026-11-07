@@ -17,7 +17,8 @@ REQUIRED = ['README.md', 'START_HERE.md', 'AGENTS.md', 'LICENSE', 'NOTICE',
             'CONTRIBUTING.md', 'SECURITY.md', 'CODE_OF_CONDUCT.md', 'THIRD_PARTY_NOTICES.md',
             'pyproject.toml', 'requirements.lock', 'requirements-dev.lock',
             '.github/workflows/ci.yml', 'docs/STATUS.md', 'docs/VALIDATION.md',
-            'prebuild/08_IMPLEMENTATION_CONTRACTS.md', 'contracts/README.md']
+            'prebuild/05_DEVELOPMENT_GUIDE.md', 'prebuild/08_IMPLEMENTATION_CONTRACTS.md',
+            'contracts/README.md']
 
 
 def checks(root=ROOT):

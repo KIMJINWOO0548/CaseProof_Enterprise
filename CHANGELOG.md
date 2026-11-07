@@ -1,5 +1,10 @@
 # Changelog
 
+## Documentation and source-package checks — 2026-11-07
+
+- Consolidate development steps in `prebuild/05_DEVELOPMENT_GUIDE.md`, with current API boundaries and required safety checks.
+- Require the development guide and safety contract in source-package validation; preserve runtime code, fixtures and historical provenance.
+
 ## 5.3.0.dev6 — 2026-11-01
 
 - Give the review workspace a distinct ink/iris/peach identity, local OFL-1.1 SUIT typography, responsive queue/detail/evidence panels and an accessible current-stage rail. Preserve raw statuses, actor-scoped recovery and evidence boundaries; serve the font with a portable explicit MIME type.

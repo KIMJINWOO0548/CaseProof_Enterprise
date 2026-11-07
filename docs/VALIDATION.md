@@ -1,5 +1,18 @@
 # 검증 결과 — 5.3.0.dev6
 
+## 2026-11-07 개발 안내와 소스 패키지
+
+Linux / Python 3.12.14. 기준선 `0855bde`에서 `python VERIFY_PACKAGE.py`는 392 source files PASS였다. 개발 안내·참조·필수 배포 파일 검사만 수정하고 앱·데이터·기존 인수 테스트·안전 계약·역사적 provenance는 유지했다. 새 안내 누락을 찾지 못하는 회귀 1건을 먼저 재현했으며, 안내 및 `AGENTS.md` 누락 검사 2건은 수정 후 통과했다.
+
+- `python -m pytest -q`: **914 passed, 459 skipped, 3 warnings, 22 subtests passed**, exit 0. 457개 PostgreSQL, 1개 선택적 Playwright, 1개 선택적 수치통계 검사는 이 로컬 환경에 필요한 구성·의존성이 없어 SKIPPED다.
+- `python -m scripts.smoke`, `python -m scripts.check_ui_syntax`, `node --check service/static/v1.js`, `node scripts/v1_ui_probe.js`, `node scripts/check_uncertain_recovery.cjs`: 모두 exit 0. 실제 브라우저 실행을 대신하지 않는다.
+- `python -m scripts.check_package`: 13 schemas, 63 examples, 14 canonical vectors, exit 0.
+- `python -m build --no-isolation --outdir dist/public-guides` 및 `python -m scripts.check_distribution dist/public-guides`: wheel/sdist 생성과 포함 파일 검사 exit 0. 새 개발 안내·`AGENTS.md`·시작 안내를 sdist 필수 파일로 검사한다.
+
+- 별도 가상환경에 `requirements.lock`을 hash 검증으로 설치한 뒤 새 wheel을 `--no-deps`로 설치했다. `pip check`와 저장소 밖 `scripts/check_distribution.py --installed` 모두 exit 0이며 자산·seed·HTML·health 검사를 통과했다.
+
+새 결과는 `reports/runs/20261107T150000Z-guide-validation/`에 기록했다. Windows·다른 Python 버전·PostgreSQL·수치통계·의존성 감사의 새 결과는 해당 commit의 CI와 별도로 대조한다. 연구·외부 검수·운영 배포 Gate를 이 문서 변경으로 통과 처리하지 않는다.
+
 ## 추가 시각 개편 — 2026-11-01 KST
 
 구현 `b0c3d64`의 [CI41226797390](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는 **9 success / PR 전용1skip**이다. Linux Python3.11/3.12/3.13·Windows3.12 각각 **912 PASS,459 optional SKIP,22 subtests PASS,3 warnings**이며, 별도 실제 PG17.11은 **460 PASS/0skip**, NumPy는 **34 PASS**다. [명령·JUnit·checksum](evidence/g1-g6/ci-b0c3d64.json), [정확한 source ZIP·wheel·저장소 밖 설치·Gitleaks](evidence/g1-g6/installed-b0c3d64.json)을 기록했다. 소스 ZIP은390개 source hash+manifest를 검증했다. Gitleaks 원시 종료값은1이며, 이력23/작업 소스22 후보를 해시·합성 요청키로 분류했고 자격 증명/미해결은0이었다. 보안 인증으로 해석하지 않는다.

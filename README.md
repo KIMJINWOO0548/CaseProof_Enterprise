@@ -108,6 +108,7 @@ The included GitHub Actions workflow defines fresh CI runs. A workflow file is n
 | --- | --- |
 | [prebuild/01_TARGET_DESIGN.md](prebuild/01_TARGET_DESIGN.md) | Product scope, design decisions, invariants |
 | [prebuild/08_IMPLEMENTATION_CONTRACTS.md](prebuild/08_IMPLEMENTATION_CONTRACTS.md) | Exact target API, transactions, state/evidence and data contracts |
+| [prebuild/05_DEVELOPMENT_GUIDE.md](prebuild/05_DEVELOPMENT_GUIDE.md) | Development workflow, safety boundaries and verification |
 | [prebuild/02_IMPLEMENTATION_PLAN.md](prebuild/02_IMPLEMENTATION_PLAN.md) | Development roadmap and acceptance criteria |
 | [contracts/README.md](contracts/README.md) | Versioned schemas, structural examples and links to the actual standalone v1 API |
 | [docs/STATUS.md](docs/STATUS.md) | Implemented vs planned capability matrix |

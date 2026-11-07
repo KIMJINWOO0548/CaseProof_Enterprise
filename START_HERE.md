@@ -33,7 +33,7 @@ $env:CASEPROOF_DEMO_MODE = '1'
 
 실행 가능한 CI는 이미 존재합니다. dev6 구현 `643e25f`의 [실제 CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41222223392)는 9개 job 성공, push의 PR 전용 1개 skip을 확인했습니다. 새 환경의 wheel 설치·V2 평가·근거 조회도 통과했습니다. 후속 문서 변경은 같은 구현을 유지하며 commit별 최종 검증은 [VALIDATION](docs/VALIDATION.md)에서 확인합니다.
 
-개발을 이어갈 때는 [AGENTS.md](AGENTS.md), [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md), [진행 체크리스트](prebuild/02_IMPLEMENTATION_PLAN.md)를 읽고 첫 미완료 인수 항목부터 진행합니다. 원본 테스트·합성 정답·기존 기록을 보존하고 새 결과는 `reports/runs/<run-id>/`에 남깁니다. 선택적 도구나 외부 검수 자료가 없으면 해당 검사를 SKIPPED로 기록합니다.
+개발을 이어갈 때는 [AGENTS.md](AGENTS.md), [개발 안내](prebuild/05_DEVELOPMENT_GUIDE.md), [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md), [진행 체크리스트](prebuild/02_IMPLEMENTATION_PLAN.md)를 읽고 첫 미완료 인수 항목부터 진행합니다. 원본 테스트·합성 정답·기존 기록을 보존하고 새 결과는 `reports/runs/<run-id>/`에 남깁니다. 선택적 도구나 외부 검수 자료가 없으면 해당 검사를 SKIPPED로 기록합니다.
 
 외부 모델과 optional job/lease 확장은 미활성·미구현입니다. 독립 앵커/WORM·보험 전문가 검수·비공개 360건 연구·독립 Windows 설치·사용자 관찰은 확보되지 않았으며 외부 검수 bonus는 0입니다. 로컬 PASS나 `APPROVED_FOR_DEMO`는 실제 보험 판단·운영 배포 승인이 아닙니다.
 

@@ -113,6 +113,7 @@ def check_archives(folder: Path) -> None:
         names = {"/".join(PurePosixPath(name).parts[1:]) for name in raw_names}
         required = RUNTIME_FILES | {
             "pyproject.toml", "requirements.txt", "README.md", "LICENSE", "NOTICE",
+            "AGENTS.md", "START_HERE.md", "prebuild/05_DEVELOPMENT_GUIDE.md",
             "THIRD_PARTY_NOTICES.md", "scripts/check_distribution.py",
             "alembic.ini", "migrations/env.py", "migrations/script.py.mako",
             "migrations/versions/0001_v1.py",

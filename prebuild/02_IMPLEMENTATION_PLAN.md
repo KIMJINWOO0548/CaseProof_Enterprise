@@ -1,6 +1,6 @@
 # CaseProof v1 Implementation Plan — v5.3 handoff
 
-> For agentic workers: implement one reviewable task at a time. Use `superpowers:executing-plans` or `superpowers:subagent-driven-development` when available; otherwise the same test-first procedure works without installed skills. Checkboxes below track **v1 acceptance work**, separately from the hardened `/api` baseline. Checked items have recorded execution evidence; unchecked items can contain implemented portions whose full acceptance matrix is not yet evidenced.
+> Implement one reviewable task at a time using the test-first procedure in [the development guide](05_DEVELOPMENT_GUIDE.md). No proprietary development tool is required. Checkboxes below track **v1 acceptance work**, separately from the hardened `/api` baseline. Checked items have recorded execution evidence; unchecked items can contain implemented portions whose full acceptance matrix is not yet evidenced.
 
 **Verification checkpoint (2026-11-01 KST):** implementation commit `e9b67ac`; [local evidence](../docs/VALIDATION.md), [PG17 CI job](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41214934555). Final UI revision and complete release CI are tracked separately. An implemented feature does not close a broader unexecuted acceptance matrix.
 
