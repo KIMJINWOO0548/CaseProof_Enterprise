@@ -14,7 +14,7 @@ CaseProof checks a numeric claim against versioned synthetic rules, records the 
 - No LLM connection, production authentication, externally anchored evidence, or completed 360-case study. Tested PostgreSQL RLS does not establish production deployment readiness.
 - `PASS` means the tested numeric claim matched a synthetic rule. `APPROVED_FOR_DEMO` never deploys software or authorizes a real claim.
 
-한국어 시작 안내: [START_HERE.md](START_HERE.md). Codex 구현 진입점: [AGENTS.md](AGENTS.md), [실행 프롬프트](prebuild/05_CODEX_KICKOFF.md).
+한국어 시작 안내: [START_HERE.md](START_HERE.md).
 
 ## Review workspace
 
@@ -102,19 +102,19 @@ This starts its own local server and temporary database, then cleans up only the
 
 The included GitHub Actions workflow defines fresh CI runs. A workflow file is not proof GitHub executed it. Dependency audit and Docker/browser/platform checks are reported separately in [VALIDATION.md](docs/VALIDATION.md).
 
-## Implementing the next version
+## Architecture and documentation
 
 | Path | Purpose |
 | --- | --- |
 | [prebuild/01_TARGET_DESIGN.md](prebuild/01_TARGET_DESIGN.md) | Product scope, design decisions, invariants |
 | [prebuild/08_IMPLEMENTATION_CONTRACTS.md](prebuild/08_IMPLEMENTATION_CONTRACTS.md) | Exact target API, transactions, state/evidence and data contracts |
-| [prebuild/02_IMPLEMENTATION_PLAN.md](prebuild/02_IMPLEMENTATION_PLAN.md) | Dependency-ordered tasks with file, test and acceptance details |
+| [prebuild/02_IMPLEMENTATION_PLAN.md](prebuild/02_IMPLEMENTATION_PLAN.md) | Development roadmap and acceptance criteria |
 | [contracts/README.md](contracts/README.md) | Versioned schemas, structural examples and links to the actual standalone v1 API |
 | [docs/STATUS.md](docs/STATUS.md) | Implemented vs planned capability matrix |
 | [docs/PUBLISHING.md](docs/PUBLISHING.md) | GitHub publishing and release procedure |
 | [docs/PROVENANCE.md](docs/PROVENANCE.md) | Origin, retained code, exclusions and license boundaries |
 
-Prefer a modular monolith and one end-to-end slice per task. Full enterprise functionality, real-model experiments, SME review, and external operations evidence remain separate gates. No score or “production ready” label is earned by the number of documents or tests.
+The target architecture is a modular monolith. Full enterprise functionality, real-model experiments, SME review, and external operations evidence remain separate gates. No score or “production ready” label is earned by the number of documents or tests.
 
 ## Contributing and security
 
