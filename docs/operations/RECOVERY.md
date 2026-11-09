@@ -44,3 +44,30 @@ These synthetic workstation measurements are not production RTO/RPO guarantees.
 
 External signing/WORM, wholesale DB rewrite detection against independent state,
 consented human review and independent installation are SKIPPED with bonus 0.
+
+## Success-request ledger consistency
+
+The 2026-11-09 independent increment starts from the accessible remote
+`improve/competitive-depth-20261106` commit
+`19112383f7387e340a3906d6277e746fc6d41e6d`, on the separate
+`improve/recovery-ledger-integrity-20261109` branch. Inaccessible preservation
+archives were not read, restored, replaced or integrated by this work.
+
+Inspection also verifies every committed v1 request record using the existing
+canonical decoder and replay binding checks. Each verified change revision must
+have exactly one request record. The stored actor, method, route, resource,
+success status, completion and timestamps must match that historical transition.
+The saved response is compared as canonical bytes with its historical snapshot,
+including the original run only for an evaluation response. Current projections
+do not replace earlier responses during this check.
+
+Damaged payloads, inconsistent fingerprint/status columns, missing records,
+duplicates and a missing record compensated by a duplicate of another revision
+are rejected. Restore performs this inspection before reserving its new target.
+Source files and stored request records are not rewritten. The normal HTTP
+authorization and historical replay contract are unchanged.
+
+This checks the stored fingerprint against its indexed value, not an independently
+preserved original request body. It does not detect a coordinated owner rewrite
+of the entire database and metadata without an external trusted anchor. Token
+registry rotation and current revocation review above remain required.

@@ -1,5 +1,47 @@
 # 검증 결과 — 5.3.0.dev6
 
+## Local recovery request-ledger integrity — 2026-11-09 UTC
+
+This independent increment uses accessible remote commit
+`19112383f7387e340a3906d6277e746fc6d41e6d` and the separate
+`improve/recovery-ledger-integrity-20261109` branch. Inaccessible preservation
+archives were not read or represented as restored/integrated. Only the local
+SQLite v1 recovery inspector changes; normal mutation/replay and UI sources are
+unchanged. No schema migration or production database is involved.
+
+Python 3.12.14 dependencies were installed in a project-local venv from
+`requirements-dev.lock` with `--require-hashes`. The existing recovery baseline
+passed 12 tests. New corruption cases first produced **21 failures/1 pass**:
+damaged payload, fingerprint/status alias mismatch, self-rehashed response,
+missing record, duplicate record and equal-count missing/duplicate corruption
+were accepted by inspect/backup/restore. The initial targeted GREEN was
+**34 passed**. Two additional positive rejection paths were then added.
+
+The complete `.venv/bin/python -m pytest -q` run passed **985 tests, 459 optional
+skips, 22 subtests**, exit 0, in 136.22 seconds. This includes all 24 new cases:
+21 corruption/operation combinations and approval/domain-rejection/release-rejection
+restore paths with unchanged original-response replay. Existing warnings were
+one Starlette/httpx deprecation and two SQLAlchemy cyclic-FK sort warnings.
+Optional skips are real PG17 (457), NumPy (1) and Python Playwright (1).
+
+`python -m scripts.smoke` passed **12/12** and `python -m scripts.check_ui_syntax`
+passed. Raw command results, baseline manifest differences and logs are under the
+new ignored run directory `reports/runs/20261109T152116Z-a0bc5667-recovery-ledger/`.
+The source manifest initially failed with **16 added/9 changed files already in
+the remote baseline**, independently of this recovery change; that failure was
+preserved before any manifest update. Byte-manifest reconciliation is separate
+from functional tests and does not authenticate authorship or safety.
+
+`python -m scripts.check_package` passed with **427 source files, 15 schemas,
+65 examples and 14 canonical vectors**. After comparing the official base and
+the explicitly permitted recovery/documentation changes, the source manifest
+was reconciled; `python VERIFY_PACKAGE.py` passed for all **427 source files**.
+
+Real PG/RLS, Windows, browser execution, external anchors, independent human
+review and production recovery were not run. The stored fingerprint is checked
+against its indexed value; the original request body is not independently
+reconstructed. See [the recovery boundary](operations/RECOVERY.md#success-request-ledger-consistency).
+
 ## Local saved-run comparison — 2026-11-02 UTC
 
 The isolated feature worktree uses Python 3.12.14, SQLite 3.53.1, FastAPI 0.162.0,

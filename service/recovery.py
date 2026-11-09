@@ -3,14 +3,18 @@ from contextlib import closing
 from datetime import datetime, timezone
 import hashlib
 from pathlib import Path
+import re
 import sqlite3
 
 from sqlalchemy import select
 
 from service import models_v1 as m
+from service.api.schemas_v1 import CreateHeaders
+from service.commands import BASE
 from service.db import make_engine, session_factory
-from service.domain.canonical import content_hash
+from service.domain.canonical import canonical_bytes, content_hash
 from service.domain.evidence import verify_evidence
+from service.idempotency_v1 import replay
 from service.repositories import ZERO, decode, load_history
 
 
@@ -28,6 +32,50 @@ def file_sha256(path):
 
 def _read_only(path):
     return sqlite3.connect(Path(path).resolve().as_uri() + '?mode=ro', uri=True)
+
+
+def _verify_request_ledger(db, history):
+    """Each verified historical transition needs exactly one intact saved result."""
+    snapshot = history['snapshot']
+    transitions = {row['revision_to']: row for row in history['transitions']}
+    snapshots = {row['revision']: row for row in history['snapshots']}
+    runs = {row['id']: row for row in history['runs']}
+    records = db.execute(select(m.IdempotencyRecord).where(
+        m.IdempotencyRecord.tenant_id == snapshot['tenant_id'],
+        m.IdempotencyRecord.change_id == snapshot['change_id'])).scalars().all()
+    if len(records) != len(transitions):
+        raise ValueError('Missing or extra committed request record')
+    suffixes = {'CHANGE_CREATED': '', 'EVALUATION_RECORDED': 'evaluation-runs',
+                'SUBMITTED_FOR_DOMAIN_REVIEW': 'submit', 'DOMAIN_APPROVE': 'domain-decision',
+                'DOMAIN_REJECT': 'domain-decision', 'RELEASE_REJECT': 'release-decision',
+                'APPROVED_FOR_DEMO': 'release-decision'}
+    seen = set()
+    for row in records:
+        saved = decode(row)
+        replay(row)  # Also checks indexed fingerprint/status aliases against the payload.
+        revision = row.result_revision
+        if revision not in transitions or revision in seen:
+            raise ValueError('Missing or duplicate committed request revision')
+        seen.add(revision)
+        transition = transitions[revision]
+        kind = transition['kind']
+        CreateHeaders.model_validate({'Idempotency-Key': row.key})
+        if not re.fullmatch('[0-9a-f]{64}', row.fingerprint_sha256):
+            raise ValueError('Invalid committed request fingerprint')
+        response = dict(snapshots[revision])
+        if kind == 'EVALUATION_RECORDED':
+            response['run'] = runs[transition['evaluation_run_id']]
+        suffix = suffixes[kind]
+        expected = {'schema': 'idempotency_record_v1', 'tenant_id': snapshot['tenant_id'],
+            'actor_id': transition['actor_id'], 'key': row.key, 'request_sha256': row.fingerprint_sha256,
+            'method': 'POST', 'route_template': BASE + ('/{change_id}/' + suffix if suffix else ''),
+            'resource_id': snapshot['change_id'] if suffix else 'NEW',
+            'response_status': 201 if kind in ('CHANGE_CREATED', 'EVALUATION_RECORDED') else 200,
+            'response_data_json': response, 'result_revision': revision,
+            'created_at': transition['occurred_at'], 'completed_at': transition['occurred_at'],
+            'completion': 'COMMITTED'}
+        if canonical_bytes(saved) != canonical_bytes(expected):
+            raise ValueError('Committed request does not match its historical transition')
 
 
 def inspect_database(path):
@@ -68,11 +116,16 @@ def inspect_database(path):
                     raise ValueError('Tenant audit integrity check failed') from error
             for change in db.execute(select(m.Change).order_by(m.Change.tenant_id, m.Change.id)).scalars():
                 try:
-                    evidence = verify_evidence(load_history(db, change.tenant_id, change.id))
+                    history = load_history(db, change.tenant_id, change.id)
+                    evidence = verify_evidence(history)
                 except Exception as error:
                     raise ValueError('Application evidence integrity check failed') from error
                 if evidence['historical_integrity'] != 'VALID':
                     raise ValueError('Application evidence integrity check failed')
+                try:
+                    _verify_request_ledger(db, history)
+                except Exception as error:
+                    raise ValueError('Idempotency request ledger integrity check failed') from error
                 if evidence['envelope_sha256']:
                     envelopes.append(dict(tenant_id=change.tenant_id, change_id=change.id, sha256=evidence['envelope_sha256']))
     finally:

@@ -1,5 +1,10 @@
 # Changelog
 
+## Local recovery request-ledger integrity — 2026-11-09
+
+- Reject damaged, missing and duplicate committed request records during SQLite v1 inspection, backup and restore. Bind each saved result to its verified historical transition, actor, route, status and response; preserve authorized historical replay and existing database files.
+- Add synthetic corruption and successful approval/rejection recovery regressions. This is an independent increment from the accessible remote code, not restoration or integration of an inaccessible preservation archive.
+
 ## Local saved-run comparison — 2026-11-02
 
 - Add authenticated same-change saved-run history and descriptive comparison GETs, pure bounded projections and lazy workspace controls. Preserve original run digests, immutable version IDs, latest-run gates and recovery. Report input/source/configuration context separately from outcomes; expose no raw historical values or model-quality claim.
