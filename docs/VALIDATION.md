@@ -1,3 +1,13 @@
+## 2026-11-16 final cleanup regression completed
+
+Final implementation9396d81:992 passed,459 optional skipped,22 subtests passed,
+3 warnings,523.28 seconds,exit0. Command: `python -m scripts.windows_checks pytest
+-q --tb=short`. The existing Windows wrapper reported127 socketpair initialization
+retries; application requests and assertions were not retried or weakened.
+Browser, PostgreSQL and numerical evaluation skips remain unverified, not passed.
+This result supersedes the running/pending notes below; historical failures remain
+preserved. [Machine-readable evidence](evidence/reliability-20261116.json).
+
 ## 2026-11-16 smoke failure cleanup
 
 The preceding unchanged full suite completed with988 passed,459 optional skipped,
