@@ -1,3 +1,16 @@
+## Reviewed reactivation and real browser (2026-11-16)
+
+Full regression: 1006 passed, 459 optional skipped, 22 subtests passed, 3 warnings
+in 256.82s. Windows initialization-only socketpair retries: 49. Separate real
+Chromium against a fresh synthetic loopback demo: 2/2 PASS in 9.15s. The bare
+suite still skips browser because it has no profile URL; that is not substituted
+for this separate executed result. Real PG17 remains unavailable (no server or
+private admin configuration); its skipped checks are not passes.
+Independent review: 9/9 plus second-grant failure with full transaction rollback.
+See `docs/evidence/reviewed-reactivation-20261116.json`. The reactivation helper
+requires an offline owner, independently trusted current grants and deployment
+of only the rotated registry. It does not automate or certify those judgments.
+
 ## Restore quarantine regression (2026-11-16)
 
 997 passed, 459 optional skipped, 22 subtests passed, 3 warnings in 202.06s.

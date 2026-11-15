@@ -185,3 +185,55 @@ def restore_database(backup, target, metadata):
     return dict(started_at=started, completed_at=utc_now(), snapshot=snapshot,
                 registry_rotation_required=True, authorization_state='QUARANTINED',
                 current_authorization_review_required=True)
+
+def reactivate_reviewed_actors(path, expected_sha256, grants, old_registry, new_registry, review_reference):
+    """Offline owner operation only: install reviewed roles, never infer them.
+
+    Caller must stop the service, independently verify current revocations, and
+    deploy ONLY new_registry before exposing it again. Registries contain hashes,
+    never raw tokens. This does not authenticate or certify the human review.
+    """
+    from service.auth import DemoTokenAuthenticator
+    from service.domain.canonical import canonical_bytes
+    if not isinstance(review_reference, str) or not review_reference.strip():
+        raise ValueError('A current independent review reference is required')
+    old = DemoTokenAuthenticator(old_registry).registry
+    new = DemoTokenAuthenticator(new_registry).registry
+    if set(old) & set(new):
+        raise ValueError('Every restored credential must be rotated')
+    allowed = {'ANALYST', 'DOMAIN_REVIEWER', 'RELEASE_APPROVER', 'AUDITOR'}
+    reviewed = {}
+    for grant in grants:
+        if set(grant) != {'tenant_id', 'actor_id', 'roles'}:
+            raise ValueError('Invalid reviewed grant')
+        identity = (grant['tenant_id'], grant['actor_id'])
+        roles = grant['roles']
+        if identity in reviewed or not isinstance(roles, list) or not roles or any(role not in allowed for role in roles):
+            raise ValueError('Invalid or duplicate reviewed identity/role')
+        reviewed[identity] = canonical_bytes(sorted(set(roles)))
+    if not reviewed or {(x['tenant_id'], x['actor_id']) for x in new.values()} != set(reviewed):
+        raise ValueError('New registry must contain exactly the reviewed identities')
+    inspect_database(path)
+    with closing(sqlite3.connect(Path(path).resolve().as_uri() + '?mode=rw', uri=True)) as db:
+        try:
+            db.execute('BEGIN IMMEDIATE')
+            if db.execute('PRAGMA journal_mode').fetchone()[0] == 'wal':
+                raise ValueError('Offline rollback-journal restored database required')
+            if file_sha256(path) != expected_sha256:
+                raise ValueError('Reviewed database digest changed')
+            rows = db.execute('SELECT tenant_id,id,enabled FROM v1_actor').fetchall()
+            if any(enabled for _, _, enabled in rows):
+                raise ValueError('Database is not fully quarantined')
+            if not set(reviewed) <= {(tenant, actor) for tenant, actor, _ in rows}:
+                raise ValueError('Reviewed actor does not exist')
+            for (tenant, actor), roles in reviewed.items():
+                db.execute('UPDATE v1_actor SET enabled=1,roles_payload=? WHERE tenant_id=? AND id=?', (roles, tenant, actor))
+            db.commit()
+        except BaseException:
+            db.rollback()
+            raise
+    return dict(schema='caseproof.restore-authorization-review.v1',
+                review_reference=review_reference, activated_count=len(reviewed),
+                reviewed_database_sha256=expected_sha256, resulting_database_sha256=file_sha256(path),
+                registry_sha256=hashlib.sha256(canonical_bytes(new)).hexdigest(),
+                new_registry_deployment_required=True)

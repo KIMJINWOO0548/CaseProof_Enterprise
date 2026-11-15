@@ -94,3 +94,25 @@ quarantined winner, one FileExistsError), injected publication PermissionError
 POSIX publication has not been runtime-tested in this Windows run. Forced
 process termination was not injected; it can leave an orphan staging database.
 Staging files are never service inputs and must not be manually published.
+
+## Offline reviewed reactivation
+
+Keep the service stopped. Independently reconcile current identity disablements
+and exact roles from the authoritative record, not the old backup. Prepare a
+fresh token-hash registry for only the reviewed identities; keep raw tokens out
+of source, logs and evidence. Record the quarantined file SHA-256 and review ID.
+The owner-only `reactivate_reviewed_actors(path, expected_sha256, grants,
+old_registry, new_registry, review_reference)` rejects stale bytes, reused
+credential hashes, unknown actors, invalid roles, duplicate grants, nonquarantined
+files, and registry identities outside the exact allowlist. It replaces roles
+rather than reviving old roles, and leaves all unlisted identities disabled.
+Changes occur in one SQLite transaction with a writer lock. WAL/service-online
+operation is rejected. Preserve the returned review receipt in private operations
+records. Deploy ONLY the new registry before restarting and verify old-token
+401, excluded-identity denial and the reviewed least-privilege role.
+
+This is a local owner-operated procedure, not an HTTP endpoint or identity
+provider. It does not certify the review, discover omitted historical credentials,
+or atomically deploy a registry into another process. A dishonest review source,
+owner bypass, or serving the DB with the old registry remains outside its trust
+boundary. Do not invoke it against a running service or production data.
