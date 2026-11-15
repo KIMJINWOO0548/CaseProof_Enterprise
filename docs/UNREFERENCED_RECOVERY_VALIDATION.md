@@ -43,3 +43,8 @@ are not one locked snapshot. Concurrent modification between those operations
 is not fixed by this patch and must not be claimed resolved. Backups intended
 for restore should remain immutable/offline; production concurrency and external
 authentication need their own design and validation.
+
+Follow-up: the original-path inspection/copy race described above is now
+addressed by private digest-bound input snapshots; see
+[Restore snapshot binding](RESTORE_SNAPSHOT_BINDING.md) for the precise standalone
+artifact/WAL contract and remaining private-workspace/power-loss limitations.
