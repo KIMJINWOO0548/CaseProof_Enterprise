@@ -1,3 +1,14 @@
+## 2026-11-16 local recovery URI verification
+
+From origin recovery commit 0a3e66a, on a separate Windows worktree (old checkout untouched).
+`python -m pytest tests/operations/test_recovery_request_ledger.py -q -x --tb=short`:
+RED: 1 failed (`sqlite3.OperationalError: unable to open database file`).
+GREEN: 27 passed in 78.91 seconds after preserving SQLite URI escaping through
+SQLAlchemy URL decoding. Added backup/restore checks for #, percent and space in
+paths, with original database bytes unchanged. Read-only mode remains enforced.
+Full-suite verification is pending; focused results are not a full release pass.
+No production database, external service or permissions changed.
+
 # 검증 결과 — 5.3.0.dev6
 
 ## Local recovery request-ledger integrity — 2026-11-09 UTC

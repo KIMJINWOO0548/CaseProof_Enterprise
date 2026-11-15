@@ -124,3 +124,19 @@ def test_restored_multiple_change_histories_replay_their_original_committed_resu
         assert inspect_database(target) == metadata['snapshot']
     finally:
         engine.dispose()
+
+
+@pytest.mark.parametrize('directory', ['with#fragment', 'with%percent', 'with space'])
+def test_recovery_read_only_uri_preserves_special_path_characters(tmp_path, directory):
+    location = tmp_path / directory
+    location.mkdir()
+    factory, actors, body = setup(location)
+    evaluated(factory, actors, body)
+    factory.kw['bind'].dispose()
+    source = location / 'v1.db'
+    before = source.read_bytes()
+    metadata = backup_database(source, location / 'backup.db')
+    restored = location / 'restored.db'
+    restore_database(location / 'backup.db', restored, metadata)
+    assert inspect_database(restored) == metadata['snapshot']
+    assert source.read_bytes() == before

@@ -94,7 +94,10 @@ def inspect_database(path):
         schema = repr(db.execute("SELECT type,name,tbl_name,sql FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name").fetchall()).encode()
         heads = [dict(tenant_id=t, sequence=s, head_sha256=h) for t, s, h in db.execute(
             'SELECT tenant_id,sequence,head_sha256 FROM v1_tenant_audit_head ORDER BY tenant_id')]
-    engine = make_engine('sqlite:///file:' + Path(path).resolve().as_posix() + '?mode=ro&uri=true')
+    # SQLAlchemy decodes the URL database once before passing the SQLite URI.
+    # Preserve the URI's escaping so #, %, and ? remain literal filename bytes.
+    sqlite_uri = Path(path).resolve().as_uri().replace('%', '%25')
+    engine = make_engine('sqlite:///' + sqlite_uri + '?mode=ro&uri=true')
     envelopes = []
     try:
         with session_factory(engine)() as db:
