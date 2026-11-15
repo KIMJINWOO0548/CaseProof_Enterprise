@@ -4,6 +4,8 @@ from datetime import datetime, timezone
 import hashlib
 from pathlib import Path
 import re
+import os
+import tempfile
 import sqlite3
 
 from sqlalchemy import select
@@ -163,11 +165,23 @@ def restore_database(backup, target, metadata):
     snapshot = inspect_database(backup)
     if snapshot != metadata['snapshot']:
         raise ValueError('Backup schema/checkpoint mismatch')
-    with target.open('xb'):
-        pass
-    with closing(_read_only(backup)) as origin, closing(sqlite3.connect(target)) as destination:
-        origin.backup(destination)
-    if inspect_database(target) != snapshot:
-        raise ValueError('Restored checkpoint mismatch')
+    # Never publish a usable restored file before quarantine and verification.
+    fd, staging_name = tempfile.mkstemp(prefix='.caseproof-restore-', suffix='.db', dir=target.parent)
+    os.close(fd)
+    staging = Path(staging_name)
+    try:
+        with closing(_read_only(backup)) as origin, closing(sqlite3.connect(staging)) as destination:
+            origin.backup(destination)
+            destination.execute('UPDATE v1_actor SET enabled=0')
+            destination.commit()
+        if inspect_database(staging) != snapshot:
+            raise ValueError('Restored checkpoint mismatch')
+        if os.name == 'nt':
+            os.rename(staging, target)  # Windows rename refuses existing targets.
+        else:
+            os.link(staging, target)  # POSIX rename could overwrite a raced target.
+    finally:
+        staging.unlink(missing_ok=True)
     return dict(started_at=started, completed_at=utc_now(), snapshot=snapshot,
-                registry_rotation_required=True)
+                registry_rotation_required=True, authorization_state='QUARANTINED',
+                current_authorization_review_required=True)

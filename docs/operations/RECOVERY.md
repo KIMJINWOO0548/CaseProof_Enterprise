@@ -71,3 +71,26 @@ This checks the stored fingerprint against its indexed value, not an independent
 preserved original request body. It does not detect a coordinated owner rewrite
 of the entire database and metadata without an external trusted anchor. Token
 registry rotation and current revocation review above remain required.
+
+## Restore authorization contract v2 (2026-11-16)
+
+Successful restores now disable **all** restored actors. An old backup cannot
+prove that an identity or role is still authorized. The returned report states
+`authorization_state=QUARANTINED` and `current_authorization_review_required=true`.
+Canonical history, decisions, approval envelopes and original role assignments
+remain intact. Only current actor enablement is changed, never the source/backup.
+Before exposing the new file, an owner must independently review current
+revocations and roles, rotate the token registry, and explicitly enable only
+currently authorized identities. There is no automatic enable-all API or bypass.
+Restore uses a private sibling staging file, disables actors and verifies it
+before atomic no-overwrite publication. Errors before publication leave no new
+target; concurrently created targets are preserved. Never serve staging files.
+Owner/process interruption cleanup still requires inspecting abandoned staging.
+The local owner can edit SQLite; this is not protection from a malicious owner.
+
+Independent Windows review additionally exercised concurrent restores (one
+quarantined winner, one FileExistsError), injected publication PermissionError
+(no target, staging removed, backup bytes unchanged), and 32 related tests.
+POSIX publication has not been runtime-tested in this Windows run. Forced
+process termination was not injected; it can leave an orphan staging database.
+Staging files are never service inputs and must not be manually published.

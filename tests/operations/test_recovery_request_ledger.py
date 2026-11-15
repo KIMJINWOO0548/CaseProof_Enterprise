@@ -114,6 +114,11 @@ def test_restored_multiple_change_histories_replay_their_original_committed_resu
     engine = make_engine('sqlite:///' + target.as_posix())
     restored = session_factory(engine)
     try:
+        # Explicit synthetic owner review; restore no longer grants access.
+        with restored.begin() as db:
+            from sqlalchemy import update
+            from service import models_v1 as m
+            db.execute(update(m.Actor).values(enabled=True))
         before = dump(restored)
         for actor, request, original in requests:
             replayed = execute_command(restored, actor, request)

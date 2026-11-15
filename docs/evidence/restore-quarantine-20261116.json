@@ -1,0 +1,30 @@
+{
+  "scope": "Synthetic Windows local restore authorization v2",
+  "command": "python -m scripts.windows_checks pytest -q --tb=short",
+  "exit_code": 0,
+  "passed": 997,
+  "skipped": 459,
+  "subtests_passed": 22,
+  "warnings": 3,
+  "seconds": 202.06,
+  "initialization_only_socketpair_retries": 110,
+  "log_sha256": "aab0c6fa7f7924b0a16d1ac0d892675be1ed2e76c58594fb8afcc6d13b4aec62",
+  "source_sha256": {
+    "service/recovery.py": "d6565e0eaa5e021c6a9b5263a6fc40badcbd05100babd84a02d8b8692551f7da",
+    "tests/operations/test_recovery_authorization.py": "7142378b9b3a6ce5ac6bf56ed37a97742612df11cc9a06ab683f2ce4f014153f",
+    "tests/operations/test_recovery_request_ledger.py": "25458973b4b15de60b40396b34717d033fe543b51727f4ccaf9830fb293d4b74"
+  },
+  "focused_passed": 75,
+  "independent_review_passed": 32,
+  "not_run": [
+    "real PostgreSQL17",
+    "Playwright browser",
+    "optional numerical evaluation",
+    "POSIX runtime",
+    "forced process termination"
+  ],
+  "limitations": [
+    "owner must review current role/revocation state and rotate registry before explicitly enabling any restored actor",
+    "process termination may leave unservable staging file"
+  ]
+}

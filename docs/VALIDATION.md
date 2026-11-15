@@ -1,3 +1,12 @@
+## Restore quarantine regression (2026-11-16)
+
+997 passed, 459 optional skipped, 22 subtests passed, 3 warnings in 202.06s.
+Existing Windows initialization-only wrapper retried socketpair creation 110
+times; no application requests or assertions were retried. Focused checks 75/75;
+independent scoped review 32/32 plus concurrent/publication-failure injection.
+See `docs/evidence/restore-quarantine-20261116.json` for hashes and unrun checks.
+This does not certify production readiness or the optional PostgreSQL/browser paths.
+
 ## 2026-11-16 final cleanup regression completed
 
 Final implementation9396d81:992 passed,459 optional skipped,22 subtests passed,
