@@ -17,7 +17,7 @@ from service.db import make_engine, session_factory
 from service.domain.canonical import canonical_bytes, content_hash
 from service.domain.evidence import verify_evidence
 from service.idempotency_v1 import replay
-from service.repositories import ZERO, decode, load_history
+from service.repositories import PURPOSES, ZERO, decode, load_history
 
 
 def utc_now():
@@ -133,6 +133,14 @@ def inspect_database(path):
                     raise ValueError('Idempotency request ledger integrity check failed') from error
                 if evidence['envelope_sha256']:
                     envelopes.append(dict(tenant_id=change.tenant_id, change_id=change.id, sha256=evidence['envelope_sha256']))
+            # Snapshots not yet referenced by a change still feed future execution.
+            # Check every stored payload, not only records reached from history.
+            for model in PURPOSES:
+                try:
+                    for row in db.execute(select(model)).scalars():
+                        decode(row)
+                except Exception as error:
+                    raise ValueError('Stored payload integrity check failed: ' + model.__table__.name) from error
     finally:
         engine.dispose()
     return dict(schema_sha256=hashlib.sha256(schema).hexdigest(), integrity_check='ok',
