@@ -140,16 +140,27 @@ def inspect_database(path):
 
 
 def backup_database(source, target):
-    """Online backup includes committed WAL; reserve a new target exclusively."""
+    """Publish a verified online WAL snapshot without replacing an existing file."""
     started = utc_now()
     target = Path(target)
-    with target.open('xb'):
-        pass
-    with closing(_read_only(source)) as origin, closing(sqlite3.connect(target)) as destination:
-        origin.backup(destination)
-    snapshot = inspect_database(target)
+    if target.exists():
+        raise FileExistsError(target)
+    fd, staging_name = tempfile.mkstemp(prefix='.caseproof-backup-', suffix='.db', dir=target.parent)
+    os.close(fd)
+    staging = Path(staging_name)
+    try:
+        with closing(_read_only(source)) as origin, closing(sqlite3.connect(staging)) as destination:
+            origin.backup(destination)
+        snapshot = inspect_database(staging)
+        digest = file_sha256(staging)
+        if os.name == 'nt':
+            os.rename(staging, target)  # Windows refuses an existing destination.
+        else:
+            os.link(staging, target)  # POSIX rename would overwrite a raced target.
+    finally:
+        staging.unlink(missing_ok=True)
     return dict(schema='caseproof.local-backup.v1', started_at=started, completed_at=utc_now(),
-                backup_sha256=file_sha256(target), snapshot=snapshot, external_anchor='SKIPPED')
+                backup_sha256=digest, snapshot=snapshot, external_anchor='SKIPPED')
 
 
 def restore_database(backup, target, metadata):
