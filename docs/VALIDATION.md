@@ -1,3 +1,13 @@
+## 2026-11-16 Windows single-process demo loop
+
+Normal-permission startup reproduced Proactor accept WinError64 after application
+startup; authenticated readiness failed within20 seconds. The HTTP-only Windows
+demo now uses a standard asyncio.Runner with local SelectorEventLoop. Global
+policy, installed stdlib, auth rules, ports and server workload limits are unchanged.
+The existing real CLI test verifies authenticated200, anonymous401, static assets,
+original database digest and secret-free logs. Startup suite5/5 passed in5.05s.
+Final full regression is running; do not infer a complete pass from this result.
+
 ## 2026-11-16 local recovery URI verification
 
 From origin recovery commit 0a3e66a, on a separate Windows worktree (old checkout untouched).
