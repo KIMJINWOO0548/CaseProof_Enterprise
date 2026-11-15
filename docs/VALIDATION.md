@@ -6,7 +6,9 @@ RED: 1 failed (`sqlite3.OperationalError: unable to open database file`).
 GREEN: 27 passed in 78.91 seconds after preserving SQLite URI escaping through
 SQLAlchemy URL decoding. Added backup/restore checks for #, percent and space in
 paths, with original database bytes unchanged. Read-only mode remains enforced.
-Full-suite verification is pending; focused results are not a full release pass.
+Full-suite fail-fast run: 520 passed, 459 optional skipped, 22 subtests passed,
+1 failure in demo-startup cleanup (`taskkill` exit 1). Not a full release pass.
+Local log: reports/runs/reliability-20261116/pytest.log (not included in source package).
 No production database, external service or permissions changed.
 
 # 검증 결과 — 5.3.0.dev6
