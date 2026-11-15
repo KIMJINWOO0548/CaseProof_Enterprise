@@ -1,3 +1,18 @@
+## 2026-11-16 smoke failure cleanup
+
+The preceding unchanged full suite completed with988 passed,459 optional skipped,
+22 subtests,3 warnings in483.65s using scripts.windows_checks;81 initialization-only
+socketpair retries were reported. The unwrapped run had949 passed,22 failures and
+17 errors originating in Windows10014; both local logs are preserved separately.
+
+Four independent injections at table creation, seeding, client startup and request
+execution reproduced missing engine disposal (4 RED). Three also reproduced a
+secondary Windows32 cleanup error masking the original exception. A finally now
+disposes the engine before TemporaryDirectory cleanup. No failed report is published.
+Existing smoke output checks plus the four injections:7 PASS,3.21s,0 initialization
+retries. Full regression for this final cleanup change is running, not yet passed.
+Optional browser, real PostgreSQL and numerical evaluation remain unrun here.
+
 ## 2026-11-16 Windows single-process demo loop
 
 Normal-permission startup reproduced Proactor accept WinError64 after application
