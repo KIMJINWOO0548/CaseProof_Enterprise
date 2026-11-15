@@ -1,0 +1,31 @@
+{
+  "scope": "Synthetic evaluator cluster correctness; not independent business validation",
+  "full_suite": {
+    "passed": 1016,
+    "skipped": 458,
+    "subtests": 22,
+    "warnings": 3,
+    "seconds": 477.91,
+    "exit_code": 0,
+    "initialization_only_socketpair_retries": 35
+  },
+  "evaluation_suite_passed": 43,
+  "red_before_fix": "7 shared-origin relations returned 2 clusters instead of 1",
+  "log_sha256": "2ef995ea912114d024de88b99961a4d0bfe08058da866f39650de05653f9023c",
+  "source_sha256": {
+    "service/evaluation/benchmark.py": "5184064c221cee002b6b472d2257932ff7c60f9e61006a1609c94c2a429819fa",
+    "tests/evaluation/test_paired.py": "c0b1a84fb490858ac0ab7a0bd3df76904bd46d35b0c996664251d65bde0ff133"
+  },
+  "independent_business_gold": "NOT_AVAILABLE",
+  "not_run": [
+    "real PostgreSQL17",
+    "browser in bare full-suite (separate prior Chromium run passed)",
+    "POSIX runtime",
+    "forced termination"
+  ],
+  "independent_code_review": {
+    "evaluation_tests_passed": 43,
+    "scoped_blockers": 0,
+    "limitation": "Missing or false relationship metadata cannot establish actual independence"
+  }
+}

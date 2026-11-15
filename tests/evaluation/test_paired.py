@@ -136,3 +136,39 @@ def test_exact_bootstrap_hand_checked_endpoints_and_reproducibility(tmp_path):
     assert first["numpy_version"] == np.__version__
     assert len(first["lock_sha256"]) == 64
     assert first["replicates"] == 10000
+
+@pytest.mark.parametrize('relation', ['document_family','product_family','contract_group','incident_group','scenario_derivation','source_version_ids','document_original_ids'])
+def test_related_scenarios_are_not_counted_as_independent_clusters(relation):
+    from pathlib import Path
+    b, c, g, m = fixture()
+    m[0]['scenario_family'], m[1]['scenario_family'] = 'scenario-a', 'scenario-b'
+    for row in m:
+        row[relation] = ['shared-origin']
+    result = compare_paired(b, c, g, m, {'allowed_differences': []}, lock_path=Path('requirements-evaluation.lock'))
+    assert result['cluster_count'] == 1
+    assert result['paired_ci95'] is None
+    assert result['ci_reason'] == 'INSUFFICIENT_CLUSTERS'
+
+def test_cluster_connection_is_transitive_across_relation_types():
+    from pathlib import Path
+    b, c, g, _ = fixture()
+    for arm in (b, c):
+        arm['case_results'].append(dict(arm['case_results'][0], case_id='c'))
+    g.append(GoldRecord('c', 'LOW', False))
+    m = [{'case_id':'a','scenario_family':'a','document_family':'shared-doc'},
+         {'case_id':'b','scenario_family':'b','document_family':'shared-doc','incident_group':'shared-incident'},
+         {'case_id':'c','scenario_family':'c','incident_group':'shared-incident'}]
+    result = compare_paired(b,c,g,m,{'allowed_differences':[]},lock_path=Path('requirements-evaluation.lock'))
+    assert result['cluster_count'] == 1
+    assert result['ci_reason'] == 'INSUFFICIENT_CLUSTERS'
+    assert result['accuracy']['candidate'] == 1
+
+
+def test_unrelated_scenarios_retain_separate_numeric_clusters():
+    from pathlib import Path
+    b,c,g,m = fixture()
+    m[0]['scenario_family'],m[1]['scenario_family'] = 'a','b'
+    result = compare_paired(b,c,g,m,{'allowed_differences':[]},lock_path=Path('requirements-evaluation.lock'))
+    assert result['cluster_count'] == 2
+    assert result['paired_ci95'] == [0,0]
+    assert 'not independently verified' in result['bootstrap']['independence_assumption']

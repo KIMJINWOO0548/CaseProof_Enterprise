@@ -1,3 +1,13 @@
+## Connected evaluation clusters (2026-11-16)
+
+1016 passed, 458 skipped, 22 subtests passed, 3 warnings in 477.91s.
+Initialization-only socketpair retries: 35. Evaluation tests 43/43 passed,
+including previously unrun NumPy bootstrap checks installed from the hash lock.
+Shared and transitive document/source/incident relations now form one cluster;
+independence is still an assumption, not independently verified business gold.
+Real PostgreSQL remains unrun. See connected-evaluation evidence and independence
+boundary documents. These results do not certify external business accuracy.
+
 ## Reviewed reactivation and real browser (2026-11-16)
 
 Full regression: 1006 passed, 459 optional skipped, 22 subtests passed, 3 warnings

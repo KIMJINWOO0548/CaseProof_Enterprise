@@ -85,7 +85,7 @@ def compare_paired(baseline: dict, candidate: dict, gold: list[GoldRecord],
         meta = _index(metadata)
         if ids != set(gold_index) or ids != set(meta):
             raise ValueError("case/gold/group IDs differ")
-        connected_groups(metadata)
+        independent_groups = connected_groups(metadata)
         if any(type(row.get("scenario_family")) is not str or not row["scenario_family"] for row in metadata):
             raise ValueError("scenario_family is required")
         for name, arm in arms.items():
@@ -142,8 +142,9 @@ def compare_paired(baseline: dict, candidate: dict, gold: list[GoldRecord],
     result["new_critical_ids"] = new_critical
     groups = {}
     for key in sorted(ids):
-        groups.setdefault(meta[key]["scenario_family"], []).append(int(indexed["candidate"][key]["correct"]) - int(indexed["baseline"][key]["correct"]))
+        groups.setdefault(independent_groups[key], []).append(int(indexed["candidate"][key]["correct"]) - int(indexed["baseline"][key]["correct"]))
     bootstrap = paired_ci95(groups, lock_path=lock_path)
+    bootstrap["independence_assumption"] = "registered connected components are independent; this is not independently verified"
     result.update(paired_ci95=bootstrap["interval"], ci_reason=bootstrap["reason"], bootstrap=bootstrap,
                   cluster_count=len(groups), critical_case_count=sum(record.severity == "CRITICAL" for record in gold),
                   source_count=len({row["source_sha256"] for row in indexed["baseline"].values()}))
