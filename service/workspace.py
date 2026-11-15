@@ -2,6 +2,7 @@
 from copy import deepcopy
 import json
 import os
+import re
 from pathlib import Path
 from uuid import uuid4
 
@@ -10,6 +11,8 @@ from fastapi.security import HTTPBearer
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy import select
+from pydantic import TypeAdapter, ValidationError
+from service.api.schemas_v1 import UUIDv4
 
 from service import models_v1 as m
 from service.api.errors import DomainError, error_payload
@@ -102,10 +105,10 @@ def create_workspace_app(session_factory, registry):
         response.headers['X-Content-Type-Options'] = 'nosniff'
         return response
 
-    def actor_for(request, db):
+    def actor_for(request, db, *, allow_query=False):
         auth = request.headers.get('authorization', '')
         require(auth.startswith('Bearer ') and bool(auth[7:]) and ' ' not in auth[7:], 'UNAUTHENTICATED')
-        require(not request.query_params, 'INVALID_REQUEST')
+        require(allow_query or not request.query_params, 'INVALID_REQUEST')
         actor = current_actor(db, authenticator(auth[7:], db))
         require(bool(actor.roles), 'FORBIDDEN')
         return actor
@@ -122,20 +125,41 @@ def create_workspace_app(session_factory, registry):
                 'roles': sorted(actor.roles)}, 'presets': presets,
                 'capabilities': {'external_model': False, 'external_anchor': False, 'synthetic': True}}}
 
-    @app.get('/api/v1/changes', dependencies=[Depends(HTTPBearer(auto_error=False))])
+    @app.get('/api/v1/changes', dependencies=[Depends(HTTPBearer(auto_error=False))],
+        description='Tenant-scoped live keyset listing. Data remains an array. Pagination.next_cursor is null at the end. '
+                    'The UUID cursor is a position, not a credential or a stable export snapshot.',
+        openapi_extra={'parameters': [
+            {'in': 'query', 'name': 'after', 'required': False, 'schema': TypeAdapter(UUIDv4).json_schema()},
+            {'in': 'query', 'name': 'limit', 'required': False,
+             'schema': {'type': 'integer', 'minimum': 1, 'maximum': 200, 'default': 200}}]})
     async def changes(request: Request):
         with session_factory() as db, db.begin():
-            actor = actor_for(request, db)
-            changes = db.execute(select(m.Change).where(m.Change.tenant_id == actor.tenant_id)
-                                 .order_by(m.Change.id).limit(200)).scalars()
+            actor = actor_for(request, db, allow_query=True)
+            pairs = request.query_params.multi_items()
+            query = dict(pairs)
+            require(len(pairs) == len(query) and set(query) <= {'after', 'limit'}, 'INVALID_REQUEST')
+            raw_limit = query.get('limit', '200')
+            require(re.fullmatch(r'[1-9][0-9]{0,2}', raw_limit) is not None, 'INVALID_REQUEST')
+            limit = int(raw_limit)
+            require(limit <= 200, 'INVALID_REQUEST')
+            statement = select(m.Change).where(m.Change.tenant_id == actor.tenant_id)
+            if 'after' in query:
+                try:
+                    after = TypeAdapter(UUIDv4).validate_python(query['after'], strict=True)
+                except ValidationError:
+                    raise DomainError('INVALID_REQUEST') from None
+                # Position only, never an authorization credential or row lookup.
+                statement = statement.where(m.Change.id > after)
+            page = list(db.execute(statement.order_by(m.Change.id).limit(limit + 1)).scalars())
             results = []
-            for change in changes:
+            for change in page[:limit]:
                 try:
                     results.append(load_history(db, actor.tenant_id, change.id)['snapshot'])
                 except DomainError:
                     results.append(dict(change_id=change.id, tenant_id=actor.tenant_id, title='기록 무결성 오류',
                         pack_version_id='—', revision=change.revision, status='INTEGRITY_INVALID'))
-            return {'data': results}
+            return {'data': results, 'pagination': {'limit': limit,
+                'next_cursor': page[limit - 1].id if len(page) > limit else None}}
 
     @app.get('/static/vendor/suit/SUIT-Variable.woff2', include_in_schema=False)
     async def workspace_font():
