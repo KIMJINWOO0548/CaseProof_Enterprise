@@ -166,6 +166,7 @@ def test_cluster_connection_is_transitive_across_relation_types():
 
 def test_unrelated_scenarios_retain_separate_numeric_clusters():
     from pathlib import Path
+    pytest.importorskip("numpy", reason="numeric evaluation dependency not installed", exc_type=ModuleNotFoundError)
     b,c,g,m = fixture()
     m[0]['scenario_family'],m[1]['scenario_family'] = 'a','b'
     result = compare_paired(b,c,g,m,{'allowed_differences':[]},lock_path=Path('requirements-evaluation.lock'))
