@@ -56,14 +56,29 @@ def test_real_database_pagination_and_live_revocation(workspace, tmp_path):
                 cursor = pages[0][1]['pagination']['next_cursor']
                 assert cursor and pages[1][0].endswith('?after=' + cursor)
                 assert pages[1][1]['pagination']['next_cursor'] is None
+                pw.expect(page.locator('#queue-summary')).to_have_text('전체 201건')
+                assert page.locator('#queue').evaluate('node => node.scrollHeight > node.clientHeight')
                 page.screenshot(path=str(tmp_path / 'real-201.png'), full_page=True)
                 page.remove_listener('response', record)
+                page.set_viewport_size({'width': 480, 'height': 800})
+                page.locator('#search').fill(expected[-1])
+                pw.expect(page.locator('#queue-summary')).to_have_text('검색 결과 1건 / 전체 201건')
+                item = page.locator(f'#queue button[data-change-id="{expected[-1]}"]')
+                item.press('Enter')
+                pw.expect(page.locator('#detail-title')).to_be_focused()
+                pw.expect(page.locator('#detail .detail-heading')).to_have_text('Synthetic real pagination 200')
+                pw.expect(item).to_have_attribute('aria-current', 'true')
+                assert page.evaluate('document.documentElement.scrollWidth <= innerWidth')
+                page.screenshot(path=str(tmp_path / 'narrow-selected.png'))
+                page.locator('#return-queue').press('Enter')
+                pw.expect(item).to_be_focused()
                 with factory.begin() as db:
                     db.get(m.Actor, ('fictional', 'analyst')).enabled = False
                 with page.expect_response('**/api/v1/changes') as pending:
                     page.locator('#refresh').click()
                 assert pending.value.status == 401
                 pw.expect(page.locator('#queue button[data-change-id]')).to_have_count(0)
+                pw.expect(page.locator('#queue-summary')).to_be_empty()
                 assert not errors
                 print(f'Chromium {browser.version}: real API persisted 201 rows; UI fetched 200 + 1, exact IDs, no mocks; revoked actor HTTP 401 and queue cleared.')
                 browser.close()

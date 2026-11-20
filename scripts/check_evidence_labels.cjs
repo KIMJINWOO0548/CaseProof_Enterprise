@@ -58,11 +58,12 @@ async function main() {
   const rows = get('evidence').children[0].children;
   const sourceLabel = rows.findIndex(e => e.tagName === 'DT' && e.textContent === '현재 출처 적격성');
   assert.ok(sourceLabel >= 0, 'source-only ELIGIBLE must be labeled as current source eligibility');
-  assert.equal(rows[sourceLabel + 1].textContent, 'ELIGIBLE', 'preserve the existing API source verdict');
+  assert.equal(rows[sourceLabel + 1].textContent, '출처 요건 충족', 'make the source-only verdict readable');
+  assert.equal(rows[sourceLabel + 1].dataset.result, 'ELIGIBLE', 'preserve the existing API source verdict');
   assert.equal(rows.some(e => e.tagName === 'DT' && e.textContent === '현재 승인 적격성'), false);
   assert.deepEqual(JSON.parse(get('evidence').children[1].children[1].textContent), evidence, 'raw evidence stays unchanged');
   const html = fs.readFileSync(path.join(__dirname, '../service/static/v1.html'), 'utf8');
-  assert.ok(html.includes('출처 적격성이 ELIGIBLE이어도 평가 통과·검토 단계·역할 분리 조건을 충족해야 승인할 수 있습니다.'));
+  assert.ok(html.includes('승인에는 현재 출처 요건, 평가 통과, 검토 단계, 역할 분리 조건이 적용됩니다.'));
   console.log('PASS: source eligibility stays distinct from a blocked evaluation and approval authorization');
 }
 

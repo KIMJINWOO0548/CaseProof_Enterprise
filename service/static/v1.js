@@ -177,6 +177,15 @@
     }));
   let epoch = 0, selection = 0, queueRequest = 0, queueReady = false;
   let workspace, rows = [], current, parent, decision, opener;
+  const queueStatuses = new Map([
+    ['DRAFT', '작성·평가'], ['PENDING_DOMAIN_REVIEW', '현업 검토 대기'],
+    ['PENDING_RELEASE', '최종 검토 대기'], ['REJECTED', '반려'], ['APPROVED_FOR_DEMO', '데모 승인'],
+  ]);
+  const evidenceLabels = new Map([
+    ['VALID', '기록 검증됨'], ['INVALID', '기록 검증 실패'], ['LEGACY_UNVERIFIED', '이전 형식 · 검증 안 됨'],
+    ['ELIGIBLE', '출처 요건 충족'], ['BLOCKED', '출처 요건 미충족'], ['NOT_APPLICABLE', '확인 대상 아님'],
+    ['NOT_CONFIGURED', '외부 연결 미설정'], ['SKIPPED', '확인 생략'],
+  ]);
   function node(tag, text, className) { const el = document.createElement(tag); if (text !== undefined) el.textContent = text; if (className) el.className = className; return el; }
   function message(value = '') {
     const target = $('message'), error = value instanceof Error;
@@ -209,6 +218,7 @@
     $('new-change').hidden = !role('ANALYST');
   }
   function syncSelectedRow() {
+    $('return-queue').hidden = !current;
     document.querySelectorAll('[data-change-id]').forEach(button => {
       const selected = button.dataset.changeId === current?.change_id;
       button.setAttribute('aria-current', String(selected));
@@ -507,13 +517,17 @@
     if (!queueReady) return;
     const q = $('search').value.toLowerCase(), state = $('status-filter').value;
     const filtered = rows.filter(r => (!state || r.status === state) && (r.title + r.change_id).toLowerCase().includes(q));
+    $('queue-summary').textContent = q || state ? `검색 결과 ${filtered.length}건 / 전체 ${rows.length}건` : `전체 ${rows.length}건`;
     $('queue').replaceChildren(); if (!filtered.length) { $('queue').append(node('p', '표시할 변경 요청이 없습니다.', 'p-3')); return; }
     const table = node('table', undefined, 'table table-vcenter'), head = node('thead'), hr = node('tr'); hr.append(node('th', '변경 요청')); head.append(hr); table.append(head); const body = node('tbody');
     filtered.forEach(row => {
       const tr = node('tr'), td = node('td'), b = node('button', row.title, 'btn btn-link p-0 text-start');
-      b.type = 'button'; b.dataset.changeId = row.change_id; b.onclick = () => select(row.change_id);
+      b.type = 'button'; b.dataset.changeId = row.change_id;
+      b.onclick = async () => {
+        if (await select(row.change_id) && document.activeElement === b) $('detail-title').focus();
+      };
       const meta = node('div', undefined, 'queue-meta'); meta.append(node('span', row.pack_version_id), node('span', 'Revision ' + row.revision));
-      const status = node('div', row.status, 'queue-status'); status.dataset.status = row.status;
+      const status = node('div', queueStatuses.get(row.status) ?? row.status, 'queue-status'); status.dataset.status = row.status;
       td.append(b, status, meta); tr.append(td); body.append(tr);
     }); table.append(body); $('queue').append(table); syncSelectedRow();
   }
@@ -521,6 +535,7 @@
     const e = epoch, request = ++queueRequest;
     const valid = () => e === epoch && request === queueRequest;
     rows = []; queueReady = false;
+    $('queue-summary').textContent = '';
     $('queue').setAttribute('aria-busy', 'true'); $('queue').textContent = '불러오는 중…';
     try {
       const data = await client.get('/api/v1/changes');
@@ -586,8 +601,12 @@
     event.preventDefault(); const token = $('token').value; $('token').value = ''; const e = ++epoch; ++selection; message(); const submit = event.submitter; submit.disabled = true;
     try { const data = await client.get('/api/v1/workspace', token); if (e !== epoch) return; workspace = data; client.connect(token, data.actor, data.request_context); rows = []; clearDetail(); $('actor').textContent = `${data.actor.tenant_id} / ${data.actor.actor_id} · ${data.actor.roles.join(', ')}`; $('workspace').hidden = false; $('login').hidden = true; lock(); await refresh(); if ($('message').dataset.kind !== 'error') $('main').focus(); } catch (error) { if (e === epoch) message(error); } finally { submit.disabled = false; }
   };
-  $('switch-role').onclick = () => { ++epoch; ++selection; client.connect(null, null); workspace = null; rows = []; clearDetail(); document.querySelectorAll('dialog[open]').forEach(d => d.close()); $('workspace').hidden = true; $('login').hidden = false; message(); $('token').focus(); };
+  $('switch-role').onclick = () => { ++epoch; ++selection; client.connect(null, null); workspace = null; rows = []; clearDetail(); $('search').value = ''; $('status-filter').value = ''; $('queue-summary').textContent = ''; document.querySelectorAll('dialog[open]').forEach(d => d.close()); $('workspace').hidden = true; $('login').hidden = false; message(); $('token').focus(); };
   $('refresh').onclick = () => { message(); ++selection; clearDetail(); refresh(); };
+  $('return-queue').onclick = () => {
+    const selected = document.querySelector('#queue [aria-current="true"]');
+    (selected || $('queue-title')).focus();
+  };
   $('new-change').onclick = () => openCreate(); $('search').oninput = renderQueue; $('status-filter').onchange = renderQueue;
   $('preset').onchange = () => { $('title').value = workspace.presets[Number($('preset').value)].create_body.title; };
   $('create-form').onsubmit = event => { event.preventDefault(); const body = { ...workspace.presets[Number($('preset').value)].create_body, title: $('title').value }; if (parent) Object.assign(body, { parent_change_id: parent.change_id, parent_relation: 'CORRECTS_REJECTED' }); mutate('/api/v1/changes', body, null); };
@@ -606,7 +625,28 @@
   window.addEventListener('storage', event => {
     if (workspace && (event.key === null || event.key === client.scope)) lock();
   });
-  $('load-evidence').onclick = async () => { if (!current) return; const id = current.change_id, e = epoch, s = selection; $('evidence').textContent = '확인 중…'; try { const data = await client.get('/api/v1/changes/' + id + '/evidence'); if (e !== epoch || s !== selection) return; const list = node('dl', undefined, 'evidence-result'); for (const [label, key] of [['역사적 무결성', 'historical_integrity'], ['현재 출처 적격성', 'current_approval_eligibility'], ['외부 앵커', 'external_anchor'], ['승인 revision', 'approved_revision'], ['Envelope SHA-256', 'envelope_sha256']]) { const value = node('dd', data[key] ?? '—'); value.dataset.result = String(data[key] ?? ''); list.append(node('dt', label), value); } const details = node('details'); details.append(node('summary', '원본 JSON'), node('pre', JSON.stringify(data, null, 2))); $('evidence').replaceChildren(list, details); } catch (error) { if (e === epoch && s === selection) { $('evidence').textContent = '증거 조회 실패'; message(error); } } };
+  $('load-evidence').onclick = async () => {
+    if (!current) return;
+    const id = current.change_id, e = epoch, s = selection;
+    const target = $('evidence');
+    target.textContent = '확인 중…';
+    try {
+      const data = await client.get('/api/v1/changes/' + id + '/evidence');
+      if (e !== epoch || s !== selection) return;
+      const list = node('dl', undefined, 'evidence-result');
+      for (const [label, key] of [['역사적 무결성', 'historical_integrity'], ['현재 출처 적격성', 'current_approval_eligibility'], ['외부 앵커', 'external_anchor'], ['승인 개정', 'approved_revision'], ['Envelope SHA-256', 'envelope_sha256']]) {
+        const raw = data[key];
+        const value = node('dd', evidenceLabels.get(raw) ?? raw ?? '—');
+        value.dataset.result = String(raw ?? '');
+        list.append(node('dt', label), value);
+      }
+      const details = node('details');
+      details.append(node('summary', '증거 원본 JSON'), node('pre', JSON.stringify(data, null, 2)));
+      target.replaceChildren(list, details);
+    } catch (error) {
+      if (e === epoch && s === selection) { target.textContent = '증거 조회 실패'; message(error); }
+    }
+  };
   document.querySelectorAll('[data-close]').forEach(b => { b.onclick = () => b.closest('dialog').close(); });
   document.querySelectorAll('dialog').forEach(d => d.addEventListener('close', () => {
     if ($('message').dataset.kind === 'error') $('message').focus();
