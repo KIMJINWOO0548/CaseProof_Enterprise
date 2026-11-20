@@ -16,18 +16,38 @@ inputs, evaluate the entire suite and submit. A rejected change opens a new
 `CORRECTS_REJECTED` request. Neither evaluations nor approvals are copied.
 Distinct domain and release reviewers record 8–500-character reasons. Server
 authorization remains authoritative. Evidence is requested separately and displays
-historical integrity, current eligibility and external anchor status separately.
+historical integrity, current source eligibility and external anchor status separately.
+The legacy JSON field `current_approval_eligibility` describes source eligibility
+only. The UI labels it `현재 출처 적격성`: an ELIGIBLE source verdict does not
+authorize approval or replace the evaluation gate, workflow state or role separation.
+For example, a complete failed evaluation can retain eligible sources while submission
+returns `RELEASE_GATE_BLOCKED`. The JSON field name and domain predicate are preserved.
 Pack, candidate, source, suite and run-result hash references remain readable.
 
-Bearer tokens never enter browser persistent storage. An uncertain mutation keeps
-its original serialized body, path, key and revision under the authenticated tenant
-and actor in memory. All server 5xx, network loss and unparseable responses retain
-that request. Recovery explicitly retries the same request, with no automatic new
-key. Another role cannot recover it; switching back to the original actor can.
-A first known 4xx clears that failed request. After an uncertain outcome, a later 4xx retains the original key until its committed result is resolved. Both report the server code/request ID.
-Mutations cannot overlap. Session and selection counters discard stale responses.
-Failed reads/mutations clear prior detail/evidence instead of leaving a stale verdict.
-Page reload clears pending recovery; durable cross-reload recovery is outside scope.
+Bearer tokens stay in memory. The browser saves the synthetic mutation's exact
+body, path, key, revision and workspace context in per-actor local storage before
+the first POST. Sign in to the same account in the same browser profile and
+origin, then use **원래 요청 복구**. A browser lock coordinates open tabs. The
+server rechecks current authorization, returns the original committed result for
+the same request, and rejects changed input under the same committed key.
+The UI reads current detail from the server before displaying the result.
+See [request recovery and restore boundaries](REQUEST_RECONNECT.md).
+
+Normal submission is enabled only for the existing owned DRAFT/ANALYST UI path
+with a latest COMPLETE/PASS run. Missing, blocked or incomplete runs have visible
+evaluation guidance beside the disabled button. This is an affordance; current
+source, workflow, role and gate checks remain authoritative on the server.
+
+A first known 409 with `RELEASE_GATE_BLOCKED`, `EVALUATION_INCOMPLETE`,
+`SOURCE_NOT_ELIGIBLE` or `STALE_REVISION` triggers one fresh authorized current
+read for the still-selected change. Only a valid response restores same-suite
+typed inputs and updates that selected queue row's summary. Other rows and filters
+are preserved. The original error/request ID stays visible and the UI never
+automatically resubmits the rejected mutation. A 401/403/404 or invalid current
+history clears the old detail and does not restore typed data. Pending uncertain
+requests do not take this known-conflict path: their original serialized request
+remains available through the separate recovery control even while normal
+submission is disabled.
 
 Server-controlled strings use `textContent`/text nodes. Native dialog Escape and
 focus restoration, explicit form labels, keyboard-visible focus, live status,
@@ -39,6 +59,20 @@ client: exact replay, actor isolation, immutable original body, 503 recovery,
 known-error cleanup and concurrent-mutation refusal. Its initial execution failed
 because the client file did not exist; after implementation it passed (exit 0).
 `node --check service/static/v1.js` also passed (exit 0).
+
+`node scripts/check_evidence_labels.cjs` exercises the actual evidence click handler
+with synthetic responses in a small DOM harness. It checks that a BLOCK evaluation
+and source-only ELIGIBLE remain distinct, the displayed label is precise, the visible
+qualifier explains the other approval conditions, and raw evidence JSON is preserved.
+This is not a browser layout or accessibility observation.
+
+`node scripts/check_submit_flow.cjs` checks the actual handlers with a small DOM
+and transport harness: four readiness states, four known 409 conflicts, mutation
+and recovery-read 401/403/404 clearing, and exact uncertain evaluation replay.
+Its 15 scenarios also check current queue revision, correction input, selected
+state and original error visibility. The separate regular Playwright run records
+actual HTTP, desktop/mobile screenshots and deliberate response-loss recovery;
+that rendered evidence is not inferred from the harness.
 
 `scripts/v1_ui_probe.js` exports `browserProbe(page, config)` for an existing
 Playwright session. Config contains `baseURL`, runtime-only `tokens` with

@@ -181,6 +181,13 @@ class EvaluationRun(BaseV1):
                       UniqueConstraint('tenant_id', 'change_id', 'recorded_revision'))
 
 
+class EvaluationCoverage(BaseV1):
+    __table__ = table('evaluation_coverage', text('run_id', primary_key=True),
+                      text('run_input_sha256', primary_key=True), integer('format_version', primary_key=True),
+                      text('evaluation_sha256'), Column('canonical_payload', LargeBinary, nullable=False), text('payload_sha256'),
+                      ref('run_id', 'evaluation_run'), identity=False)
+
+
 class DecisionNote(BaseV1):
     __table__ = table('decision_note', text('change_id'), text('stage'), text('actor_id'),
                       integer('input_revision'), integer('output_revision'), text('assessment_sha256', nullable=True),

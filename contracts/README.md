@@ -200,3 +200,11 @@ anchors remain separately evidenced gates.
 ## dev6 execution-config boundary
 
 The original `evaluation-run.schema.json` and v1 gold examples remain historical contracts. New runtime writes use the separate `evaluation-run-v2.schema.json` with a complete versioned execution digest. V1 persisted runs are not silently upgraded or certified. See [execution configuration and evidence refs](../docs/EXECUTION_CONFIG.md).
+
+## Additive saved-run read projections
+
+`evaluation-run-history-v1.schema.json` and `evaluation-comparison-v1.schema.json`
+describe the new authenticated same-change GET projections. Their structural
+examples preserve original run hashes and omit raw inputs/source/model bodies.
+`COMPARISON_LIMIT_EXCEEDED` is a new safe 422 error. See the
+[runtime contract, count semantics and limits](../docs/RUN_COMPARISON.md).

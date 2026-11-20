@@ -112,6 +112,8 @@ release APPROVE에서 tenant head와 change를 잠근 뒤 승인 직전 revision
 
 `GET evidence`는 저장 bytes를 다시 hash하는 것만으로 검증하지 않는다. 고정 범위의 실제 source/run/decision/snapshot/transition/event를 재구성하여 저장 manifest와 비교한다. 누락/추가/중복/순서/field 변경을 검출한다. 결과는 `historical_integrity=VALID|INVALID|LEGACY_UNVERIFIED`, `current_approval_eligibility=ELIGIBLE|BLOCKED|NOT_APPLICABLE`, `external_anchor=NOT_CONFIGURED|UNVERIFIED|VERIFIED|FAILED`로 구분한다. 승인 전에는 approved_revision/envelope hash가 null이다. 관련 없는 후속 tenant event나 새 source version의 존재만으로 봉인 hash가 바뀌지 않는다.
 
+호환성을 위해 유지하는 `current_approval_eligibility` 필드는 현재 **출처 적격성만** 나타낸다. UI의 표시는 `현재 출처 적격성`이며, ELIGIBLE은 평가 통과·검토 단계·역할 분리 조건까지 만족했다는 뜻이 아니다. 이 필드로 mutation 승인 여부를 결정하지 않고 기존 full-suite gate와 상태·역할 검사를 각각 유지한다.
+
 현재 source가 철회되면 신규 승인은 BLOCKED이며 기존 envelope의 historical integrity는 별개다. source status history는 append-only이고 assessment의 `source_eligibility_snapshot_ref`는 승인 시점의 검사 결과 및 적용한 policy version을 고정한다. 사후 철회를 과거 payload에 덮어쓰지 않는다.
 
 ## 8. `/api/v1` endpoint/DTO

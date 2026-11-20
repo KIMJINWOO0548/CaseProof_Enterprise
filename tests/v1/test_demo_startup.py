@@ -120,11 +120,8 @@ def test_real_demo_cli_starts_and_preserves_existing_database(tmp_path, monkeypa
                 assert javascript.status_code == 200 and 'RequestClient' in javascript.text
         finally:
             if process.poll() is None:
-                if sys.platform == 'win32':
-                    subprocess.run(['taskkill', '/PID', str(process.pid), '/T', '/F'], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
-                                   creationflags=subprocess.CREATE_NO_WINDOW, check=True)
-                else:
-                    process.terminate()
+                # Serving an existing profile uses a single process owned by this test.
+                process.terminate()
             process.wait(timeout=10)
     assert token.encode() not in log_path.read_bytes()
     assert hashlib.sha256(database.read_bytes()).hexdigest() == original_digest

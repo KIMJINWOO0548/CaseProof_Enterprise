@@ -1,0 +1,32 @@
+[
+  {
+    "fg": "text",
+    "bg": "surface",
+    "size": "normal",
+    "ratio": 14.39,
+    "aa": true,
+    "aaa": true,
+    "fg_hex": "#28283c",
+    "bg_hex": "#ffffff"
+  },
+  {
+    "fg": "focus",
+    "bg": "surface",
+    "size": "ui",
+    "ratio": 7.9,
+    "aa": true,
+    "aaa": true,
+    "fg_hex": "#5141a6",
+    "bg_hex": "#ffffff"
+  },
+  {
+    "fg": "accent",
+    "bg": "surface",
+    "size": "normal",
+    "ratio": 6.43,
+    "aa": true,
+    "aaa": false,
+    "fg_hex": "#5945d8",
+    "bg_hex": "#ffffff"
+  }
+]

@@ -6,6 +6,8 @@ async function selfTest() {
   const calls = [];
   let response = 'lost';
   const client = new RequestClient(async (url, options) => {
+    if (url.startsWith('/api/v1/mutations/')) return {ok: false, status: 404,
+      json: async () => ({error: {code: 'NOT_FOUND'}})};
     calls.push({ url, options });
     if (response === 'lost') throw new Error('connection lost after commit');
     return { ok: response === 200, status: response, json: async () => response === 200

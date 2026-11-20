@@ -1,5 +1,41 @@
 # 구현 상태 — 5.3.0.dev6
 
+2026-11-20 합성 평가 사례 CSV 점검을 추가했다. 변경 작성자가 고정된 모음의 누락·중복과 입력 오류를 수정한 뒤 기존 평가 명령으로 제출할 수 있다. 점검은 평가나 감사 원장을 쓰지 않는다. [API 계약](api/v1-openapi.json) · [검증](VALIDATION.md#합성-평가-사례-csv)
+
+2026-11-16 로컬 개선(CP2·CP6). 브라우저가 요청 전 원래 키·본문·리비전을
+저장한다. 같은 계정으로 재접속하면 같은 DB에서 처리 결과를 복구하고 현재
+상태를 재조회한다. 이전 백업에서는 미확정 요청 재전송이 차단되며 계정
+격리와 검토된 재활성화가 적용된다. 실제 Chromium 재접속·복원, 독립
+SQLite 요청/증거 검사와 별도 PG17.11 회귀를 실행했다.
+[복구 계약](REQUEST_RECONNECT.md) · [검증](VALIDATION.md).
+당시 CP1 화면 이어보기는 설계 단계였다. 2026-11-20 검증 사본에서는 [목록 이어보기](CHANGE_LIST_PAGINATION.md#cp1-integration-design)를 구현하고 실제 브라우저에서 201건을 확인했다.
+
+2026-11-09 UTC 독립 증분: SQLite v1 복구 검사에서 성공 요청 원장의 내용과
+각 역사 revision의 1:1 대응을 검증한다. 손상·누락·중복 및 같은 행 수의 보상형
+누락/중복을 거부하고, 저장된 과거 응답을 당시 snapshot/run과 대조한다.
+[복구 범위](operations/RECOVERY.md#success-request-ledger-consistency)와
+[실행 결과](VALIDATION.md)를 구분한다. 접근 제한 보존본의 복원·대체·전체 통합은 아니다.
+
+2026-11-02 UTC 로컬 증분: 선택 변경의 저장된 v2 평가 이력과 기준/대상 비교를
+읽기 전용 GET 및 지연 조회 패널로 제공한다. 전체 이력의 기존 무결성 검증 뒤
+최근 100개를 표시하며, 비교는 최대 1000개 합집합 사례의 결과·해시 차이만 보여 준다.
+입력/출처/설정 문맥과 결과 변화를 구분하며 최신 평가·제출 gate·원래 요청 복구는
+기존 흐름을 따른다. [정확한 계약과 한계](RUN_COMPARISON.md),
+[이번 실행](VALIDATION.md)을 참고한다. 모델 품질 판정이나 실제 보험 승인이 아니다.
+
+로컬 제출 흐름을 보강했다. 평가 전·BLOCK·미완료는 재평가 안내와 함께 일반 제출을 비활성화하며,
+알려진 409 뒤에는 새 권한 조회를 통과한 최신 상세·선택 행·동일 모음 입력을 복원한다.
+401/403/404와 조회 실패는 이전 상세를 지우고, 미확정 요청은 기존 키·내용·revision으로 별도 복구한다.
+서버 gate·JSON·권한·LLM 의미는 바꾸지 않았다. [이번 실행](VALIDATION.md)은 일반 932 PASS와 실제 데스크톱·모바일 브라우저 흐름을 구분한다.
+
+로컬 품질 점검에서 증거 화면의 출처 전용 ELIGIBLE이 전체 승인 가능 여부처럼 표시되는 혼동을 재현했다.
+표시를 `현재 출처 적격성`으로 바로잡고 평가·검토 단계·역할 분리는 별도 조건임을 명시했다.
+기존 JSON 필드와 도메인 판정은 그대로이며, [실행 범위](VALIDATION.md)는 일반 931 PASS와 선택 검사 skip을 구분한다.
+
+로컬 강화 브랜치의 첫 증분은 [합성 증권 문서 검토 팩](SYNTHETIC_SECURITIES_REVIEW.md) 1개다.
+기존 계약의 정수 일수·시점·출처 판정기를 설정으로 재사용한다. 기존 보험 팩 3개와 기본 UI preset은 그대로이며,
+새 팩의 HTTP/UI 등록·금융 금액 추출·실제 공시 기한·투자 판단은 구현하거나 검증한 범위가 아니다.
+
 2026-11-01 KST. 기존 `/api`와 독립적인 v1 작업공간을 제공한다. `python -m scripts.v1_demo`가 명시적으로 새 임시 프로필을 준비하며 앱 시작 시 DB 변환·seed를 실행하지 않는다. baseline의 멱등성과 digest bytes는 보존한다.
 
 | 단계 | 구현·관찰 | 남은 경계 |
@@ -39,6 +75,28 @@ dev6의 고정된 실행·HTTP·UI 소스에 대한 로컬 전체 회귀는 **90
 잉크·아이리스·피치 색상, 로컬 SUIT 글꼴, 실제 현재 검토 단계와 넓은 화면의 독립 증거 패널을 적용했다. [설계·출처](VISUAL_DESIGN.md), [실제 화면·측정](evidence/g1-g6/ui-visual-refresh.json)을 기록했다. Chrome156에서 전체 반려/시정/승인·원래 요청 복구·오류 초점을 통과했고,375/390/768/1024/1280/1440px 가로 넘침0과 모션 감소를 확인했다. MIME 회귀는 RED→GREEN, 관련 Python4 PASS·선택 브라우저1 SKIP이다. 앞선 핵심 검증과 새 변경의 최종 CI는 SHA를 구분해 [VALIDATION](VALIDATION.md)에 기록한다.
 
 시각 구현 `b0c3d64`의 [CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는9개 성공이다. OS별 전체 각각912 PASS, 실제 PG460 PASS, 통계34 PASS이며 [새 배포물 설치·source ZIP](evidence/g1-g6/installed-b0c3d64.json)도 통과했다. 후속 현재 단계 외 라벨 대비 보정은 실제1440/390px에서5.53:1로 확인했다. 일반 CI의 선택 검사 skip을 실제 PG/NumPy 실행과 구분한다. 외부 검수와 운영 검증의 미완료 범위는 변함없다.
+
+## 2026-11-06 — saved comparison triage
+
+Added change-dimension filtering and literal case-ID search to the existing read-only comparison table. Whole-comparison warnings, hash references and latest-run approval gates remain visible and unchanged. Actual JavaScript handlers: RED 10 passed / 1 failed, GREEN 11 passed / 0 failed; full verification is recorded in replica/verification.md. [Scope and source](../replica/recon.md).
+
+2026-11-06 phase2: bounded 50-case paging, per-case provenance inspection and lazy raw JSON rendering. Twelve real-handler scenarios and fifteen submit/recovery scenarios pass; full HTTP suite962 passed/458 optional skips. See replica/depth-review.md for own-only benchmark and remaining gaps.
+
+Phase2 host verification completed:962pytest PASS/458optional SKIP/22subtests; smoke12/12, syntax and package421files PASS. Windows initialization wrapper0retries. See replica/depth-review.md for measured scope and remaining gaps.
+
+Phase2 Chromium156 verification completed: native keyboard flow,1440/390px document overflow0, no page exceptions. Synthetic API interception; backend tests separate. Evidence and remaining professional accessibility/production gaps: replica/depth-review.md.
+
+## 2026-11-20 isolated Windows acceptance
+
+- Queue refreshes and filters now respect the current request. Delayed responses cannot replace a newer failure or restore rows after sign-out. The client checks ordering and cursor continuity before showing the queue.
+- API continuation already existed at b388703, but the actual v1 UI returned only 200 rows. The shared list reader now finishes all pages atomically; a failed continuation is an explicit failed load. Reconnect checks the stored mutation result before reposting an absent request.
+- Independent Node reproduction: 200 instead of 201 (red), then 201 plus failed-page rejection (green). Real Chromium rendered 201 synthetic paged responses, rejected a dropped continuation, recovered a committed request by GET after process restart, and verified revoked roles/old-backup quarantine. A separate API test persisted 201 actual synthetic records.
+- Broad Windows recovery suite: 1073 passed, 459 skipped, 22 subtests (before final UI edits); final affected tests: 21 passed, 1 optional browser-profile skip; native reconnect/browser matrix: 1 passed. Smoke 12/12, UI syntax and package check passed before edits. Windows initialization-only wrapper used; native baseline had WinError 10014 failures. No OS/runtime setting was changed.
+- Evidence: ../../outputs/caseproof from this isolated workspace. PostgreSQL, production behavior, release manifest and installer were not validated.
+
+## 2026-11-20 · CP1 조항별 검증
+
+v1 전체 평가가 조항·규칙별 선택, 사례 판정, 시행·종료 경계의 검증 이력을 같은 트랜잭션에서 저장한다. 평가 이력의 ‘조항별 검증’에서 당시 기록을 조회할 수 있다. 이전 v2 평가는 보고서가 없는 경우 UNAVAILABLE이다. 실제 PG17 출시는 별도 검증 대상이다.
 
 ## 2026-11-07 개발 안내·패키지 검사
 

@@ -13,6 +13,297 @@ Linux / Python 3.12.14. 기준선 `0855bde`에서 `python VERIFY_PACKAGE.py`는 
 
 새 결과는 `reports/runs/20261107T150000Z-guide-validation/`에 기록했다. Windows·다른 Python 버전·PostgreSQL·수치통계·의존성 감사의 새 결과는 해당 commit의 CI와 별도로 대조한다. 연구·외부 검수·운영 배포 Gate를 이 문서 변경으로 통과 처리하지 않는다.
 
+## 합성 평가 사례 CSV
+
+2026-11-20 감자 PC의 격리 사본에서 Python 기반 Windows 검사 래퍼로 포맷·권한·리비전·쓰기 없음, 고정된 50개 사례와 원본 정규화 해시를 확인했다. 전체 검사는 1,088 통과, 조건부 473 건너뜀, 하위 검사 22 통과였다. 실제 Chrome 시험을 포함한 집중 검사 5개와 합성 스모크·UI 문법·패키지 검사도 통과했다. Windows 소켓 초기화 재시도는 전체 검사 147회, 집중 검사 1회였다. 실제 PostgreSQL 17과 고객 자료는 이번 검사에서 사용하지 않았다.
+
+## CP2 and CP6 request reconnect (2026-11-16)
+
+The implementation starts from local `f9b290a` on
+`codex/caseproof-request-recovery-20261116`. Desktop `main` was clean at
+`f586b6f`. Read-only remote heads were `01c24d7` for the earlier reliability
+branch and `8a407ba` for `main`. The starting improvement source was one commit
+ahead of the earlier reliability ref and diverged from remote main by
+20 local and three remote commits. Work and commits stayed local.
+
+- The client test first failed because a new client could not read the saved
+  intent. It passed after persistence, including write-before-send, identical
+  retry, different actor and workspace isolation, and a pre-send quota error.
+  A second test reproduced a wrong-change success response clearing the slot.
+  The fix validates the expected status, resource and result revision.
+- Two SQLite connections racing the same key initially produced a 409 after
+  one commit. After explicit serialization, they returned one original and
+  one replay with one row set. The independent workflow test also checks
+  post-write/precommit rollback, dropped committed HTTP response, changed-input
+  conflict, live role revocation and older backup quarantine. Literal states
+  and revisions and direct SQL/SHA-256 checks cover the approval, evaluation
+  version and source bytes. The integrated focused run passed 6 tests.
+- The opted-in native Chromium 156.0.8078.4 test passed through the documented
+  local launcher in 30.47s, with zero socketpair/listener initialization
+  retries. It dropped a committed submit response, closed the tab, restarted
+  the server, and recovered with the same key, body, revision and context.
+  It verified live 403 after opening a review dialog and zero decision rows,
+  then same-origin stale restore with old token 401, rotated AUDITOR access,
+  blocked replay and unchanged historical approval/evaluation/source hashes.
+  Logs, JUnit, runtime hashes and browser captures are in
+  `reports/runs/20261116T042128Z-a178958b/`.
+- A separate real loopback PostgreSQL 17.11 cluster passed all 460 existing
+  role, RLS, migration, concurrency and lock tests in 37.44s using a
+  non-owner app role. Zero skips and zero socketpair initialization retries.
+  The owned cluster was shut down. Logs and source hashes are in
+  `reports/runs/20261116-cp6-independent-e8bfc1/pg17-final/`.
+  The browser's file-identity restore contract applies to SQLite.
+
+The full run at implementation commit `4036a43` recorded 1072 pass, 459
+skip, 22 subtests and one Windows launcher cleanup failure. The existing
+profile served authenticated HTTP before `taskkill` returned exit 255.
+The unchanged test passed in isolation. The follow-up uses the owned
+subprocess handle for termination and waits for exit. Its five launcher
+tests passed without altering HTTP or database assertions.
+
+The full-run exit codes and local commit binding are stored in
+`reports/runs/20261116T041211Z-da7d7919/`. CP1 GUI continuation, independent
+insurance business truth, production restores and cross-device recovery
+remain outside this validation.
+
+## Connected evaluation clusters (2026-11-16)
+
+1016 passed, 458 skipped, 22 subtests passed, 3 warnings in 477.91s.
+Initialization-only socketpair retries: 35. Evaluation tests 43/43 passed,
+including previously unrun NumPy bootstrap checks installed from the hash lock.
+Shared and transitive document/source/incident relations now form one cluster;
+independence is still an assumption, not independently verified business gold.
+Real PostgreSQL remains unrun. See connected-evaluation evidence and independence
+boundary documents. These results do not certify external business accuracy.
+
+## Reviewed reactivation and real browser (2026-11-16)
+
+Full regression: 1006 passed, 459 optional skipped, 22 subtests passed, 3 warnings
+in 256.82s. Windows initialization-only socketpair retries: 49. Separate real
+Chromium against a fresh synthetic loopback demo: 2/2 PASS in 9.15s. The bare
+suite still skips browser because it has no profile URL; that is not substituted
+for this separate executed result. Real PG17 remains unavailable (no server or
+private admin configuration); its skipped checks are not passes.
+Independent review: 9/9 plus second-grant failure with full transaction rollback.
+See `docs/evidence/reviewed-reactivation-20261116.json`. The reactivation helper
+requires an offline owner, independently trusted current grants and deployment
+of only the rotated registry. It does not automate or certify those judgments.
+
+## Restore quarantine regression (2026-11-16)
+
+997 passed, 459 optional skipped, 22 subtests passed, 3 warnings in 202.06s.
+Existing Windows initialization-only wrapper retried socketpair creation 110
+times; no application requests or assertions were retried. Focused checks 75/75;
+independent scoped review 32/32 plus concurrent/publication-failure injection.
+See `docs/evidence/restore-quarantine-20261116.json` for hashes and unrun checks.
+This does not certify production readiness or the optional PostgreSQL/browser paths.
+
+## 2026-11-16 final cleanup regression completed
+
+Final implementation9396d81:992 passed,459 optional skipped,22 subtests passed,
+3 warnings,523.28 seconds,exit0. Command: `python -m scripts.windows_checks pytest
+-q --tb=short`. The existing Windows wrapper reported127 socketpair initialization
+retries; application requests and assertions were not retried or weakened.
+Browser, PostgreSQL and numerical evaluation skips remain unverified, not passed.
+This result supersedes the running/pending notes below; historical failures remain
+preserved. [Machine-readable evidence](evidence/reliability-20261116.json).
+
+## 2026-11-16 smoke failure cleanup
+
+The preceding unchanged full suite completed with988 passed,459 optional skipped,
+22 subtests,3 warnings in483.65s using scripts.windows_checks;81 initialization-only
+socketpair retries were reported. The unwrapped run had949 passed,22 failures and
+17 errors originating in Windows10014; both local logs are preserved separately.
+
+Four independent injections at table creation, seeding, client startup and request
+execution reproduced missing engine disposal (4 RED). Three also reproduced a
+secondary Windows32 cleanup error masking the original exception. A finally now
+disposes the engine before TemporaryDirectory cleanup. No failed report is published.
+Existing smoke output checks plus the four injections:7 PASS,3.21s,0 initialization
+retries. Full regression for this final cleanup change is running, not yet passed.
+Optional browser, real PostgreSQL and numerical evaluation remain unrun here.
+
+## 2026-11-16 Windows single-process demo loop
+
+Normal-permission startup reproduced Proactor accept WinError64 after application
+startup; authenticated readiness failed within20 seconds. The HTTP-only Windows
+demo now uses a standard asyncio.Runner with local SelectorEventLoop. Global
+policy, installed stdlib, auth rules, ports and server workload limits are unchanged.
+The existing real CLI test verifies authenticated200, anonymous401, static assets,
+original database digest and secret-free logs. Startup suite5/5 passed in5.05s.
+Final full regression is running; do not infer a complete pass from this result.
+
+## 2026-11-16 local recovery URI verification
+
+From origin recovery commit 0a3e66a, on a separate Windows worktree (old checkout untouched).
+`python -m pytest tests/operations/test_recovery_request_ledger.py -q -x --tb=short`:
+RED: 1 failed (`sqlite3.OperationalError: unable to open database file`).
+GREEN: 27 passed in 78.91 seconds after preserving SQLite URI escaping through
+SQLAlchemy URL decoding. Added backup/restore checks for #, percent and space in
+paths, with original database bytes unchanged. Read-only mode remains enforced.
+Full-suite fail-fast run: 520 passed, 459 optional skipped, 22 subtests passed,
+1 failure in demo-startup cleanup (`taskkill` exit 1). Not a full release pass.
+Local log: reports/runs/reliability-20261116/pytest.log (not included in source package).
+No production database, external service or permissions changed.
+
+## Local recovery request-ledger integrity — 2026-11-09 UTC
+
+This independent increment uses accessible remote commit
+`19112383f7387e340a3906d6277e746fc6d41e6d` and the separate
+`improve/recovery-ledger-integrity-20261109` branch. Inaccessible preservation
+archives were not read or represented as restored/integrated. Only the local
+SQLite v1 recovery inspector changes; normal mutation/replay and UI sources are
+unchanged. No schema migration or production database is involved.
+
+Python 3.12.14 dependencies were installed in a project-local venv from
+`requirements-dev.lock` with `--require-hashes`. The existing recovery baseline
+passed 12 tests. New corruption cases first produced **21 failures/1 pass**:
+damaged payload, fingerprint/status alias mismatch, self-rehashed response,
+missing record, duplicate record and equal-count missing/duplicate corruption
+were accepted by inspect/backup/restore. The initial targeted GREEN was
+**34 passed**. Two additional positive rejection paths were then added.
+
+The complete `.venv/bin/python -m pytest -q` run passed **985 tests, 459 optional
+skips, 22 subtests**, exit 0, in 136.22 seconds. This includes all 24 new cases:
+21 corruption/operation combinations and approval/domain-rejection/release-rejection
+restore paths with unchanged original-response replay. Existing warnings were
+one Starlette/httpx deprecation and two SQLAlchemy cyclic-FK sort warnings.
+Optional skips are real PG17 (457), NumPy (1) and Python Playwright (1).
+
+`python -m scripts.smoke` passed **12/12** and `python -m scripts.check_ui_syntax`
+passed. Raw command results, baseline manifest differences and logs are under the
+new ignored run directory `reports/runs/20261109T152116Z-a0bc5667-recovery-ledger/`.
+The source manifest initially failed with **16 added/9 changed files already in
+the remote baseline**, independently of this recovery change; that failure was
+preserved before any manifest update. Byte-manifest reconciliation is separate
+from functional tests and does not authenticate authorship or safety.
+
+`python -m scripts.check_package` passed with **427 source files, 15 schemas,
+65 examples and 14 canonical vectors**. After comparing the official base and
+the explicitly permitted recovery/documentation changes, the source manifest
+was reconciled; `python VERIFY_PACKAGE.py` passed for all **427 source files**.
+
+Real PG/RLS, Windows, browser execution, external anchors, independent human
+review and production recovery were not run. The stored fingerprint is checked
+against its indexed value; the original request body is not independently
+reconstructed. See [the recovery boundary](operations/RECOVERY.md#success-request-ledger-consistency).
+
+## Local saved-run comparison — 2026-11-02 UTC
+
+The isolated feature worktree uses Python 3.12.14, SQLite 3.53.1, FastAPI 0.162.0,
+SQLAlchemy 2.1.6, Pydantic 2.14.1, pytest 9.2.0 and Node 24.19.0 on Linux.
+Imports were checked against this worktree, using the existing task venv rather
+than an editable original checkout. No dependency installation was required.
+
+Independent HTTP RED was 14 failures for missing GET behavior; pure projection
+RED was 7 failures for the missing module; real JS-handler RED was 7 failures for
+the absent controls; response-schema RED was 1 failure for the absent contract.
+Two early GREEN attempts exposed test-fixture mistakes (frozen command payloads
+and immutable/FK protections); their failures were preserved and the fixtures
+corrected. An additive OpenAPI path-count expectation was updated from 8 to 9.
+Browser QA's run-option readability correction had its own 1-fail/6-pass RED
+before the revision/status-first label change.
+
+The affected tests passed **61/61** with one existing dependency warning. The
+complete suite passed **961 tests, 459 optional skips, 22 subtests**, three
+existing warnings, exit 0. Optional skips cover unavailable Python Playwright,
+NumPy and real PG17/RLS/concurrency; those are not reported as passing checks.
+The real JS-handler harness additionally passed **10/10** scenarios, including
+delayed history/comparison after role/change selection, changed run selectors,
+read failure/retry, literal untrusted identifiers and latest incomplete veto.
+
+The tests persist corrected FAIL→PASS runs normally and compare every v1 table
+before/after GETs. They check authentication/revocation, wrong tenant/change/run,
+exact duplicate-free UUID query parameters, legacy/tampered history, original
+payload digests, sorted rows and zero-change same-run output. A real 101-run
+history proves full validation before the 100-summary slice, old-ID comparison
+and rejection of tampering outside the displayed slice. A normally persisted
+1001-case run proves safe 422 bounds without writes. Pure fixtures exercise
+configuration/version/case-set differences without weakening same-change
+immutable-reference validation. A latest incomplete saved run remains the
+submission gate even while inspecting an older PASS.
+
+`python -m scripts.smoke` passed 12/12; `scripts.check_ui_syntax` and
+`scripts.check_package` passed. The two additive schemas/examples are checked
+against actual HTTP output. Source manifest regeneration and byte verification
+are part of the local delivery checks. Exact logs, command outcomes and source
+hashes are retained in the separate task delivery folder; generated runtime
+evidence is not inserted into source fixtures.
+
+The parent task owns the actual local HTTP browser run and independent internal
+review. Their reports are separate from the Node DOM-handler checks and this
+worker's Python suite. No new browser dependency, real model, Windows run,
+external expert review or production-capacity claim is made here.
+
+## 로컬 제출 안내·409 시정 문맥 — 2026-11-02 UTC
+
+현재 화면에서 평가 전/BLOCK에도 제출이 활성화되고 실제 409 뒤 상세·평가·입력이 사라지는 흐름을 재현했다.
+수정 후 최신 COMPLETE/PASS에만 일반 제출을 열고, 그 외에는 평가/수정 안내를 표시한다.
+알려진 409는 새 권한 조회를 통과한 최신 상세·동일 모음 입력·선택 행 요약을 복원한다.
+권한/조회 실패는 이전 상세를 지우며, 원래 키·body·revision의 미확정 복구는 별도 유지한다.
+서버 gate·API JSON·인증/권한·합성 어댑터·출처 판정은 변경하지 않았다.
+
+이번 기준선은 source manifest **398개 PASS**, 표적 **11 PASS**였다.
+새 실제 JS handler 검사는 초기 15개 중 **3 PASS/12 FAIL**로 RED였고,
+선택 행의 이전 revision을 별도로 확인한 뒤 **11 PASS/4 FAIL** RED를 보존했다.
+최종 handler는 **15/15 PASS**, 표적 pytest는 **15 passed/1 optional skipped**,
+전체는 **932 passed, 459 skipped, 22 subtests passed**, 기존 경고 3개, exit 0이다.
+smoke 12/12·JS 문법·원래 요청/불확정 복구 검사도 통과했다.
+
+Browser 플러그인/스킬이 없어 `frontend-testing-debugging`의 허용 경로로 세션에 이미 있던
+Node Playwright 1.62.1과 system Chromium 154.0.8037.57을 사용했다. 새 설치는 없다.
+이는 저장소 선택 Python Playwright lock 1.64.1 실행이 아니다. 정확한 주소는
+`http://127.0.0.1:8766/v1`, caller-owned 임시 SQLite와 공개 합성 test identity만 사용했다.
+1440x1000·390x844의 현재 화면에서 평가 전/BLOCK 차단, PASS 제출, 실제 stale PASS→409,
+최신 revision/입력 11/선택/오류 ID 보존, 정상 시정 제출을 확인했다.
+성공 commit 응답만 중단한 평가도 동일 키·본문·revision으로 재생했고, 중복 run 없이 revision 2였다.
+page error·framework overlay는 0, 검사한 모바일 가로 넘침은 0이다.
+기존 favicon 404·시험한 409·의도적 response abort console 항목은 별도로 설명한다.
+
+첫 브라우저 사후 probe는 두 번째 create의 이전 ID/일시적 요청 banner를 기다리는 시험 조정 오류로 실패했다.
+`after-attempt-1`에 실패를 보존했으며 통과로 집계하지 않는다. 행 동기화 이전 통과 화면도 그대로 보존했다.
+최종 행 동기화 후 화면/결과는 외부 증거의 별도 `after-final/`에 저장·검토했다.
+정식 Product Design screenshot audit, 전체 접근성/스크린리더, 독립 사용자 검수는 수행하지 않았다.
+일반 suite의 PG457·NumPy1·선택 Python browser1 skip과 별도 실제 Node browser 실행을 구분한다.
+백엔드/SQL 변경이 없어 PG는 재실행하지 않았고, 원격 GitHub/CI·Windows 검증도 이번에는 하지 않았다.
+이번 로그와 소스 해시는 새 `reports/runs/*-submit-guidance/`에 보존한다.
+
+## 로컬 출처 적격성 표시 정정 — 2026-11-02 UTC
+
+정상 API의 29일 주장/30일 합성 근거 사례에서 run은 BLOCK, 제출은 409 `RELEASE_GATE_BLOCKED`인데
+증거의 출처 전용 `current_approval_eligibility=ELIGIBLE`이 UI에서 `현재 승인 적격성`으로 표시됐다.
+이는 승인 우회가 아니라 출처 진단의 표시·설명 혼동이다. 기존 JSON 필드·출처 판정·승인 gate·seal·replay는 보존했다.
+화면은 `현재 출처 적격성`과 별도 승인 조건을 표시하고, 실제 OpenAPI 설명도 같은 의미를 명시한다.
+
+Linux/Python 3.12.14/기존 hash lock 환경의 기준선은 **929 passed, 459 skipped, 22 subtests passed**였다.
+새 검사 2개는 실제 evidence 클릭 handler의 라벨과 OpenAPI의 의미 설명에서 RED였고,
+BLOCK 평가·제출 거부·출처 ELIGIBLE의 기존 HTTP 동작은 RED 실행에서도 이미 통과했다.
+수정 후 관련 **44 passed**, 전체 **931 passed, 459 skipped, 22 subtests passed**, 기존 경고 3개, exit 0이다.
+smoke 12/12·JS 문법·기존 응답 유실 복구·새 DOM handler 검사도 통과했다.
+
+새 Node 검사는 실제 UI handler를 작은 DOM harness에서 실행한 것이며 브라우저·레이아웃·접근성 관찰이 아니다.
+실제 PG457·선택 NumPy1·선택 Python Playwright1은 이번 일반 실행에서 skip이다.
+도메인/SQL/역할 코드와 API handler AST(해당 OpenAPI 설명 제외)가 동일함을 대조했으므로 PG는 재실행하지 않았다.
+이전 f95ed024의 실제 PG17.11 460 PASS는 별도 증거이며 새 브랜치 실행으로 바꾸어 기록하지 않는다.
+원격 GitHub/CI·Windows·외부 사람 검수는 미실행이다. 새 로그·재현 명령은 `reports/runs/*-evidence-source-label/`와 별도 복원 패키지에 보존한다.
+
+## 로컬 합성 증권 팩 증분 — 2026-11-01 UTC
+
+Linux / Python 3.12.14 / 기존 `requirements-dev.lock` hash 설치 / 임시 SQLite에서 실행했다.
+기준선 `f586b6f`의 전체 결과는 **912 passed, 459 skipped, 22 subtests passed**였고,
+새 팩과 전용 검사 추가 후 **929 passed, 459 skipped, 22 subtests passed**였다. 양쪽 모두 기존 경고 3개와 exit 0이다.
+설정 파일 부재로 전용 검사 17개가 RED(설정 fixture 오류, exit 1)를 보인 뒤,
+팩 추가 후 기존 정책 검사와 함께 **45 passed**였다. 기존 테스트·보험 데이터·runtime 122개 파일의 bytes는 보존됐다.
+
+baseline smoke와 최종 smoke는 각각 **12/12**, UI 문법·실제 요청 복구 Node 검사 2개도 통과했다.
+459 skip은 실제 PG17 미구성 457개, 선택 NumPy 검사 1개, 선택 Python Playwright 1개다.
+원격 CI·Windows·실제 PG·외부 검수는 이번 브랜치에서 실행하지 않았다.
+증분은 [명시적 PackRegistry 사용](SYNTHETIC_SECURITIES_REVIEW.md)까지이며 새 팩의 HTTP/UI 흐름을 완료했다고 주장하지 않는다.
+
+원본 UI의 로컬 Chromium 캡처는 이미지 없이 정지해 중지했고, 30초 제한 재시도도 exit 124로 실패했다.
+이 결과를 브라우저 PASS로 집계하지 않는다. 보존한 기존 committed UI 이미지는 새 캡처가 아니다.
+명령·exit·버전·해시·원본 출력은 이번 `reports/runs/*-synthetic-securities/`와 별도 복원 패키지에 보존한다.
+
 ## 추가 시각 개편 — 2026-11-01 KST
 
 구현 `b0c3d64`의 [CI41226797390](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/runs/41226797390)는 **9 success / PR 전용1skip**이다. Linux Python3.11/3.12/3.13·Windows3.12 각각 **912 PASS,459 optional SKIP,22 subtests PASS,3 warnings**이며, 별도 실제 PG17.11은 **460 PASS/0skip**, NumPy는 **34 PASS**다. [명령·JUnit·checksum](evidence/g1-g6/ci-b0c3d64.json), [정확한 source ZIP·wheel·저장소 밖 설치·Gitleaks](evidence/g1-g6/installed-b0c3d64.json)을 기록했다. 소스 ZIP은390개 source hash+manifest를 검증했다. Gitleaks 원시 종료값은1이며, 이력23/작업 소스22 후보를 해시·합성 요청키로 분류했고 자격 증명/미해결은0이었다. 보안 인증으로 해석하지 않는다.
@@ -125,7 +416,7 @@ SQLite owner의 전체 재작성에 대한 외부 보증도 제공하지 않는�
 
 ## 5.3.0.dev3 — Tabler 검토 화면
 
-Windows / Python 3.12.10 / Chrome 156 / 임시 합성 SQLite. [새 로그](../reports/runs/20261030T142434Z-a01caa29/)와 [화면 범위](UI_WORKSPACE.md)를 함께 읽는다. UI 자체와 승인 기록을 실제 브라우저에서 조작했고, DB에서도 결과를 확인했다.
+Windows / Python 3.12.10 / Chrome 156 / 임시 합성 SQLite. [새 로그](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/tree/8a407ba0c64bb662ecb7713e98da88a7b5079bd0/reports/runs/20261030T142434Z-a01caa29)와 [화면 범위](UI_WORKSPACE.md)를 함께 읽는다. UI 자체와 승인 기록을 실제 브라우저에서 조작했고, DB에서도 결과를 확인했다.
 
 | 검사 | 실제 결과 |
 | --- | --- |
@@ -151,7 +442,7 @@ Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwr
 
 ## 5.3.0.dev2 G1.1 — 2026-10-30 KST
 
-실행은 Windows / Python 3.12.10 / 프로젝트 가상환경이다. [이번 run](../reports/runs/20261029T154037Z-4b5b5b75/)은 10월 29일 UTC에 시작해 30일 UTC에 이어서 수행했다. v1 테스트는 DB 없이 실행하며 기존 HTTP 회귀는 임시 합성 SQLite를 사용했다.
+실행은 Windows / Python 3.12.10 / 프로젝트 가상환경이다. [이번 run](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/tree/8a407ba0c64bb662ecb7713e98da88a7b5079bd0/reports/runs/20261029T154037Z-4b5b5b75)은 10월 29일 UTC에 시작해 30일 UTC에 이어서 수행했다. v1 테스트는 DB 없이 실행하며 기존 HTTP 회귀는 임시 합성 SQLite를 사용했다.
 
 | 검사 | 실제 결과 |
 | --- | --- |
@@ -176,7 +467,7 @@ Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwr
 
 ## 5.3.0.dev1 통합 — 2026-10-30 KST
 
-이번 결과는 Windows / Python 3.12.10 / 신규 임시 SQLite / hash lock 환경이다. 실행 로그는 [이번 run](../reports/runs/20261029T151200Z-a53be001/)에 있다. 아래 v5.3 원본의 Linux 기록은 별도 이력이다.
+이번 결과는 Windows / Python 3.12.10 / 신규 임시 SQLite / hash lock 환경이다. 실행 로그는 [이번 run](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/tree/8a407ba0c64bb662ecb7713e98da88a7b5079bd0/reports/runs/20261029T151200Z-a53be001)에 있다. 아래 v5.3 원본의 Linux 기록은 별도 이력이다.
 
 | 이번 검사 | 실제 결과 |
 | --- | --- |
@@ -228,3 +519,32 @@ Chrome DevTools MCP의 모바일 전체 캡처가 지연돼 중단하고, Playwr
 - 외부 SME 검수, 비공개 holdout 연구, production 인증과 실제 보험 의사결정 적용은 수행하지 않았다.
 
 이 결과는 기록된 로컬 실행의 증거이며 공개 저장소 CI green, 보안 인증 또는 배포 승인을 뜻하지 않는다.
+
+## 2026-11-06 comparison triage
+
+Host Python 3.12 existing virtual environment: full suite **962 passed / 458 skipped / 22 subtests passed**, 3 existing warnings, exit 0. Skips are 457 unavailable PostgreSQL checks and one optional Playwright browser check. Initialization-only Windows wrapper retries: 0. Smoke 12/12, baseline JS syntax and structural package checks each exit 0. Actual modified comparison-handler harness: RED 10/1 → GREEN 11/0; v1.js Node syntax exit 0. [Commands, source evidence and limitations](../replica/verification.md). No real browser visual or external/production acceptance claim.
+
+Phase2 host verification completed:962pytest PASS/458optional SKIP/22subtests; smoke12/12, syntax and package421files PASS. Windows initialization wrapper0retries. See replica/depth-review.md for measured scope and remaining gaps.
+
+Phase2 Chromium156 verification completed: native keyboard flow,1440/390px document overflow0, no page exceptions. Synthetic API interception; backend tests separate. Evidence and remaining professional accessibility/production gaps: replica/depth-review.md.
+
+## 2026-11-20 isolated Windows acceptance
+
+- The queue generation regression holds an authorized response from the real loopback API in Chromium, revokes the profile and verifies that the newer failure remains visible. The Node pagination probe rejects duplicate IDs, descending order and a cursor beyond the last record.
+- API continuation already existed at b388703, but the actual v1 UI returned only 200 rows. The shared list reader now finishes all pages atomically; a failed continuation is an explicit failed load. Reconnect checks the stored mutation result before reposting an absent request.
+- Independent Node reproduction: 200 instead of 201 (red), then 201 plus failed-page rejection (green). Real Chromium rendered 201 synthetic paged responses, rejected a dropped continuation, recovered a committed request by GET after process restart, and verified revoked roles/old-backup quarantine. A separate API test persisted 201 actual synthetic records.
+- Broad Windows recovery suite: 1073 passed, 459 skipped, 22 subtests (before final UI edits); final affected tests: 21 passed, 1 optional browser-profile skip; native reconnect/browser matrix: 1 passed. Smoke 12/12, UI syntax and package check passed before edits. Windows initialization-only wrapper used; native baseline had WinError 10014 failures. No OS/runtime setting was changed.
+- After the queue refresh and fixture changes, both opt-in Chromium tests for real SQLite pagination and request reconnect ran. Focused suite: 8 passed, 1 optional browser-profile skip. Full `python -m scripts.windows_checks pytest -q` with `CASEPROOF_V1_RECONNECT_BROWSER=1`: 1077 passed, 458 skipped, 22 subtests passed, exit 0. The Windows wrapper retried socket initialization 119 times.
+- Evidence: ../../outputs/caseproof from this isolated workspace. PostgreSQL, production behavior, release manifest and installer were not validated.
+
+## 2026-11-20 · CP1 읽기·저장 경계
+
+임시 SQLite에서 원자 롤백과 멱등 재생, 실제 마이그레이션과 권한 재검사, 보고서 해시, 분모·경계와 최고순위 동률을 검사했다. Chrome에서 v1 런처로 키보드 조항·사례 탐색과 열람 회수 후 표시 제거를 확인했다. 명령과 결과는 격리 작업공간의 `outputs/caseproof/implementation-result.md`에 있다.
+
+## 2026-11-20 · Patched Windows integration candidate (synthetic data only)
+
+- Reconciled local request recovery and the latest review workspace against upstream main `8a407ba`, keeping its development guide and historical evidence. This is a local integration candidate, not an upstream merge or release.
+- The existing `0002_coverage` SQLite and PostgreSQL migration definitions declare `canonical_payload` before `payload_sha256`; the ORM metadata declared the reverse. SQLite recovery correctly rejects a physical schema whose field order does not match the model. Before the correction, the real-browser restore acceptance and a new populated-coverage regression both failed in `backup_database` with `Unsupported v1 schema: v1_evaluation_coverage`. Aligning the model, without changing either migration or recovery validation, fixed the regression. The focused case checks that stored evidence matches byte-for-byte after verified backup and quarantined restore.
+- Windows/Python 3.13.16 and Chromium 156.0.8078.4: 45 focused tests passed (no skips), including real Chromium on the v1 SQLite service, 201 persisted records (200+1), queue request races, authorization revocation, committed response loss followed by GET-only recovery after browser/app restart, and CSV and coverage flows. Windows socket startup retries in this focused run: 0. The legacy Node harness now checks that an explicit not-found response is required before reposting the same original request.
+- PostgreSQL 17 was not available in the Windows test environment. Earlier PostgreSQL results in this document apply to their historical revisions, not this candidate or the coverage migration. No production database, customer data, deployment, or external review was used.
+- Source handoff keeps excluded archive/report data out of the ZIP; the five historical links now point to their existing upstream revision. Validate both a checkout and a newly extracted ZIP with the existing verification scripts.

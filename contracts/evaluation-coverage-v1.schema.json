@@ -1,0 +1,307 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Evaluation coverage v1",
+  "oneOf": [
+    {
+      "type": "object",
+      "required": [
+        "version",
+        "run_id",
+        "availability",
+        "recorded_revision",
+        "run_input_sha256",
+        "candidate_snapshot_id",
+        "source_bundle_id",
+        "dataset_version_id",
+        "suite_version_id",
+        "evaluator_version_id",
+        "clause_count",
+        "case_count",
+        "executed_case_count",
+        "executed_clause_count",
+        "inconclusive_case_count",
+        "gap_case_ids",
+        "clauses",
+        "cases"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "availability": {
+          "const": "AVAILABLE"
+        },
+        "recorded_revision": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "run_input_sha256": {
+          "pattern": "^[a-f0-9]{64}$",
+          "type": "string"
+        },
+        "candidate_snapshot_id": {
+          "type": "string"
+        },
+        "source_bundle_id": {
+          "type": "string"
+        },
+        "dataset_version_id": {
+          "type": "string"
+        },
+        "suite_version_id": {
+          "type": "string"
+        },
+        "evaluator_version_id": {
+          "type": "string"
+        },
+        "clause_count": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "executed_case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "executed_clause_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "inconclusive_case_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "gap_case_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "clauses": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "rule_id",
+              "clause_id",
+              "policy_version",
+              "case_ids",
+              "passed",
+              "failed",
+              "unselected_candidate_count",
+              "boundaries"
+            ],
+            "properties": {
+              "rule_id": {
+                "type": "string"
+              },
+              "clause_id": {
+                "type": "string"
+              },
+              "policy_version": {
+                "type": "string"
+              },
+              "case_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "passed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "failed": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "unselected_candidate_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "boundaries": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "boundary",
+                    "offset",
+                    "date",
+                    "case_ids"
+                  ],
+                  "properties": {
+                    "boundary": {
+                      "enum": [
+                        "valid_from",
+                        "valid_to"
+                      ]
+                    },
+                    "offset": {
+                      "enum": [
+                        -1,
+                        0
+                      ]
+                    },
+                    "date": {
+                      "type": "string"
+                    },
+                    "case_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "cases": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": [
+              "case_id",
+              "basis_date",
+              "recorded_as_of",
+              "selected_rule_id",
+              "verdict",
+              "complete",
+              "error_code",
+              "reason_codes",
+              "tie_rule_ids",
+              "candidates"
+            ],
+            "properties": {
+              "case_id": {
+                "type": "string"
+              },
+              "basis_date": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "recorded_as_of": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "selected_rule_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "verdict": {
+                "enum": [
+                  "PASS",
+                  "FAIL",
+                  "INCONCLUSIVE"
+                ]
+              },
+              "complete": {
+                "type": "boolean"
+              },
+              "error_code": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "reason_codes": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "tie_rule_ids": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "candidates": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "rule_id",
+                    "source_id",
+                    "policy_version",
+                    "clause_id",
+                    "eligible",
+                    "reason_codes"
+                  ],
+                  "properties": {
+                    "rule_id": {
+                      "type": "string"
+                    },
+                    "source_id": {
+                      "type": "string"
+                    },
+                    "policy_version": {
+                      "type": "string"
+                    },
+                    "clause_id": {
+                      "type": "string"
+                    },
+                    "eligible": {
+                      "type": "boolean"
+                    },
+                    "reason_codes": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "additionalProperties": false
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    {
+      "type": "object",
+      "required": [
+        "version",
+        "run_id",
+        "availability",
+        "reason"
+      ],
+      "properties": {
+        "version": {
+          "const": 1
+        },
+        "run_id": {
+          "type": "string"
+        },
+        "availability": {
+          "const": "UNAVAILABLE"
+        },
+        "reason": {
+          "const": "NO_SAVED_COVERAGE"
+        }
+      },
+      "additionalProperties": false
+    }
+  ]
+}

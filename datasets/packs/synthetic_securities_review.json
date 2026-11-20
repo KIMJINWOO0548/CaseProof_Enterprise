@@ -1,0 +1,101 @@
+{
+  "schema_version": "caseproof.policy-pack.v1",
+  "synthetic": true,
+  "tenant_id": "fictional",
+  "pack_id": "securities-review-synthetic",
+  "pack_version": "v1",
+  "business_timezone": "UTC",
+  "product_ids": ["synthetic-bond-memo"],
+  "workflows": [
+    {
+      "workflow": "document-review",
+      "date_basis_version": "synthetic-review-basis-v1",
+      "date_basis": "consultation_date",
+      "required_dates": ["consultation_date"]
+    }
+  ],
+  "retroactivity_policy_id": "synthetic-no-retroactivity-v1",
+  "retroactivity_policies": [
+    {
+      "policy_id": "synthetic-no-retroactivity-v1",
+      "reviewed": false,
+      "evidence_id": null
+    }
+  ],
+  "priorities": {
+    "version": "synthetic-internal-priority-v1",
+    "approved": true,
+    "evidence_id": "synthetic-fixture-priority-label",
+    "ranks": {"base": 10}
+  },
+  "sources": [
+    {
+      "source_id": "synthetic-memo-v1",
+      "policy_version": "v1",
+      "approval_history": [
+        {
+          "recorded_at": "2025-01-01T00:00:00Z",
+          "status": "APPROVED",
+          "evidence_id": "synthetic-fixture-v1-label"
+        }
+      ]
+    },
+    {
+      "source_id": "synthetic-memo-v2",
+      "policy_version": "v2",
+      "approval_history": [
+        {
+          "recorded_at": "2025-05-15T00:00:00Z",
+          "status": "DRAFT",
+          "evidence_id": "synthetic-fixture-v2-draft-label"
+        },
+        {
+          "recorded_at": "2025-06-01T00:00:00Z",
+          "status": "APPROVED",
+          "evidence_id": "synthetic-fixture-v2-approved-label"
+        },
+        {
+          "recorded_at": "2025-09-01T00:00:00Z",
+          "status": "REVOKED",
+          "evidence_id": "synthetic-fixture-v2-revoked-label"
+        }
+      ]
+    }
+  ],
+  "rules": [
+    {
+      "rule_id": "synthetic-internal-v1",
+      "product_id": "synthetic-bond-memo",
+      "workflow": "document-review",
+      "rule_key": "internal-review-window",
+      "source_id": "synthetic-memo-v1",
+      "clause_id": "SYNTHETIC-INTERNAL-v1",
+      "valid_from": "2025-01-01",
+      "valid_to": "2025-07-01",
+      "recorded_from": "2025-01-01T00:00:00Z",
+      "recorded_to": null,
+      "rider_code": null,
+      "priority_key": "base",
+      "retroactive": false,
+      "value": 10,
+      "unit": "days"
+    },
+    {
+      "rule_id": "synthetic-internal-v2",
+      "product_id": "synthetic-bond-memo",
+      "workflow": "document-review",
+      "rule_key": "internal-review-window",
+      "source_id": "synthetic-memo-v2",
+      "clause_id": "SYNTHETIC-INTERNAL-v2",
+      "valid_from": "2025-07-01",
+      "valid_to": null,
+      "recorded_from": "2025-05-15T00:00:00Z",
+      "recorded_to": null,
+      "rider_code": null,
+      "priority_key": "base",
+      "retroactive": false,
+      "value": 7,
+      "unit": "days"
+    }
+  ]
+}

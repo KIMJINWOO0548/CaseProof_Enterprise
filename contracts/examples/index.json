@@ -115,6 +115,8 @@
     {"file": "examples/fingerprint-create.json", "schema": "mutation-fingerprint.schema.json", "valid": true},
     {"file": "examples/fingerprint-create-revision.json", "schema": "mutation-fingerprint.schema.json", "valid": false},
     {"file": "examples/error-stale.json", "schema": "error.schema.json", "valid": true},
-    {"file": "examples/error-private-detail.json", "schema": "error.schema.json", "valid": false}
+    {"file": "examples/error-private-detail.json", "schema": "error.schema.json", "valid": false},
+    {"file": "examples/run-history-v1.json", "schema": "evaluation-run-history-v1.schema.json", "valid": true},
+    {"file": "examples/run-comparison-v1.json", "schema": "evaluation-comparison-v1.schema.json", "valid": true}
   ]
 }

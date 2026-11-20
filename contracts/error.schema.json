@@ -18,6 +18,7 @@
             "SEPARATION_OF_DUTIES",
             "NOT_FOUND",
             "IDEMPOTENCY_CONFLICT",
+            "REQUEST_CONTEXT_CHANGED",
             "AUDIT_INTEGRITY_FAILURE",
             "EVIDENCE_RECORD_TAMPERED",
             "EXECUTION_CONFIG_UNVERIFIED",
@@ -30,7 +31,8 @@
             "INVALID_REQUEST",
             "RETRYABLE_CONFLICT",
             "OUTCOME_UNKNOWN",
-            "INTERNAL_ERROR"
+            "INTERNAL_ERROR",
+            "COMPARISON_LIMIT_EXCEEDED"
           ]
         },
         "message": {"type": "string"},
@@ -148,6 +150,7 @@
     "SEPARATION_OF_DUTIES": 403,
     "NOT_FOUND": 404,
     "IDEMPOTENCY_CONFLICT": 409,
+    "REQUEST_CONTEXT_CHANGED": 409,
     "AUDIT_INTEGRITY_FAILURE": 409,
     "EVIDENCE_RECORD_TAMPERED": 409,
     "INVALID_STATUS": 409,
@@ -159,6 +162,7 @@
     "INVALID_REQUEST": 422,
     "RETRYABLE_CONFLICT": 503,
     "OUTCOME_UNKNOWN": 503,
-    "INTERNAL_ERROR": 500
+    "INTERNAL_ERROR": 500,
+    "COMPARISON_LIMIT_EXCEEDED": 422
   }
 }
