@@ -124,6 +124,23 @@ class RecordEvaluation(JSONModel):
         return self
 
 
+class CSVPreviewError(JSONModel):
+    row: int | None
+    column: Literal['case_id', 'claim_days', 'case_context'] | None
+    code: Literal['INVALID_UTF8', 'INVALID_CSV', 'INVALID_HEADER', 'TOO_MANY_ROWS',
+                  'INVALID_COLUMN_COUNT', 'INVALID_CASE_ID', 'UNKNOWN_CASE_ID', 'DUPLICATE_CASE_ID',
+                  'MISSING_CASE_ID', 'INVALID_INTEGER', 'INVALID_CLAIM_DAYS', 'INVALID_CONTEXT']
+    case_id: RegisteredId | None = None
+
+
+class CSVPreview(JSONModel):
+    ready: bool
+    revision: Revision
+    errors: list[CSVPreviewError] = Field(max_length=50)
+    errors_truncated: bool
+    evaluation: RecordEvaluation | None
+
+
 class SubmitChange(JSONModel):
     pass
 

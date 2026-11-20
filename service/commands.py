@@ -61,6 +61,9 @@ def execute_command(session_factory, actor, command):
     try:
         with session_factory() as db:
             with db.begin():
+                if db.get_bind().dialect.name == 'sqlite':
+                    # SQLite ignores FOR UPDATE. Serialize before reading auth or the ledger.
+                    db.connection().exec_driver_sql('BEGIN IMMEDIATE')
                 actor = current_actor(db, actor)
                 head = db.execute(select(m.TenantAuditHead).where(m.TenantAuditHead.tenant_id == actor.tenant_id).with_for_update()).scalar_one_or_none()
                 change = None if kind == 'CHANGE_CREATED' else get_change(db, actor.tenant_id, command.resource_id, lock=True)
@@ -110,7 +113,8 @@ def _execute(db, actor, command, kind, change, head):
     source_eligible = False
     if kind == 'EVALUATION_RECORDED':
         from service.evaluation.runner import prepare_run
-        run = prepare_run(history, body, actor, str(uuid4()), now, revision + 1)
+        coverage_cases = []
+        run = prepare_run(history, body, actor, str(uuid4()), now, revision + 1, coverage_cases=coverage_cases)
     if kind in ('SUBMITTED_FOR_DOMAIN_REVIEW', 'APPROVED_FOR_DEMO'):
         from service.domain.gates import check_run_gate, source_eligibility
         require(bool(history['runs']), 'EVALUATION_INCOMPLETE')
@@ -167,7 +171,14 @@ def _execute(db, actor, command, kind, change, head):
         add_payload(db, m.DecisionNote, note)
     checkpoint('note')
     if kind == 'EVALUATION_RECORDED':
+        from service.evaluation.coverage import build_coverage
+        from service.domain.canonical import canonical_bytes
         add_payload(db, m.EvaluationRun, run)
+        if run['schema'] == 'evaluation_run_v2':
+            report = build_coverage(history, run, coverage_cases)
+            db.add(m.EvaluationCoverage(tenant_id=actor.tenant_id, run_id=run['id'], format_version=1,
+                run_input_sha256=run['run_input_sha256'], evaluation_sha256=content_hash('evaluation-run', run),
+                canonical_payload=canonical_bytes(report), payload_sha256=content_hash('evaluation-coverage', report)))
         for case in run['case_results']:
             for ref in case['source_refs']:
                 db.add(m.RunSourceRef(tenant_id=actor.tenant_id, id=str(uuid4()), run_id=run['id'], case_id=case['case_id'], source_id=ref['id']))

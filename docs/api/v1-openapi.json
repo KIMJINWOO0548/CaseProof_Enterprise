@@ -728,7 +728,7 @@
     "/api/v1/changes/{change_id}/evidence": {
       "get": {
         "summary": "Evidence",
-        "description": "Returns integrity diagnostics and immutable_refs containing only canonical identities and purpose-separated payload_sha256 hashes for the selected change. immutable_refs is null when historical integrity is INVALID or LEGACY_UNVERIFIED.",
+        "description": "Returns integrity diagnostics and immutable_refs containing only canonical identities and purpose-separated payload_sha256 hashes for the selected change. immutable_refs is null when historical integrity is INVALID or LEGACY_UNVERIFIED. The legacy current_approval_eligibility field reports source eligibility only; ELIGIBLE does not authorize approval. Evaluation gates, workflow state and role separation remain independent checks.",
         "operationId": "evidence_api_v1_changes__change_id__evidence_get",
         "security": [
           {
@@ -829,6 +829,384 @@
             "HTTPBearer": []
           }
         ]
+      }
+    },
+    "/api/v1/changes/{change_id}/evaluation-runs/preview-csv": {
+      "post": {
+        "summary": "Evaluation Csv Preview",
+        "description": "Validate synthetic CSV against the saved suite. Does not execute or persist evaluations.",
+        "operationId": "evaluation_csv_preview_api_v1_changes__change_id__evaluation_runs_preview_csv_post",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "change_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Change Id"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-Expected-Revision",
+            "required": true,
+            "schema": {
+              "maxLength": 16,
+              "pattern": "^[1-9][0-9]*\\z",
+              "title": "X-Expected-Revision",
+              "type": "string"
+            }
+          },
+          {
+            "in": "header",
+            "name": "X-CaseProof-Request-Context",
+            "schema": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Ready to submit or structured CSV diagnostics",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "additionalProperties": false,
+                      "properties": {
+                        "ready": {
+                          "title": "Ready",
+                          "type": "boolean"
+                        },
+                        "revision": {
+                          "maximum": 9007199254740991,
+                          "minimum": 1,
+                          "title": "Revision",
+                          "type": "integer"
+                        },
+                        "errors": {
+                          "items": {
+                            "additionalProperties": false,
+                            "properties": {
+                              "row": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "title": "Row"
+                              },
+                              "column": {
+                                "anyOf": [
+                                  {
+                                    "enum": [
+                                      "case_id",
+                                      "claim_days",
+                                      "case_context"
+                                    ],
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "title": "Column"
+                              },
+                              "code": {
+                                "enum": [
+                                  "INVALID_UTF8",
+                                  "INVALID_CSV",
+                                  "INVALID_HEADER",
+                                  "TOO_MANY_ROWS",
+                                  "INVALID_COLUMN_COUNT",
+                                  "INVALID_CASE_ID",
+                                  "UNKNOWN_CASE_ID",
+                                  "DUPLICATE_CASE_ID",
+                                  "MISSING_CASE_ID",
+                                  "INVALID_INTEGER",
+                                  "INVALID_CLAIM_DAYS",
+                                  "INVALID_CONTEXT"
+                                ],
+                                "title": "Code",
+                                "type": "string"
+                              },
+                              "case_id": {
+                                "anyOf": [
+                                  {
+                                    "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ],
+                                "title": "Case Id"
+                              }
+                            },
+                            "required": [
+                              "row",
+                              "column",
+                              "code"
+                            ],
+                            "title": "CSVPreviewError",
+                            "type": "object"
+                          },
+                          "maxItems": 50,
+                          "title": "Errors",
+                          "type": "array"
+                        },
+                        "errors_truncated": {
+                          "title": "Errors Truncated",
+                          "type": "boolean"
+                        },
+                        "evaluation": {
+                          "anyOf": [
+                            {
+                              "additionalProperties": false,
+                              "properties": {
+                                "suite_version_id": {
+                                  "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                                  "title": "Suite Version Id",
+                                  "type": "string"
+                                },
+                                "case_inputs": {
+                                  "items": {
+                                    "additionalProperties": false,
+                                    "properties": {
+                                      "case_id": {
+                                        "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                                        "title": "Case Id",
+                                        "type": "string"
+                                      },
+                                      "claim_days": {
+                                        "maximum": 9999,
+                                        "minimum": 0,
+                                        "title": "Claim Days",
+                                        "type": "integer"
+                                      },
+                                      "case_context": {
+                                        "additionalProperties": false,
+                                        "properties": {
+                                          "contract_date": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ],
+                                            "title": "Contract Date"
+                                          },
+                                          "incident_date": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ],
+                                            "title": "Incident Date"
+                                          },
+                                          "claim_date": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ],
+                                            "title": "Claim Date"
+                                          },
+                                          "consultation_date": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ],
+                                            "title": "Consultation Date"
+                                          },
+                                          "rider_context_status": {
+                                            "default": "UNKNOWN",
+                                            "enum": [
+                                              "CONFIRMED",
+                                              "UNKNOWN"
+                                            ],
+                                            "title": "Rider Context Status",
+                                            "type": "string"
+                                          },
+                                          "riders": {
+                                            "items": {
+                                              "additionalProperties": false,
+                                              "properties": {
+                                                "code": {
+                                                  "pattern": "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,119}\\z",
+                                                  "title": "Code",
+                                                  "type": "string"
+                                                },
+                                                "enrolled_from": {
+                                                  "anyOf": [
+                                                    {
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "type": "null"
+                                                    }
+                                                  ],
+                                                  "title": "Enrolled From"
+                                                },
+                                                "enrolled_to": {
+                                                  "anyOf": [
+                                                    {
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "type": "null"
+                                                    }
+                                                  ],
+                                                  "title": "Enrolled To"
+                                                },
+                                                "confirmation_evidence_id": {
+                                                  "anyOf": [
+                                                    {
+                                                      "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}\\z",
+                                                      "type": "string"
+                                                    },
+                                                    {
+                                                      "type": "null"
+                                                    }
+                                                  ],
+                                                  "title": "Confirmation Evidence Id"
+                                                }
+                                              },
+                                              "required": [
+                                                "code",
+                                                "enrolled_from",
+                                                "enrolled_to",
+                                                "confirmation_evidence_id"
+                                              ],
+                                              "title": "Rider",
+                                              "type": "object"
+                                            },
+                                            "title": "Riders",
+                                            "type": "array"
+                                          },
+                                          "recorded_as_of": {
+                                            "anyOf": [
+                                              {
+                                                "type": "string"
+                                              },
+                                              {
+                                                "type": "null"
+                                              }
+                                            ],
+                                            "title": "Recorded As Of"
+                                          }
+                                        },
+                                        "title": "CaseContext",
+                                        "type": "object"
+                                      }
+                                    },
+                                    "required": [
+                                      "case_id",
+                                      "claim_days",
+                                      "case_context"
+                                    ],
+                                    "title": "CaseInput",
+                                    "type": "object"
+                                  },
+                                  "minItems": 1,
+                                  "title": "Case Inputs",
+                                  "type": "array"
+                                }
+                              },
+                              "required": [
+                                "suite_version_id",
+                                "case_inputs"
+                              ],
+                              "title": "RecordEvaluation",
+                              "type": "object"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "ready",
+                        "revision",
+                        "errors",
+                        "errors_truncated",
+                        "evaluation"
+                      ],
+                      "title": "CSVPreview",
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthenticated"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "409": {
+            "description": "Conflict"
+          },
+          "413": {
+            "description": "CSV too large"
+          },
+          "415": {
+            "description": "Unsupported media type"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "text/csv": {
+              "schema": {
+                "type": "string",
+                "maxLength": 262144
+              }
+            }
+          }
+        }
       }
     }
   },

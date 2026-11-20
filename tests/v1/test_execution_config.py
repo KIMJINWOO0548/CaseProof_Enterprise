@@ -52,8 +52,8 @@ def legacy_evaluated(tmp_path, monkeypatch):
     request = command(payload, 'evaluation-runs', identity, 1, key='historical_v1_evaluation')
     original = runner.prepare_run
 
-    def historical(history, *args):
-        run = original(history, *args)
+    def historical(history, *args, **kwargs):
+        run = original(history, *args, **kwargs)
         refs = history['refs']
         run.update(schema='evaluation_run_v1', run_config_sha256=content_hash('run-config',
             {name: refs[name] for name in ('candidate_snapshot', 'suite', 'evaluator', 'model', 'prompt')}

@@ -1,0 +1,23 @@
+{
+  "color": {
+    "text": "#28283c",
+    "surface": "#ffffff",
+    "focus": "#5141a6",
+    "accent": "#5945d8"
+  },
+  "pairs": [
+    [
+      "text",
+      "surface"
+    ],
+    [
+      "focus",
+      "surface",
+      "ui"
+    ],
+    [
+      "accent",
+      "surface"
+    ]
+  ]
+}

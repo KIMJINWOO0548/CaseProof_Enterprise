@@ -1,5 +1,6 @@
 """Prepare or serve an explicit disposable local v1 demo; never print tokens."""
 import argparse
+import asyncio
 import hashlib
 import json
 import os
@@ -84,7 +85,14 @@ def main():
         config = uvicorn.Config(create_workspace_app(session_factory(engine), profile['registry']),
                                 host='127.0.0.1', port=args.port, workers=1, backlog=128)
         with _listener(args.port, config.backlog) as listener:
-            uvicorn.Server(config).run(sockets=[listener])
+            server = uvicorn.Server(config)
+            if sys.platform == 'win32':
+                # This HTTP-only single-process demo needs no IOCP subprocess support.
+                # Keep the selector local to this runner; never change global policy.
+                with asyncio.Runner(loop_factory=asyncio.SelectorEventLoop) as runner:
+                    runner.run(server.serve(sockets=[listener]))
+            else:
+                server.run(sockets=[listener])
     finally:
         engine.dispose()
 

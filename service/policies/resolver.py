@@ -16,7 +16,7 @@ def _within(value, start, end):
     return start <= value and (end is None or value < end)
 
 
-def resolve_context(context: dict, pack_snapshot: dict, recorded_as_of: str) -> dict:
+def resolve_context(context: dict, pack_snapshot: dict, recorded_as_of: str, *, tie_rule_ids=None) -> dict:
     """No clock/DB/network; authenticated tenant binding is the caller's responsibility."""
     result = dict(status='INCONCLUSIVE', reason_codes=[], required_fields=[], recorded_as_of=None,
                   candidates=[], rule_id=None, source_id=None, policy_version=None, clause_id=None,
@@ -108,6 +108,8 @@ def resolve_context(context: dict, pack_snapshot: dict, recorded_as_of: str) -> 
     highest = max(pack.priorities.ranks[r.priority_key] for r in eligible)
     winners = [r for r in eligible if pack.priorities.ranks[r.priority_key] == highest]
     if len(winners) != 1:
+        if tie_rule_ids is not None:
+            tie_rule_ids.extend(sorted(r.rule_id for r in winners))
         return hold('POLICY_CONFLICT')
     selected = winners[0]
     for rule in eligible:

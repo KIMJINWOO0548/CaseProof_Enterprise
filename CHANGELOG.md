@@ -1,5 +1,43 @@
 # Changelog
 
+## Synthetic evaluation CSV preview — 2026-11-20
+
+- Check an uploaded UTF-8 CSV against the authorized draft's pinned case suite before executing an evaluation. The preview does not write evaluation or workflow state. Use the existing evaluation command to submit the checked input explicitly.
+
+## Workspace queue refresh — 2026-11-20
+
+- Discard outdated queue responses and preserve the active loading or failure message when filters change. Verify cursor continuity and row order before displaying the queue.
+
+## Workspace request recovery — 2026-11-16
+
+- Persist the original synthetic workflow request before transmission and recover it after browser reconnection or a same-file demo restart. Bind retries to the authenticated actor and SQLite file, and read current detail following an authorized result.
+- Serialize SQLite writes before reading the request ledger. Concurrent identical requests yield one saved effect and one historical replay.
+
+## Local recovery request-ledger integrity — 2026-11-09
+
+- Reject damaged, missing and duplicate committed request records during SQLite v1 inspection, backup and restore. Bind each saved result to its verified historical transition, actor, route, status and response; preserve authorized historical replay and existing database files.
+- Add synthetic corruption and successful approval/rejection recovery regressions. This is an independent increment from the accessible remote code, not restoration or integration of an inaccessible preservation archive.
+
+## Local saved-run comparison — 2026-11-02
+
+- Add authenticated same-change saved-run history and descriptive comparison GETs, pure bounded projections and lazy workspace controls. Preserve original run digests, immutable version IDs, latest-run gates and recovery. Report input/source/configuration context separately from outcomes; expose no raw historical values or model-quality claim.
+
+## Local submission flow correction — 2026-11-02
+
+- Explain and disable normal submission until the latest evaluation is COMPLETE/PASS. For known actionable 409 conflicts, refresh authorized current detail, preserve same-suite typed corrections and selection, and synchronize only that queue row. Keep unauthorized/error clearing, server gates and the exact pending-request recovery separate.
+
+## Local evidence wording correction — 2026-11-02
+
+- Label the existing source-only eligibility result as `현재 출처 적격성` and explain that evaluation, workflow and role checks still govern approval. Clarify the legacy JSON field in OpenAPI without changing its name, predicate, approval gates, seals or replay semantics. Add HTTP and actual DOM-handler regressions for a blocked evaluation with eligible sources.
+
+## Local portfolio increment — 2026-11-01
+
+- Add one explicitly loaded, synthetic securities document-review pack with two invented internal day-window versions and independent scope/time/source regression tests. Preserve the existing schema, resolver, insurance packs, default workspace and submission UI; document the legacy date-field mapping and unverified integration boundary.
+
+## Coverage save and recovery compatibility (2026-11-20)
+
+- Align the evaluation-coverage model's field order with the existing migration declarations. SQLite coverage can now be backed up and restored without rewriting existing records.
+
 ## Documentation and source-package checks — 2026-11-07
 
 - Consolidate development steps in `prebuild/05_DEVELOPMENT_GUIDE.md`, with current API boundaries and required safety checks.
@@ -82,3 +120,18 @@ study and external security/insurance reviews remain future work.
 Imported from the user-provided CaseProof Enterprise Prebuild v5.2, whose runtime
 was a v5.1 local prototype. Historical releases/scores are not reissued as current
 verification. Original archive/file hashes are recorded in docs/PROVENANCE.md.
+
+## Unreleased — 2026-11-06
+
+- Saved-run comparison now narrows cases by change dimension and case-ID search, with visible/total counts and empty-result guidance. Filtering preserves full-comparison context warnings and latest-run readiness.
+
+2026-11-06 phase2: bounded 50-case paging, per-case provenance inspection and lazy raw JSON rendering. Twelve real-handler scenarios and fifteen submit/recovery scenarios pass; full HTTP suite962 passed/458 optional skips. See replica/depth-review.md for own-only benchmark and remaining gaps.
+
+Phase2 host verification completed:962pytest PASS/458optional SKIP/22subtests; smoke12/12, syntax and package421files PASS. Windows initialization wrapper0retries. See replica/depth-review.md for measured scope and remaining gaps.
+
+Phase2 Chromium156 verification completed: native keyboard flow,1440/390px document overflow0, no page exceptions. Synthetic API interception; backend tests separate. Evidence and remaining professional accessibility/production gaps: replica/depth-review.md.
+
+## Unreleased isolated QA 2026-11-20
+- Finish UI list continuation and recover existing mutation results by GET before retry.
+
+- v1 신규 평가의 조항별 검증 보고서를 추가했다. 이력에서 선택 규칙, 후보, 결과와 경계 사례를 조회할 수 있다.

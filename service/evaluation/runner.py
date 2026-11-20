@@ -9,17 +9,24 @@ from service.evaluation.adapters import FakeDeterministicAdapter
 from service.evaluation.config import execution_config_sha256
 
 
-def prepare_run(history, body, actor, run_id, time, revision):
+def suite_cases(history, suite_version_id):
+    if suite_version_id != history['snapshot']['suite_version_id']:
+        raise DomainError('SNAPSHOT_MISMATCH')
+    required = history['refs']['suite']['required_case_ids']
+    if not required or len(required) != len(set(required)):
+        raise DomainError('INVALID_REQUEST')
+    return set(required)
+
+
+def prepare_run(history, body, actor, run_id, time, revision, *, coverage_cases=None):
     try:
         request = RecordEvaluation.model_validate(json_payload(body)).model_dump(by_alias=True)
     except ValueError:
         raise DomainError('INVALID_REQUEST') from None
     snapshot, refs = history['snapshot'], history['refs']
     suite = refs['suite']
-    if request['suite_version_id'] != snapshot['suite_version_id']:
-        raise DomainError('SNAPSHOT_MISMATCH')
-    required = suite['required_case_ids']
-    if not required or len(required) != len(set(required)) or sorted(c['case_id'] for c in request['case_inputs']) != sorted(required):
+    required = suite_cases(history, request['suite_version_id'])
+    if {case['case_id'] for case in request['case_inputs']} != required:
         raise DomainError('INVALID_REQUEST')
     for key, name in zip(SNAPSHOT_IDS, ('candidate_snapshot','source_bundle','dataset','suite','evaluator')):
         if refs[name]['id'] != snapshot[key] or refs[name]['tenant_id'] != snapshot['tenant_id']:
@@ -42,11 +49,13 @@ def prepare_run(history, body, actor, run_id, time, revision):
         allowed = suite.get('case_policy_versions', {}).get(case['case_id'], [])
         sources = [s for s in refs['sources'] if s['policy_version_id'] in allowed and s.get('status') == 'APPROVED']
         packs = [p['pack_snapshot'] for p in refs['policies'] if 'pack_snapshot' in p]
+        ties = []
+        resolution = {'reason_codes': ['PACK_UNAVAILABLE']}
         if packs:
             from service.policies.resolver import resolve_context
             context = dict(case['case_context'], tenant_id=snapshot['tenant_id'], pack_id=snapshot['pack_version_id'],
                            product_id=snapshot['product_id'], workflow=snapshot['workflow'],rule_key=snapshot['rule_key'])
-            resolution = resolve_context(context, packs[0], context['recorded_as_of']) if len(packs) == 1 else {'status':'INCONCLUSIVE','reason_codes':['POLICY_CONFLICT']}
+            resolution = resolve_context(context, packs[0], context['recorded_as_of'], tie_rule_ids=ties) if len(packs) == 1 else {'status':'INCONCLUSIVE','reason_codes':['POLICY_CONFLICT']}
             if resolution['status'] != 'RESOLVED':
                 sources, error = [], resolution['reason_codes'][0]
             else:
@@ -64,6 +73,11 @@ def prepare_run(history, body, actor, run_id, time, revision):
             resolution_status='RESOLVED' if complete else 'INCONCLUSIVE',
             verdict=('PASS' if output['claim_days'] == next(iter(values)) else 'FAIL') if complete else 'INCONCLUSIVE',
             complete=complete,error_code=error,critical_failure=False if complete else None))
+        if coverage_cases is not None:
+            coverage_cases.append(dict(case_id=case['case_id'], basis_date=resolution.get('basis_date'),
+                recorded_as_of=case['case_context']['recorded_as_of'], selected_rule_id=resolution.get('rule_id'),
+                verdict=results[-1]['verdict'], complete=complete, error_code=error,
+                reason_codes=(['MULTIPLE_PACKS'] if len(packs) > 1 else resolution['reason_codes']), tie_rule_ids=ties, candidates=resolution.get('candidates', [])))
     run = dict(schema='evaluation_run_v2',id=run_id,tenant_id=actor.tenant_id,change_id=snapshot['change_id'],
         recorded_revision=revision,actor_id=actor.actor_id,created_at=time,
         **{key:snapshot[key] for key in SNAPSHOT_IDS},adapter_version_id=adapters[0]['id'],

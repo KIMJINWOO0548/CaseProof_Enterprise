@@ -14,6 +14,15 @@ import pytest
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def test_ui_pagination_and_reconnect_query():
+    node = shutil.which('node')
+    if not node:
+        pytest.skip('Node is unavailable')
+    result = subprocess.run([node, 'scripts/v1_pagination_probe.js'], cwd=ROOT,
+                            capture_output=True, text=True, timeout=30)
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
 def test_v1_request_recovery():
     node = shutil.which('node')
     if not node:

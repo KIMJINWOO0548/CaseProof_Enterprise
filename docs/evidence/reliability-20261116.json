@@ -1,0 +1,20 @@
+{
+  "implementation_commit": "9396d811e677a3b5c2a08e0ae775091781d4bdc6",
+  "platform": "Windows",
+  "python": "3.13.16",
+  "command": "python -m scripts.windows_checks pytest -q --tb=short",
+  "exit_code": 0,
+  "passed": 992,
+  "skipped": 459,
+  "subtests_passed": 22,
+  "warnings": 3,
+  "seconds": 523.28,
+  "socketpair_initialization_retries": 127,
+  "log_sha256": "ae2607c6440cd497f584016e081dfc0b7f3495d22bb9ce1d05e3ad99f168a2ff",
+  "unverified": [
+    "optional Playwright browser",
+    "real PostgreSQL",
+    "optional numerical evaluation"
+  ],
+  "scope": "local synthetic regression; not production certification"
+}

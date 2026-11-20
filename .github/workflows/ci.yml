@@ -21,7 +21,8 @@ jobs:
   test:
     name: ${{ matrix.os }} / Python ${{ matrix.python }}
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 20
+    # The hosted Windows regression suite can use nearly 20 minutes on its own.
+    timeout-minutes: ${{ matrix.os == 'windows-2022' && 30 || 20 }}
     strategy:
       fail-fast: false
       matrix:

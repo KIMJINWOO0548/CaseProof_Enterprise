@@ -1,0 +1,37 @@
+# CaseProof comparison review depth — 2026-11-06
+
+## Critical audit and competitor
+Primary workflow reference: [Langfuse compare experiments](https://langfuse.com/docs/evaluation/experiments/compare-experiments), public documentation read on 2026-11-06. The documented workflow selects comparable runs, narrows scores, inspects cases and opens traces. It emphasizes missing cases and evaluator errors. Documentation observation is not a live product test. Parent-managed public browser evidence is recorded separately; no login, API exploration, annotation or model execution was used here.
+
+Our starting point c809585 compared authorized saved synthetic rule evaluations and filtered by change dimension/ID. It rendered all 1000 permitted cases and eagerly serialized the entire comparison into hidden JSON. Reviewers could see result states but had to search raw JSON for a case's input/output/source identity. This is a synthetic rule prototype, not a production experiment platform or competitor feature replacement.
+
+## Coherent improvement
+A reviewer selects two saved runs, filters to a changed case, pages through at most 50 rows and activates the case ID to inspect baseline/candidate hashes and source references side by side. Missing cases explicitly say absent. Paging and filtering clear the inspector, preventing details from the previous result from masquerading as the current selection. Run selection still invalidates pending responses. Whole-run context/incomplete warnings remain above all filtered/paged views. Raw projection serializes only on opening its disclosure. No schema, authentication, mutation, release gate or payload semantics changed.
+
+## Acceptance and measurements
+- Functional: 1000 synthetic cases, page boundaries 1/20 and 20/20, search reset, missing case, literal untrusted ID, empty result, latest incomplete veto, stale response and zero POST. Real JS handler harness passed 12 scenarios; existing submit/recovery harness passed 15. RED: original rendered 1000 rather than required 50 (11 pass/1 fail). GREEN: 12 pass/0 fail. Lazy serialization introduced a syntax error during editing; corrected before final GREEN and syntax check.
+- Performance: same 1000-case fixture, same Node v24.22.1 process and harness, 5 warmups and 20 samples per source. `node scripts/benchmark_comparison.cjs` compares phase1 c809585 source with working source. [Raw measurements](evidence/comparison-benchmark.json) include source/fixture SHA256. Rows 1000→50; connected harness nodes 5151→456; default text bytes 976113→4848. Median 4.795→0.355 ms; p95 11.072→0.586 ms. Response remains 663276 bytes. Timing excludes browser layout/paint, network and server validation; no competitor speed claim. Fixed ordering and a small sample can bias timing, so deterministic row/node bounds are the primary result.
+- Accessibility/design acceptance: native labeled selects/search; native 44px-minimum case and page buttons; named navigation; live page status; inspector programmatic focus and visible 3px ring; single-column provenance below 640px; literal text insertion. Native Enter, inspector focus and 390/1440px screenshot/layout checks passed in Chrome156. Screen-reader announcements remain NOT_RUN. Original CaseProof typography, iris/ink palette and local licensed font retained; no competitor assets/source copied.
+- Full HTTP/package suite: parent host execution completed with 962 passed/458 optional skips; see final verification addendum. Pure JS harness is not browser evidence.
+
+## Remaining gaps
+No real LLM traces or outputs, arbitrary metrics/score thresholds, cost/latency comparison, annotations, reviewer sharing links, dataset-scale server paging or professional validation. All 1000 rows still arrive over the wire; paging bounds rendering only. Equal-condition competitor quality/performance/ACL/latency benchmarks: NOT_RUN. No claim of outperforming Langfuse, production readiness, regulatory compliance, or comprehensive accessibility. Replica feature matrix is a scoped gap inventory, not a product score.
+
+## Scoped design checks
+Installed Replica contrast.py executed against `replica/design/depth-tokens.json`; all declared new text/focus pairs passed AA. See depth-contrast.json and depth-components.md. First token-shape probe returned unknown-token errors; color mapping was corrected before these recorded checks. This does not certify inherited controls or assistive-technology behavior.
+
+## Phase2 host verification — completed
+Parent host logs were read directly from phase2/verification/CaseProof_Enterprise. `python -m scripts.windows_checks pytest -q --basetemp=<owned tmp>`: **962 passed,458 skipped,22 subtests**,3 existing warnings,exit0,247.58s wall time. Optional skips include unavailable real PostgreSQL and optional evaluation/browser dependencies; these are not passes. Initialization-only Windows socketpair wrapper reported **0 retries**. `scripts.windows_checks scripts.smoke`:12/12 PASS (1.81s); UI inline syntax exit0; package structural check421files PASS. Added real-handler tests12/12 and submit/recovery15/15 pass; v1.js syntax exit0.
+
+Executed `scripts/check_comparison_browser.cjs` against Chrome156 with intercepted local synthetic API; see the browser verification below. This remains distinct from backend E2E and competitor interaction evidence.
+
+## Phase2 actual browser verification — completed
+
+Chrome156.0.8078.80 executed the real source UI with synthetic intercepted API responses. At1440px and390px the document had0px horizontal overflow and no page exceptions. This is actual browser behavior/layout evidence, not live-backend E2E, assistive-technology certification or competitor testing. Backend behavior is covered separately by the full host suite.
+
+Native Enter on a case moved focus to `comparison-case-detail`. Paging/search preserved the global warning and latest incomplete gate; comparison rows remained bounded and no POST occurred. Case control measured60px at both widths. Mobile screenshot reviewed: provenance stacks and hashes wrap; the comparison table uses contained horizontal scrolling. [Result](evidence/browser/result.json), [desktop](evidence/browser/case-review-1440.png), [mobile](evidence/browser/case-review-390.png).
+
+## Actual public reference interaction — account gate
+Independent REA capture opened https://langfuse.com/cloud/demo?utm_campaign=demo_project, rejected optional cookies and clicked the Europe demo link. The destination displayed account creation/sign-in; no account, credentials or form submission was attempted. The comparison application was therefore inaccessible within the authorized public-only scope. This is evidence of portal navigation and an account gate, not validation of experiment comparison or trace behavior.
+
+[Capture summary](evidence/langfuse/summary.json) (SHA256 `ac1a4115498d1e2448da3c7eb4b73d3d72b68dea03ecd9aff2a1ecc1fbc66cf3`) and local destination accessibility snapshot (SHA256 `4f640bc846e4151d843f0ceb88bc70d2ee7f2544908532fa82910b426598e042`; retained only under task `phase2/refs/langfuse-europe-demo-flow/5-accessibility.txt`). Five initial actions completed; the final destination wait failed because `main, h1, form` matched multiple elements. CLI exit0 does not override `completeness=incomplete` and `equality_eligible=false`. The captured destination still establishes the account gate. Owned Chromium process cleanup completed. Equal-condition competitor tests remain NOT_RUN.

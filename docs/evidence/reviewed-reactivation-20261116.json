@@ -1,0 +1,41 @@
+{
+  "scope": "Offline owner-reviewed restore activation and isolated real Chromium",
+  "full_suite": {
+    "passed": 1006,
+    "skipped": 459,
+    "subtests": 22,
+    "warnings": 3,
+    "seconds": 256.82,
+    "exit_code": 0,
+    "initialization_only_socketpair_retries": 49
+  },
+  "real_browser": {
+    "passed": 2,
+    "seconds": 9.15,
+    "exit_code": 0,
+    "scenario": "isolated synthetic three-person rejection/correction/approval; response-loss replay; XSS and token storage checks"
+  },
+  "review": {
+    "related_passed": 9,
+    "second_grant_failure_rollback": "independently verified bytes unchanged"
+  },
+  "log_sha256": {
+    "pytest-reviewed-reactivation.log": "7401cf375410c1f4dd518010839088db600d9e8903fe21904ea510f6e852ec4a",
+    "browser-real.log": "01603d34a33b5f82e29a27fa11788781589ef80ab278f4cc03340237f9a986a7"
+  },
+  "source_sha256": {
+    "service/recovery.py": "d84f527c03a553353bc3bef4a89fd5dd2459821330c53ceee728a6ca0650d772",
+    "tests/operations/test_recovery_reactivation.py": "91f91d08bfade4d8fc40e3a75216ed243fb4035c04372c47f6edceac139961fa"
+  },
+  "unrun": [
+    "real PostgreSQL17: no server executable/admin config",
+    "optional numeric evaluation",
+    "POSIX runtime",
+    "forced process termination"
+  ],
+  "limitations": [
+    "Offline trusted-owner operation only",
+    "Current revocation review source and new registry deployment are manual trust boundaries",
+    "Full-suite browser skipped without URL; separate isolated real browser 2/2 ran"
+  ]
+}
