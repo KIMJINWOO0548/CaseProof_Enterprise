@@ -1,0 +1,304 @@
+<Window x:Class="CaseProof.Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CaseProof Enterprise" Icon="assets/caseproof.ico" Width="1380" Height="860"
+        MinWidth="720" MinHeight="520" WindowStartupLocation="CenterScreen"
+        Background="{StaticResource CanvasBrush}" Foreground="{StaticResource InkBrush}"
+        FontFamily="Segoe UI, Malgun Gothic" FontSize="13"
+        UseLayoutRounding="True" SnapsToDevicePixels="True">
+    <Grid Background="{StaticResource CanvasBrush}">
+        <Grid x:Name="LoginPane" AutomationProperties.AutomationId="LoginPane">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="52" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="35" />
+            </Grid.RowDefinitions>
+            <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource RuleBrush}"
+                    BorderThickness="0,0,0,1" Padding="16,0">
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                    <Border Width="32" Height="32" Background="{StaticResource AccentSoftBrush}" CornerRadius="6">
+                        <TextBlock Text="C" FontSize="18" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
+                                   HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </Border>
+                    <TextBlock Text="CaseProof Enterprise" Margin="10,0" FontSize="16" FontWeight="SemiBold"
+                               VerticalAlignment="Center" />
+                </StackPanel>
+            </Border>
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled"
+                          VerticalContentAlignment="Center">
+                <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource RuleBrush}"
+                        BorderThickness="1" CornerRadius="12" Padding="28,25,28,24" Width="468"
+                        HorizontalAlignment="Center" VerticalAlignment="Center" Margin="16,24">
+                    <StackPanel>
+                        <TextBlock Text="검토 작업대에 연결" FontSize="25" FontWeight="SemiBold" Margin="0,0,0,9" />
+                        <TextBlock Text="CaseProof 서버의 역할별 토큰을 입력하세요. 토큰은 연결 중에만 사용됩니다."
+                                   Style="{StaticResource MetaText}" TextWrapping="Wrap" Margin="0,0,0,18" />
+                        <Label Content="서버 주소" Style="{StaticResource InputLabel}" Target="{Binding ElementName=EndpointInput}" />
+                        <TextBox x:Name="EndpointInput" AutomationProperties.AutomationId="EndpointInput"
+                                 AutomationProperties.Name="서버 주소" Text="http://127.0.0.1:8766" Margin="0,0,0,13" />
+                        <Label Content="역할별 접속 토큰" Style="{StaticResource InputLabel}" Target="{Binding ElementName=TokenInput}" />
+                        <PasswordBox x:Name="TokenInput" AutomationProperties.AutomationId="TokenInput"
+                                     AutomationProperties.Name="역할별 접속 토큰" Margin="0,0,0,16" />
+                        <Button x:Name="LoginButton" Content="작업공간 열기" AutomationProperties.AutomationId="LoginButton"
+                                Style="{StaticResource PrimaryButton}" IsDefault="True" HorizontalAlignment="Left" MinWidth="134" />
+                        <TextBlock x:Name="LoginStatus" AutomationProperties.AutomationId="LoginStatus"
+                                   AutomationProperties.LiveSetting="Polite" Foreground="{StaticResource WarningBrush}"
+                                   TextWrapping="Wrap" Margin="0,9,0,0" />
+                    </StackPanel>
+                </Border>
+            </ScrollViewer>
+            <Border Grid.Row="2" Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource RuleBrush}"
+                    BorderThickness="0,1,0,0" Padding="16,0">
+                <TextBlock Text="합성 검토 환경 · 실제 보험 판정이나 운영 배포와 독립된 데모입니다."
+                           Style="{StaticResource MetaText}" VerticalAlignment="Center" />
+            </Border>
+        </Grid>
+
+        <Grid x:Name="WorkspacePane" AutomationProperties.AutomationId="WorkspacePane" Visibility="Collapsed">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+
+            <Border Background="{StaticResource SurfaceBrush}" BorderBrush="{StaticResource RuleBrush}"
+                    BorderThickness="0,0,0,1" Padding="12,7">
+                <DockPanel LastChildFill="True">
+                    <StackPanel Orientation="Horizontal" DockPanel.Dock="Left" VerticalAlignment="Center" Margin="0,0,10,0">
+                        <Border Width="30" Height="30" Background="{StaticResource AccentSoftBrush}" CornerRadius="6">
+                            <TextBlock Text="C" FontSize="17" FontWeight="Bold" Foreground="{StaticResource AccentBrush}"
+                                       HorizontalAlignment="Center" VerticalAlignment="Center" />
+                        </Border>
+                        <TextBlock Text="CaseProof" Margin="8,0,0,0" FontSize="15" FontWeight="SemiBold"
+                                   VerticalAlignment="Center" />
+                    </StackPanel>
+                    <Button x:Name="SwitchRoleButton" DockPanel.Dock="Right" Content="역할 전환"
+                            AutomationProperties.AutomationId="SwitchRoleButton" Style="{StaticResource QuietButton}"
+                            VerticalAlignment="Center" />
+                    <TextBlock x:Name="ActorText" DockPanel.Dock="Right" AutomationProperties.AutomationId="ActorText"
+                               Style="{StaticResource MetaText}" MaxWidth="172" TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"
+                               VerticalAlignment="Center" Margin="8,0,2,0" />
+                    <WrapPanel VerticalAlignment="Center">
+                        <Button x:Name="ToggleQueueButton" Content="요청 목록" AutomationProperties.AutomationId="ToggleQueueButton"
+                                ToolTip="작업 요청 목록 표시 전환" Style="{StaticResource QuietButton}" />
+                        <Button x:Name="ToggleProofButton" Content="검증 근거" AutomationProperties.AutomationId="ToggleProofButton"
+                                ToolTip="근거와 감사 기록 표시 전환" Style="{StaticResource QuietButton}" />
+                        <Button x:Name="RefreshButton" Content="새로고침" AutomationProperties.AutomationId="RefreshButton"
+                                Style="{StaticResource QuietButton}" />
+                        <Button x:Name="NewChangeButton" Content="새 변경 요청" AutomationProperties.AutomationId="NewChangeButton"
+                                Style="{StaticResource PrimaryButton}" Margin="5,0,0,0" />
+                    </WrapPanel>
+                </DockPanel>
+            </Border>
+
+            <Grid x:Name="PaneGrid" Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="QueueColumn" Width="250" MaxWidth="390" />
+                    <ColumnDefinition x:Name="QueueSplitterColumn" Width="5" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition x:Name="ProofSplitterColumn" Width="5" />
+                    <ColumnDefinition x:Name="ProofColumn" Width="292" MaxWidth="460" />
+                </Grid.ColumnDefinitions>
+
+                <Border x:Name="QueuePane" Background="{StaticResource QueueBrush}" Grid.Column="0"
+                        AutomationProperties.AutomationId="QueuePane" AutomationProperties.Name="요청 목록 영역">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+                        <Border BorderBrush="{StaticResource RuleBrush}" BorderThickness="0,0,0,1" Padding="13,17,13,11">
+                            <StackPanel>
+                                <DockPanel LastChildFill="True" Margin="0,0,0,13">
+                                    <TextBlock x:Name="QueueSummary" DockPanel.Dock="Right" Text="0건" VerticalAlignment="Center"
+                                               AutomationProperties.AutomationId="QueueSummary" AutomationProperties.LiveSetting="Polite"
+                                               Style="{StaticResource MetaText}" />
+                                    <TextBlock Text="작업함" Style="{StaticResource SectionTitle}" />
+                                </DockPanel>
+                                <Label Content="제목·요청 ID 검색" Style="{StaticResource InputLabel}" Target="{Binding ElementName=SearchInput}" />
+                                <TextBox x:Name="SearchInput" AutomationProperties.AutomationId="SearchInput"
+                                         AutomationProperties.Name="제목·요청 ID 검색" Margin="0,0,0,9" />
+                                <Label Content="검토 상태" Style="{StaticResource InputLabel}" Target="{Binding ElementName=FilterInput}" />
+                                <ComboBox x:Name="FilterInput" AutomationProperties.AutomationId="FilterInput"
+                                          AutomationProperties.Name="검토 상태" SelectedIndex="0" SelectedValuePath="Tag">
+                                    <ComboBoxItem Content="모든 상태" Tag="" />
+                                    <ComboBoxItem Content="작성·평가" Tag="DRAFT" />
+                                    <ComboBoxItem Content="현업 검토 대기" Tag="PENDING_DOMAIN_REVIEW" />
+                                    <ComboBoxItem Content="최종 승인 대기" Tag="PENDING_RELEASE" />
+                                    <ComboBoxItem Content="반려" Tag="REJECTED" />
+                                    <ComboBoxItem Content="데모 승인" Tag="APPROVED_FOR_DEMO" />
+                                </ComboBox>
+                            </StackPanel>
+                        </Border>
+                        <ListBox x:Name="QueueList" Grid.Row="1" AutomationProperties.AutomationId="QueueList"
+                                 AutomationProperties.Name="변경 요청" Background="Transparent" BorderThickness="0"
+                                 ItemContainerStyle="{StaticResource QueueItemStyle}"
+                                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="True"
+                                 VirtualizingPanel.VirtualizationMode="Recycling" VirtualizingPanel.IsVirtualizing="True">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <Border BorderBrush="{StaticResource RuleBrush}" BorderThickness="0,0,0,1" Padding="0,0,0,8"
+                                            ToolTip="{Binding Title}">
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                                            <DockPanel LastChildFill="True" Margin="0,4,0,0">
+                                                <TextBlock DockPanel.Dock="Right" Text="{Binding Revision, StringFormat='개정 {0}'}"
+                                                           Style="{StaticResource MetaText}" Margin="6,0,0,0" />
+                                                <TextBlock Text="{Binding Status}" Style="{StaticResource MetaText}"
+                                                           TextTrimming="CharacterEllipsis" />
+                                            </DockPanel>
+                                            <TextBlock Text="{Binding Pack}" Style="{StaticResource MetaText}"
+                                                       TextTrimming="CharacterEllipsis" />
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Grid>
+                </Border>
+
+                <GridSplitter x:Name="QueueSplitter" Grid.Column="1" Width="5" HorizontalAlignment="Stretch"
+                              ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"
+                              Background="{StaticResource RuleBrush}" AutomationProperties.Name="요청 목록 폭 조절" />
+
+                <Grid x:Name="ReviewPane" Grid.Column="2" Background="{StaticResource SurfaceBrush}">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Grid Margin="17,15,17,9">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Border x:Name="StatusBadge" HorizontalAlignment="Left" Background="{StaticResource AccentSoftBrush}"
+                                CornerRadius="4" Padding="8,2" Margin="0,0,0,7">
+                            <TextBlock x:Name="StageText" Text="규칙 변경 검토" AutomationProperties.AutomationId="StageText"
+                                       Foreground="{StaticResource AccentBrush}" FontWeight="SemiBold" FontSize="12" />
+                        </Border>
+                        <TextBlock x:Name="ChangeTitle" Grid.Row="1" Text="검토할 변경 요청을 선택하세요"
+                                   AutomationProperties.AutomationId="ChangeTitle" AutomationProperties.LiveSetting="Polite"
+                                   FontSize="22" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" MaxHeight="64"
+                                   TextWrapping="Wrap" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}" />
+                        <TextBlock x:Name="ChangeMeta" Grid.Row="2" AutomationProperties.AutomationId="ChangeMeta"
+                                   Text="요청을 열면 적용할 개정과 평가 실행을 확인할 수 있습니다."
+                                   Style="{StaticResource MetaText}" TextWrapping="Wrap" Margin="0,4,0,0" />
+                    </Grid>
+
+                    <Border x:Name="DecisionBar" Grid.Row="1" Margin="17,0,17,13" Padding="10"
+                            Background="{StaticResource QueueBrush}" BorderBrush="{StaticResource RuleBrush}"
+                            BorderThickness="1" CornerRadius="5">
+                        <StackPanel>
+                            <TextBlock x:Name="DecisionStatus" Text="요청, 평가 결과와 승인 조건을 같은 화면에서 확인합니다."
+                                       AutomationProperties.AutomationId="DecisionStatus" AutomationProperties.LiveSetting="Polite"
+                                       TextWrapping="Wrap" Foreground="{StaticResource MutedBrush}" />
+                            <WrapPanel>
+                                <Button x:Name="ApproveButton" Content="승인 기록" AutomationProperties.AutomationId="ApproveButton"
+                                        Style="{StaticResource PrimaryButton}" Visibility="Collapsed" Margin="0,8,6,0" />
+                                <Button x:Name="RejectButton" Content="반려 기록" AutomationProperties.AutomationId="RejectButton"
+                                        Visibility="Collapsed" Margin="0,8,6,0" />
+                                <Button x:Name="SubmitButton" Content="현업 검토 제출" AutomationProperties.AutomationId="SubmitButton"
+                                        Style="{StaticResource PrimaryButton}" Visibility="Collapsed" Margin="0,8,6,0" />
+                                <Button x:Name="EvaluateButton" Content="전체 사례 평가" AutomationProperties.AutomationId="EvaluateButton"
+                                        Visibility="Collapsed" Margin="0,8,6,0" />
+                                <Button x:Name="CorrectButton" Content="반려 변경 시정" AutomationProperties.AutomationId="CorrectButton"
+                                        Visibility="Collapsed" Margin="0,8,6,0" />
+                                <Button x:Name="RecoveryButton" Content="원래 요청 복구" AutomationProperties.AutomationId="RecoveryButton"
+                                        Visibility="Collapsed" Margin="0,8,6,0" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <TabControl x:Name="ReviewTabs" Grid.Row="2" Margin="17,0,17,8" AutomationProperties.AutomationId="ReviewTabs"
+                                AutomationProperties.Name="검토 자료">
+                        <TabItem x:Name="ComparisonTab" Header="변경 비교" AutomationProperties.AutomationId="ComparisonTab">
+                            <DataGrid x:Name="ComparisonGrid" AutoGenerateColumns="False" IsReadOnly="True"
+                                      AutomationProperties.AutomationId="ComparisonGrid" AutomationProperties.Name="규칙 변경 비교" />
+                        </TabItem>
+                        <TabItem x:Name="EvaluationTab" Header="검증 사례" AutomationProperties.AutomationId="EvaluationTab">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+                                <WrapPanel Margin="0,8,0,7">
+                                    <Button x:Name="ShowCaseInputButton" Content="평가 입력 편집" Visibility="Collapsed"
+                                            Margin="0,0,6,0" AutomationProperties.AutomationId="ShowCaseInputButton" />
+                                    <Button x:Name="PreviewCsvButton" Content="CSV 점검" Visibility="Collapsed"
+                                            AutomationProperties.AutomationId="PreviewCsvButton" />
+                                </WrapPanel>
+                                <DataGrid x:Name="EvaluationGrid" Grid.Row="1" IsReadOnly="True" AutoGenerateColumns="False"
+                                          AutomationProperties.AutomationId="EvaluationGrid" AutomationProperties.Name="평가 사례별 결과" />
+                                <Border x:Name="CaseInputPanel" Grid.Row="2" Visibility="Collapsed"
+                                        BorderThickness="0,1,0,0" BorderBrush="{StaticResource RuleBrush}" Padding="0,8,0,0">
+                                    <DataGrid x:Name="CaseInputGrid" MaxHeight="185" AutoGenerateColumns="False"
+                                              AutomationProperties.AutomationId="CaseInputGrid" AutomationProperties.Name="평가 사례 입력" />
+                                </Border>
+                            </Grid>
+                        </TabItem>
+                        <TabItem x:Name="HistoryTab" Header="평가·결정 이력" AutomationProperties.AutomationId="HistoryTab">
+                            <DockPanel>
+                                <Button x:Name="CompareRunsButton" Content="저장된 실행 비교" DockPanel.Dock="Top"
+                                        Visibility="Collapsed" HorizontalAlignment="Left" Margin="0,8,0,7"
+                                        AutomationProperties.AutomationId="CompareRunsButton" />
+                                <DataGrid x:Name="HistoryGrid" IsReadOnly="True" AutoGenerateColumns="False"
+                                          AutomationProperties.AutomationId="HistoryGrid" AutomationProperties.Name="평가·결정 이력" />
+                            </DockPanel>
+                        </TabItem>
+                    </TabControl>
+                </Grid>
+
+                <GridSplitter x:Name="ProofSplitter" Grid.Column="3" Width="5" HorizontalAlignment="Stretch"
+                              ResizeBehavior="PreviousAndNext" ResizeDirection="Columns"
+                              Background="{StaticResource RuleBrush}" AutomationProperties.Name="검증 근거 폭 조절" />
+
+                <Grid x:Name="ProofPane" Grid.Column="4" Background="{StaticResource QueueBrush}"
+                      AutomationProperties.AutomationId="ProofPane" AutomationProperties.Name="검증 근거 영역">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                    </Grid.RowDefinitions>
+                    <Border BorderThickness="0,0,0,1" BorderBrush="{StaticResource RuleBrush}" Padding="13,15,13,12">
+                        <StackPanel>
+                            <TextBlock x:Name="ProofTitle" Text="검증 근거" Style="{StaticResource SectionTitle}"
+                                       AutomationProperties.AutomationId="ProofTitle" />
+                            <TextBlock x:Name="ProofStatus" Text="요청 선택 대기" Style="{StaticResource MetaText}"
+                                       AutomationProperties.AutomationId="ProofStatus" AutomationProperties.LiveSetting="Polite"
+                                       TextWrapping="Wrap" Margin="0,4,0,9" />
+                            <WrapPanel>
+                                <Button x:Name="EvidenceButton" Content="근거 조회" AutomationProperties.AutomationId="EvidenceButton"
+                                        Margin="0,0,6,0" IsEnabled="False" />
+                                <Button x:Name="CopyReferenceButton" Content="참조 복사" AutomationProperties.AutomationId="CopyReferenceButton"
+                                        Style="{StaticResource QuietButton}" Visibility="Collapsed" />
+                            </WrapPanel>
+                        </StackPanel>
+                    </Border>
+                    <ScrollViewer x:Name="ProofTextScroll" Grid.Row="1" VerticalScrollBarVisibility="Auto"
+                                  HorizontalScrollBarVisibility="Disabled" Padding="13,11,13,15">
+                        <TextBox x:Name="ProofContent" AutomationProperties.AutomationId="ProofContent" AutomationProperties.Name="검증 근거 읽기"
+                                 Text="요청을 선택하면 적용 조항, 사례 결과와 승인 당시 참조를 확인할 수 있습니다."
+                                 IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap" FontSize="13"
+                                 Background="Transparent" BorderThickness="0" Padding="1" MinHeight="0"
+                                 VerticalContentAlignment="Top" />
+                    </ScrollViewer>
+                </Grid>
+            </Grid>
+
+            <Border Grid.Row="2" Padding="12,5" MinHeight="32" Background="{StaticResource SurfaceBrush}"
+                    BorderBrush="{StaticResource RuleBrush}" BorderThickness="0,1,0,0">
+                <DockPanel>
+                    <TextBlock Text="합성 검토 환경" DockPanel.Dock="Right" Style="{StaticResource MetaText}" Margin="9,0,0,0" />
+                    <TextBlock x:Name="ConnectionText" Text="연결 확인 중" DockPanel.Dock="Right" Style="{StaticResource MetaText}"
+                               AutomationProperties.AutomationId="ConnectionText" Margin="9,0,0,0" />
+                    <TextBlock x:Name="StatusText" AutomationProperties.AutomationId="StatusText"
+                               AutomationProperties.LiveSetting="Polite" Style="{StaticResource MetaText}"
+                               TextWrapping="Wrap" />
+                </DockPanel>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>

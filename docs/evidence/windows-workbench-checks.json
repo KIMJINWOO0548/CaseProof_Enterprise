@@ -1,0 +1,63 @@
+{
+  "checks": [
+    "Native analyst created, evaluated, and submitted a synthetic change to SQLite through the API.",
+    "Native evaluation row opened the retained case, observation date, and rule provenance.",
+    "Native queue collapsed and reopened with selected change retained.",
+    "A separate native domain reviewer approved the same change.",
+    "Ctrl+F reopened the collapsed native queue and focused search.",
+    "Pending native recovery persists without a bearer token and is hidden from a different role after restart.",
+    "Native final approval committed before controlled reply loss and recovered after app restart by one GET with the original key, without reposting.",
+    "Native stored-run comparison displays both retained run IDs and the real FAIL to PASS transition."
+  ],
+  "captures": [
+    {
+      "file": "01-native-domain-review.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "05-native-case-evidence.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "02-native-narrow-review.png",
+      "width_pixels": 1024,
+      "height_pixels": 812,
+      "window_width_pixels": 1040,
+      "window_height_pixels": 820,
+      "dpi": 120
+    },
+    {
+      "file": "03-native-reply-lost.png",
+      "width_pixels": 1024,
+      "height_pixels": 812,
+      "window_width_pixels": 1040,
+      "window_height_pixels": 820,
+      "dpi": 120
+    },
+    {
+      "file": "04-native-recovered-approval.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "06-native-stored-run-comparison.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    }
+  ],
+  "comparison_error": null
+}

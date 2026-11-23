@@ -26,6 +26,12 @@ The interface combines locally included [Tabler 1.7.3](https://docs.tabler.io/ui
 
 ## Versioned workspace
 
+### Windows review application
+
+CaseProof Desktop is a native Windows client for the same `/api/v1` workspace. Use the left queue, compare saved evaluations, and open the selected case's evidence without switching applications. A successful final decision exposes the approved revision, evaluation run, source bundle, and reason in the evidence pane. The Windows client can recover an interrupted decision by reconnecting to the same server and actor. [Windows client setup and checks](desktop/README.ko.md)
+
+![Native CaseProof on Windows showing a synthetic review, source case, and the permitted next action](docs/images/windows-workbench.png)
+
 The synthetic workspace saves an unfinished request before sending it. Reopen
 the same browser profile and origin, sign in again, and select **원래 요청 복구**
 to check the original result. [Recovery and restored-database behavior](docs/REQUEST_RECONNECT.md)

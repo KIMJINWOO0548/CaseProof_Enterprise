@@ -768,6 +768,49 @@
         }
       }
     },
+    "/api/v1/changes/{change_id}/review": {
+      "get": {
+        "summary": "Review",
+        "description": "Read-only review readiness for the current actor and revision, recorded evaluation and current gate diagnostics, decision notes, and approval-time seal references when verified. Invalid or legacy records have no evaluation, notes or seal. Mutation requests still recheck authority and the expected revision.",
+        "operationId": "review_api_v1_changes__change_id__review_get",
+        "security": [
+          {
+            "HTTPBearer": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "change_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Change Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/mutations/{key}": {
       "get": {
         "summary": "Mutation Result",

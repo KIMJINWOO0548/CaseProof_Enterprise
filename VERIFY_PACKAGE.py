@@ -13,6 +13,8 @@ IGNORED_DIRS = {'.git', '.venv', 'venv', '__pycache__', '.pytest_cache', '.ruff_
 def source_files(root: Path):
     for path in sorted(root.rglob('*')):
         relative = path.relative_to(root)
+        if relative.parts[:2] == ('desktop', 'CaseProof.Desktop') and any(p in {'bin', 'obj'} for p in relative.parts[2:]):
+            continue
         if any(p in IGNORED_DIRS or p.endswith('.egg-info') for p in relative.parts):
             continue
         try:
