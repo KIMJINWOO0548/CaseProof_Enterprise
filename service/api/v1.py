@@ -18,6 +18,7 @@ from service.idempotency_v1 import lookup, replay
 from service.repositories import decode, get_change, load_history, require
 from service.evaluation.csv_preview import CSV_LIMIT, preview_cases
 from service.evaluation.run_comparison import compare_runs, summarize_history
+from service.review import read_review
 
 
 REQUEST_CONTEXT_HEADER = 'X-CaseProof-Request-Context'
@@ -304,6 +305,23 @@ def build_router(session_factory, authenticator, *, request_context=None):
                             'immutable_refs': None}
                 return JSONResponse({'data': data})
         return await respond(request, action)
+
+    @router.get('/changes/{change_id}/review', description=(
+        'Read-only review readiness for the current actor and revision, recorded evaluation and current gate '
+        'diagnostics, decision notes, and approval-time seal references when verified. Invalid or legacy records '
+        'have no evaluation, notes or seal. Mutation requests still recheck authority and the expected revision.'))
+    async def review(change_id: str, request: Request):
+        async def action():
+            actor = actor_for(request)
+            _identity(change_id)
+            require(not request.query_params, 'INVALID_REQUEST')
+            with session_factory() as db, db.begin():
+                actor = current_actor(db, actor)
+                require(bool(actor.roles), 'FORBIDDEN')
+                return JSONResponse({'data': read_review(db, actor, change_id)})
+        response = await respond(request, action)
+        response.headers['Cache-Control'] = 'no-store'
+        return response
 
     @router.get('/mutations/{key}')
     async def mutation_result(key: str, request: Request):

@@ -89,7 +89,8 @@ def test_mutation_revision_headers(tmp_path, revision):
 def test_openapi_actual_routes_and_forbidden_extras(tmp_path):
     app, factory, body = client_app(tmp_path)
     schema = app.openapi()
-    assert len(schema['paths']) == 11
+    assert len(schema['paths']) == 12
+    assert 'get' in schema['paths']['/api/v1/changes/{change_id}/review']
     assert 'post' in schema['paths']['/api/v1/changes/{change_id}/evaluation-runs/preview-csv']
     assert 'get' in schema['paths']['/api/v1/changes/{change_id}/evaluation-runs/{run_id}/coverage']
     assert 'get' in schema['paths']['/api/v1/changes/{change_id}/evaluation-runs']

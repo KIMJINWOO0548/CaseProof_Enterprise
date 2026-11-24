@@ -56,6 +56,25 @@ def authorize(actor, kind, change=None):
                 require(actor.actor_id != change.domain_reviewer_id, 'SEPARATION_OF_DUTIES')
 
 
+def require_workflow_state(kind, snapshot):
+    require(TABLE[kind][0] == (snapshot['status'] if snapshot else 'NONE'), 'INVALID_STATUS')
+
+
+def current_approval_gate(history):
+    from service.domain.gates import check_run_gate, source_eligibility
+
+    if not history['runs']:
+        return None
+    run = history['runs'][-1]
+    require(run['id'] == history['snapshot']['active_run_id'], 'EVIDENCE_RECORD_TAMPERED')
+    return check_run_gate(run, history['refs']['suite'], source_eligibility(history))
+
+
+def require_approval_gate(gate):
+    require(gate is not None and gate['completion'] == 'COMPLETE', 'EVALUATION_INCOMPLETE')
+    require(gate['gate_summary'] == 'PASS', 'RELEASE_GATE_BLOCKED')
+
+
 def execute_command(session_factory, actor, command):
     kind, command = normalize(command)
     try:
@@ -92,7 +111,7 @@ def _execute(db, actor, command, kind, change, head):
     history = load_history(db, actor.tenant_id, identity) if change else None
     old = history['snapshot'] if history else None
     revision = old['revision'] if old else 0
-    require(TABLE[kind][0] == (old['status'] if old else 'NONE'), 'INVALID_STATUS')
+    require_workflow_state(kind, old)
     if old and command.expected_revision != revision:
         raise DomainError('STALE_REVISION', current_revision=revision)
     parent = None
@@ -116,13 +135,9 @@ def _execute(db, actor, command, kind, change, head):
         coverage_cases = []
         run = prepare_run(history, body, actor, str(uuid4()), now, revision + 1, coverage_cases=coverage_cases)
     if kind in ('SUBMITTED_FOR_DOMAIN_REVIEW', 'APPROVED_FOR_DEMO'):
-        from service.domain.gates import check_run_gate, source_eligibility
-        require(bool(history['runs']), 'EVALUATION_INCOMPLETE')
+        gate = current_approval_gate(history)
+        require_approval_gate(gate)
         run = history['runs'][-1]
-        require(run['id'] == old['active_run_id'], 'EVIDENCE_RECORD_TAMPERED')
-        gate = check_run_gate(run, history['refs']['suite'], source_eligibility(history))
-        require(gate['completion'] == 'COMPLETE', 'EVALUATION_INCOMPLETE')
-        require(gate['gate_summary'] == 'PASS', 'RELEASE_GATE_BLOCKED')
         gate_hash = content_hash('evaluation-run', run)
         source_eligible = gate['source_eligible']
     if kind in ('APPROVED_FOR_DEMO', 'RELEASE_REJECT'):

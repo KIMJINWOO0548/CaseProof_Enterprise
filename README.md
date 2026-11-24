@@ -1,6 +1,6 @@
 # CaseProof
 
-**A synthetic insurance-rule verification and human-review prototype.**
+**A Windows and web workbench for synthetic insurance-rule verification and independent review.**
 
 CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
 
@@ -16,13 +16,21 @@ CaseProof checks a numeric claim against versioned synthetic rules, records the 
 
 한국어 시작 안내: [START_HERE.md](START_HERE.md).
 
-## Review workspace
+## Windows desktop
 
-The interface combines locally included [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started) components with an ink/iris/peach identity and OFL-1.1 SUIT typography. Searchable requests, an actual current-stage rail and separate evaluation/evidence panels keep the selected change in context. No CDN is required. Three different accounts perform request, domain review and final demo approval; uncertain responses can be recovered using the original request. See the [visual design and primary references](docs/VISUAL_DESIGN.md), the [Langfuse/LangSmith/Dify inspection patterns](docs/AI_UI_REFERENCES.md), and the [error and focus audit](docs/UI_FOCUS_AUDIT.md).
+Open a request, inspect failures and inconclusive cases, and compare saved runs in one native Windows window. Keep each case's clause, policy version, and basis date beside the decision. The client uses the same `/api/v1` workspace as the web interface, including separate reviewer roles and recovery for a decision whose response was lost.
 
-![CaseProof review workspace with current stage, filtered synthetic change and separate verified evidence](docs/images/v1-review-desktop.jpg)
+![Native CaseProof on Windows with the request queue, case results and clause evidence](docs/images/windows-workbench-density.png)
 
-[Narrow-screen capture](docs/images/v1-review-mobile.jpg). Screenshots show an actual temporary synthetic workflow; approvals are recorded test data.
+[Windows setup and local build](desktop/README.ko.md) · [Windows UI Automation evidence](docs/evidence/windows-workbench-density-checks.json) · [CI runs and Windows artifacts](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/workflows/ci.yml?query=branch%3Amain)
+
+## Web review workspace
+
+The web interface combines locally included [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started) components with an ink/iris/peach identity and OFL-1.1 SUIT typography. Searchable requests, a current-stage indicator, and separate evaluation and evidence panels keep the selected change in context. It runs without a CDN. See the [visual design and primary references](docs/VISUAL_DESIGN.md), the [Langfuse/LangSmith/Dify inspection patterns](docs/AI_UI_REFERENCES.md), and the [error and focus audit](docs/UI_FOCUS_AUDIT.md).
+
+![CaseProof web review workspace with current stage, filtered synthetic change and separate verified evidence](docs/images/v1-review-desktop.jpg)
+
+[Narrow-screen web capture](docs/images/v1-review-mobile.jpg). Screenshots show temporary synthetic workflows and recorded demo decisions.
 
 ## Versioned workspace
 

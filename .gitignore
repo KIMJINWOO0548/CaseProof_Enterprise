@@ -63,3 +63,5 @@ private/
 holdout-private/
 private_gold/
 gold.private.*
+/desktop/CaseProof.Desktop/bin/
+/desktop/CaseProof.Desktop/obj/

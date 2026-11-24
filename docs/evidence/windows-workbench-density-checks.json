@@ -1,0 +1,148 @@
+{
+  "checks": [
+    "The wide native view separates the queue, case grid, evidence panel, and fixed decision rail.",
+    "A real mixed evaluation can filter cases and advance to the next inconclusive result without retaining stale proof or writing a decision.",
+    "At inline-proof width, CSV errors replace case evidence without changing the request or its evaluation.",
+    "Native analyst created, evaluated, and submitted a synthetic change to SQLite through the API.",
+    "The case proof shows basis and outcome first. The collapsed audit disclosure retains the exact input and output SHA-256 references.",
+    "The real HWND retains Windows caption controls. Native caption pixels confirm the themed color.",
+    "Native evaluation row opened the retained case, observation date, and rule provenance.",
+    "Native queue collapsed and reopened with selected change retained.",
+    "The whole enabled decision button fits inside the narrow visible window frame.",
+    "At the native narrow breakpoint, the stored clause appears inside the selected case row and the decision remains visible.",
+    "The decision dialog includes the selected stored case clause and version alongside the reason.",
+    "The native reason label remains visibly contrasted in the rendered dark confirmation window.",
+    "A separate native domain reviewer approved the same change.",
+    "Pending native recovery persists without a bearer token and is hidden from a different role after restart.",
+    "The recovered approval provides the retained revision in the default proof and the exact approval digest in the audit disclosure.",
+    "Native final approval committed before controlled reply loss and recovered after app restart by one GET with the original key, without reposting.",
+    "The main native comparison grid displays the real FAIL-to-PASS transition and audit retains both exact run IDs.",
+    "Returning to a displayed comparison restores the exact two captured run IDs in its audit inspector."
+  ],
+  "captures": [
+    {
+      "file": "08-native-mixed-outcomes-wide.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "11-native-inline-csv-preview-error.png",
+      "width_pixels": 944,
+      "height_pixels": 892,
+      "window_width_pixels": 960,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "01-native-domain-review.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "07-native-audit-disclosure.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "05-native-case-evidence.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "02-native-narrow-review.png",
+      "width_pixels": 1024,
+      "height_pixels": 812,
+      "window_width_pixels": 1040,
+      "window_height_pixels": 820,
+      "dpi": 120
+    },
+    {
+      "file": "09-native-inline-case-evidence.png",
+      "width_pixels": 944,
+      "height_pixels": 812,
+      "window_width_pixels": 960,
+      "window_height_pixels": 820,
+      "dpi": 120
+    },
+    {
+      "file": "10-native-decision-evidence.png",
+      "width_pixels": 684,
+      "height_pixels": 495,
+      "window_width_pixels": 700,
+      "window_height_pixels": 503,
+      "dpi": 120
+    },
+    {
+      "file": "03-native-reply-lost.png",
+      "width_pixels": 944,
+      "height_pixels": 812,
+      "window_width_pixels": 960,
+      "window_height_pixels": 820,
+      "dpi": 120
+    },
+    {
+      "file": "04-native-recovered-approval.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    },
+    {
+      "file": "06-native-stored-run-comparison.png",
+      "width_pixels": 1424,
+      "height_pixels": 892,
+      "window_width_pixels": 1440,
+      "window_height_pixels": 900,
+      "dpi": 120
+    }
+  ],
+  "native_frame": {
+    "caption_style": "0x16CF0000",
+    "rendered_caption_samples": [
+      "#080808",
+      "#080808",
+      "#080808"
+    ],
+    "caption_color_readback": null,
+    "caption_text_color_readback": null,
+    "border_color_readback": null
+  },
+  "wide_workflow_bounds": {
+    "dpi": 120,
+    "frame_width": 1424,
+    "frame_height": 892,
+    "first_case_y_dip": 204.0,
+    "first_case_height_dip": 36.0,
+    "decision_y": 832.0,
+    "unselected_case_color": "#151515"
+  },
+  "narrow_action_bounds": {
+    "x": 567.0,
+    "y": 734.0,
+    "width": 130.0,
+    "height": 35.0,
+    "frame_width": 1024,
+    "frame_height": 812
+  },
+  "inline_evidence_bounds": {
+    "window_width_dip": 755.2,
+    "width": 604.0,
+    "height": 140.0,
+    "y": 308.0,
+    "action_y": 734.0
+  },
+  "comparison_error": null
+}
