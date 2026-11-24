@@ -8,7 +8,7 @@
     <AssemblyName>CaseProof.Desktop</AssemblyName>
     <RootNamespace>CaseProof.Desktop</RootNamespace>
     <Product>CaseProof Enterprise</Product>
-    <Version>0.1.0</Version>
+    <Version>0.1.1</Version>
     <Description>CaseProof Enterprise Windows review workspace</Description>
     <ApplicationIcon>assets/caseproof.ico</ApplicationIcon>
   </PropertyGroup>

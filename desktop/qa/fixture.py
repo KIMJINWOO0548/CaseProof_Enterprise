@@ -2,6 +2,7 @@
 
 import argparse
 import asyncio
+from copy import deepcopy
 import hashlib
 from http.client import HTTPConnection
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -14,11 +15,14 @@ import subprocess
 import sys
 from threading import Lock, Thread
 from urllib.parse import urlsplit
+from uuid import uuid4
 
 import uvicorn
 
 from scripts.v1_demo import _listener
 from service.db import make_engine, session_factory
+from service.models_v1 import SuiteSnapshot
+from service.repositories import add_payload, decode
 from service.workspace import ACTORS, ROOT, create_workspace_app, seed_workspace
 
 
@@ -26,6 +30,21 @@ def store_json(path, data):
     temporary = path.with_suffix('.tmp')
     temporary.write_text(json.dumps(data), encoding='utf-8')
     temporary.replace(path)
+
+
+def seed_desktop_review_suite(db, workspace):
+    preset = deepcopy(next(item for item in workspace['presets'] if item['id'] == 'lantern'))
+    body = preset['create_body']
+    original = decode(db.get(SuiteSnapshot, ('fictional', body['suite_version_id'])))
+    base = preset['case_inputs'][0]
+    names = ['qa-1-window-failed', 'qa-2-context-uncertain', 'qa-3-base-pass', 'qa-4-observed-pass']
+    preset.update(id='qa-review-cases', label='합성 감사 검토 · 네 가지 사례',
+                  case_inputs=[dict(deepcopy(base), case_id=name) for name in names])
+    body['suite_version_id'] = str(uuid4())
+    policy_versions = original['case_policy_versions'][base['case_id']]
+    add_payload(db, SuiteSnapshot, dict(original, id=body['suite_version_id'], required_case_ids=names,
+        workspace=preset, case_policy_versions={name: policy_versions for name in names},
+        coverage_by_case={name: [] for name in names}))
 
 
 async def serve_until_stopped(server, backend, stop_file):
@@ -52,7 +71,7 @@ def serve(practice):
     engine = make_engine(database_url)
     db_sessions = session_factory(engine)
     with db_sessions.begin() as db:
-        seed_workspace(db)
+        seed_desktop_review_suite(db, seed_workspace(db))
     tokens = {actor: secrets.token_hex(24) for actor in ACTORS}
     registry = {hashlib.sha256(token.encode()).hexdigest(): {'tenant_id': 'fictional', 'actor_id': actor}
                 for actor, token in tokens.items()}
