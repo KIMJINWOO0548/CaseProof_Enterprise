@@ -1,20 +1,14 @@
-# CaseProof
+# CaseProof Enterprise
 
-**A Windows and web workbench for synthetic insurance-rule verification and independent review.**
+**보험 규칙 변경을 평가하고, 어떤 사례와 근거로 승인했는지 확인하는 Windows·웹 작업대입니다.**
 
-CaseProof checks a numeric claim against versioned synthetic rules, records the evidence, and requires different people to request, review, and approve a demo change. The project is useful for studying authorization, temporal rule resolution, regression evidence, and approval integrity.
+합성 데이터로 변경 전후 판정을 비교하고, 실패한 사례의 조항·규칙 버전·업무 기준일을 확인할 수 있습니다. 요청자, 현업 검토자, 최종 승인자는 각자의 권한으로 같은 요청을 처리합니다.
 
-**Release: `5.3.0.dev6` — versioned review, evaluation and evidence workspace.** The explicit `/api/v1` profile provides atomic revisions, full-suite runs, linked corrections, separate reviewers and reconstructed evidence. The original `/api` profile remains available. PostgreSQL role/RLS tests, exact paired statistics and local recovery exercises have separate evidence; external models, anchors and independent reviews remain unavailable.
+[Windows x64 다운로드](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/releases/latest) · [Windows 실행 안내](desktop/README.ko.md) · [웹 시작 안내](START_HERE.md)
 
-합성 규칙의 변경을 평가하고, 요청자·현업 검토자·최종 승인자의 역할을 분리합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청 재시도로 같은 변경이 중복 처리되는 것을 방지합니다. 구현 범위와 실행 결과는 [현재 상태](docs/STATUS.md)와 [검증 기록](docs/VALIDATION.md), 버전 통합 내역은 [병합 기록](docs/V53_INTEGRATION.md)에서 확인할 수 있습니다.
+![CaseProof Windows 15초 시연. 실패 사례에서 적용 조항을 확인하고, 승인 결과를 복구한 뒤 두 평가 실행을 비교합니다.](docs/images/caseproof-windows-demo.gif)
 
-- Synthetic fixtures only; no real customer information or insurance decisions.
-- FastAPI, SQLAlchemy, static HTML/JavaScript; local SQLite demo and separate disposable PostgreSQL role/RLS tests.
-- The `/api` baseline has two fictional organizations, four roles, ten synthetic rules and twenty public resolver examples. The standalone `/api/v1` workspace has three registered fictional packs; both profiles retain actor-scoped retries.
-- No LLM connection, production authentication, externally anchored evidence, or completed 360-case study. Tested PostgreSQL RLS does not establish production deployment readiness.
-- `PASS` means the tested numeric claim matched a synthetic rule. `APPROVED_FOR_DEMO` never deploys software or authorizes a real claim.
-
-한국어 시작 안내: [START_HERE.md](START_HERE.md).
+*합성 데이터로 실행한 Windows 포터블 앱의 화면을 15초로 편집했습니다.*
 
 ## Windows desktop
 
@@ -31,6 +25,15 @@ The web interface combines locally included [Tabler 1.7.3](https://docs.tabler.i
 ![CaseProof web review workspace with current stage, filtered synthetic change and separate verified evidence](docs/images/v1-review-desktop.jpg)
 
 [Narrow-screen web capture](docs/images/v1-review-mobile.jpg). Screenshots show temporary synthetic workflows and recorded demo decisions.
+
+## 기술 및 검증 범위
+
+서버 `5.3.0.dev6`의 `/api/v1`은 개정, 전체 사례 평가, 정정 연결, 독립 승인, 승인 당시의 근거 조회를 제공합니다. 전이 원장과 고정 승인 증거로 변경 이력을 대조하며, 요청을 다시 보내도 변경이 중복 처리되지 않도록 합니다. 기존 `/api` 프로필도 실행할 수 있습니다. [현재 상태](docs/STATUS.md) · [검증 기록](docs/VALIDATION.md) · [버전 통합 내역](docs/V53_INTEGRATION.md)
+
+- Windows 작업대는 .NET/WPF, 서버와 웹은 FastAPI·SQLAlchemy·HTML/JavaScript를 사용합니다. 로컬 시연은 SQLite로 실행합니다. PostgreSQL 권한·행 단위 보안, 통계, 로컬 복구의 검증 결과는 개별 기록에서 확인할 수 있습니다.
+- 합성 데이터만 사용합니다. `/api`에는 가상 조직 2개, 역할 4개, 규칙 10개와 예제 20개가 있습니다. 별도 `/api/v1` 작업 공간에는 합성 규칙 팩 3개가 있습니다. 두 프로필에서 각 사용자 단위로 재시도를 처리합니다.
+- LLM 연동, 운영 인증, 외부 증거 앵커, 360건 연구 및 외부 독립 검토는 별도 범위입니다. PostgreSQL 권한 실험은 운영 배포 수용을 검증하지 않습니다.
+- `PASS`는 사례의 숫자가 합성 규칙과 일치했다는 의미입니다. `APPROVED_FOR_DEMO`는 시연 승인만을 의미합니다.
 
 ## Versioned workspace
 
