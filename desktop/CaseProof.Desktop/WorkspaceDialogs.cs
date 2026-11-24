@@ -61,6 +61,10 @@ public partial class MainWindow
             input.Margin = new Thickness(0, 0, 0, 10);
             input.MinHeight = Math.Max(input.MinHeight, 32);
             input.Padding = new Thickness(8, 5, 8, 5);
+            if (input is ComboBox { IsEditable: false }
+                && input.ReadLocalValue(StyleProperty) == DependencyProperty.UnsetValue
+                && TryFindResource("QueueFilter") is Style comboStyle)
+                input.Style = comboStyle;
             content.Children.Add(caption);
             content.Children.Add(input);
         }

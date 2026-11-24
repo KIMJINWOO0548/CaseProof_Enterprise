@@ -19,6 +19,11 @@ public partial class MainWindow : Window
         JsonElement Data, JsonElement Coverage);
     private sealed record HistoryRow(string Revision, string Action, string Actor, string Time, string Reason);
     private sealed record RunChoice(string Id, string Label);
+    private sealed record RunComparison(RunChoice Baseline, RunChoice Candidate)
+    {
+        public string Labels => $"기준  {Baseline.Label}\n대상  {Candidate.Label}";
+        public string References => $"기준 평가 실행  {Baseline.Id}\n대상 평가 실행  {Candidate.Id}";
+    }
     private sealed record RunDiffRow(string Id, string Baseline, string Candidate, string Changes)
     {
         public string Pair => $"기준  {Baseline}\n대상  {Candidate}";
@@ -30,6 +35,7 @@ public partial class MainWindow : Window
     private JsonElement selected;
     private JsonElement review;
     private JsonElement execution;
+    private RunComparison? storedComparison;
     private Dictionary<string, JsonElement> caseCoverage = new(StringComparer.Ordinal);
     private List<CaseRow> caseRows = [];
     private string coverageNotice = "";
@@ -99,10 +105,13 @@ public partial class MainWindow : Window
         {
             if (!HasSelection) return;
             var audit = ProofAuditExpander.IsExpanded && ProofAuditContent.Text.Length > 0;
+            var comparison = ComparisonTab.IsSelected ? storedComparison : null;
             try
             {
-                Clipboard.SetText(audit ? ProofAuditContent.Text : $"{ChangeId} / 개정 {Revision} / 평가 {RunId}");
-                StatusText.Text = audit ? "펼친 감사 참조를 복사했습니다." : "선택한 요청 참조를 복사했습니다.";
+                Clipboard.SetText(audit ? ProofAuditContent.Text
+                    : comparison?.References ?? $"{ChangeId} / 개정 {Revision} / 평가 {RunId}");
+                StatusText.Text = audit ? "펼친 감사 참조를 복사했습니다."
+                    : comparison is not null ? "비교한 두 평가 실행 참조를 복사했습니다." : "선택한 요청 참조를 복사했습니다.";
             }
             catch (System.Runtime.InteropServices.ExternalException error) { ShowError(error); }
         };
@@ -126,6 +135,7 @@ public partial class MainWindow : Window
         {
             if (!ReferenceEquals(change.Source, ReviewTabs) || !HasSelection) return;
             if (EvaluationTab.IsSelected) RenderSelectedCase(open: false);
+            else if (ComparisonTab.IsSelected && storedComparison is { } comparison) RenderComparisonProof(comparison);
             else RenderProof();
         };
 
@@ -383,6 +393,7 @@ public partial class MainWindow : Window
     private void ClearChange()
     {
         selected = review = execution = default;
+        storedComparison = null;
         caseCoverage.Clear();
         caseRows.Clear();
         coverageNotice = "";
@@ -566,13 +577,31 @@ public partial class MainWindow : Window
         await LoadChangeAsync(id);
         if (ChangeId == id)
         {
-            updatingCases = true;
-            EvaluationGrid.SelectedItem = null;
-            updatingCases = false;
+            ClearCaseEvidenceSelection();
             RenderProof();
             OpenProof();
-            UpdateCaseNavigation();
         }
+    }
+
+    private void ClearCaseEvidenceSelection()
+    {
+        updatingCases = true;
+        EvaluationGrid.SelectedItem = null;
+        updatingCases = false;
+        showingCaseEvidence = false;
+        EvaluationGrid.Tag = "";
+        UpdateCaseNavigation();
+    }
+
+    private void RenderComparisonProof(RunComparison comparison)
+    {
+        showingCaseEvidence = false;
+        EvaluationGrid.Tag = "";
+        ProofTitle.Text = "비교 실행 참조";
+        ProofStatus.Text = "두 평가의 판정은 실행 비교에서 확인할 수 있습니다.";
+        ProofContent.Text = comparison.Labels;
+        SetProofAudit(comparison.References);
+        ApplyPaneLayout();
     }
 
     private async Task CompareRunsAsync()
@@ -603,15 +632,14 @@ public partial class MainWindow : Window
                 "INCOMPLETE" => "\n미완료 사례가 포함됩니다. 결과를 추가로 확인하세요.",
                 _ => "\n실행 조건이 같지 않습니다. 입력과 평가 조건을 확인하세요."
             };
-            RunDiffSummary.Text = $"기준  {first.Label}\n대상  {second.Label}\n달라진 사례  {counts.Number("any_changed")}건{notice}";
+            var comparison = new RunComparison(first, second);
+            storedComparison = comparison;
+            RunDiffSummary.Text = $"{comparison.Labels}\n달라진 사례  {counts.Number("any_changed")}건{notice}";
             RunDiffGrid.ItemsSource = ComparisonRows(result);
             RunDiffPanel.Visibility = Visibility.Visible;
-            ReviewTabs.SelectedItem = ComparisonTab;
+            if (ComparisonTab.IsSelected) RenderComparisonProof(comparison);
+            else ReviewTabs.SelectedItem = ComparisonTab;
             OpenProof();
-            ProofTitle.Text = "비교 실행 참조";
-            ProofStatus.Text = "두 평가의 판정은 실행 비교에서 확인할 수 있습니다.";
-            ProofContent.Text = $"기준  {first.Label}\n대상  {second.Label}";
-            SetProofAudit($"기준 평가 실행  {first.Id}\n대상 평가 실행  {second.Id}");
         }
         catch (Exception error) { if (selection == generation && client == session) ShowError(error); }
     }
@@ -696,6 +724,7 @@ public partial class MainWindow : Window
             if (client != session || Revision != revision || ChangeId != change) return;
             if (!preview.Flag("ready"))
             {
+                ClearCaseEvidenceSelection();
                 ProofTitle.Text = "CSV 점검 결과";
                 ProofStatus.Text = "오류 · 수정 후 다시 선택";
                 SetProofAudit(null);

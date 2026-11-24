@@ -4,9 +4,11 @@ CaseProof Desktop은 Windows 네이티브 검토 프로그램입니다. 기존 C
 
 ## 시작
 
-1. Windows x64 실행 ZIP을 모두 풀고 `CaseProof.Desktop.exe`를 실행합니다. 자체 포함 빌드에는 데스크톱 런타임이 포함됩니다. 협업 작업공간 서버는 별도로 실행합니다.
+1. [GitHub Actions의 main CI](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/workflows/ci.yml?query=branch%3Amain)에서 성공한 실행의 `CaseProof-Windows-x64` 아티팩트를 받거나 아래 명령으로 빌드합니다. 전체 폴더를 풀고 `CaseProof.Desktop.exe`를 실행합니다. 실행 폴더에는 Windows x64 런타임이 포함됩니다.
 2. 연결 주소에는 서버 기본 주소를 입력합니다. 개발용 로컬 서버의 기본 주소는 `http://127.0.0.1:8766`입니다. 원격 서버 주소에는 HTTPS를 사용합니다.
 3. 서버에서 발급한 **역할별 접속 토큰**으로 연결합니다. 합성 데모의 접속 토큰은 서버가 생성하는 로컬 `profile.json`에서 확인합니다.
+
+Actions의 아티팩트는 30일 동안 보관됩니다. 다운로드 기간이 지나면 아래 빌드 명령으로 같은 실행 폴더를 만들 수 있습니다.
 
 로컬 합성 서버는 저장소 루트에서 기존 가상환경으로 실행할 수 있습니다. 새 프로필은 별도 폴더에 생성되며, 다시 같은 프로필을 사용할 때는 `--profile <기존 profile.json 경로>`를 추가합니다.
 
@@ -40,10 +42,12 @@ C#과 .NET 10 WPF의 기본 Windows 창, 목록, 표, 대화상자를 사용합�
 
 ## 빌드
 
+로컬 빌드에는 .NET 10 SDK가 필요합니다. 서버는 별도로 실행합니다.
+
 ```powershell
 dotnet publish desktop/CaseProof.Desktop/CaseProof.Desktop.csproj -c Release -r win-x64 --self-contained true -o ..\CaseProof-Windows
 ```
 
 현장 실행 검증은 [Windows QA 스크립트](qa/verify_workbench.ps1)를 사용합니다. 이 테스트는 임시 합성 SQLite 서버와 개인용 클라이언트 상태 폴더를 만들고, 실제 열린 Windows 창을 조작합니다.
 
-감자의 Windows 125% 배율에서 1,440×900 및 1,040×820 창을 확인했습니다. 별도 현업 검토자와 최종 승인자, 사례별 근거, 저장 실행 두 건의 실패→통과 비교를 검증했습니다. 응답을 서버 저장 직후 끊고 프로그램을 다시 열었을 때 같은 원래 키로 저장 결과를 한 번 조회했습니다. [Windows 실행 화면](../docs/images/windows-workbench.png) · [검증 결과](../docs/evidence/windows-workbench-checks.json)
+Windows 125% 배율에서 1,440×900 및 좁은 창의 실제 실행을 확인했습니다. 사례별 근거, 별도 현업 검토와 최종 승인, 응답 유실 후 같은 키로 복구, 탭 전환 후 비교 참조 보존을 합성 데이터에서 검증했습니다. 좁은 창에서 이전 사례의 근거를 CSV 오류가 교체하고 저장된 평가는 유지되는지도 별도로 확인했습니다. 실제 OS 150%는 미검증입니다. [현재 Windows 실행 화면](../docs/images/windows-workbench-density.png) · [현재 검증 결과](../docs/evidence/windows-workbench-density-checks.json) · [이전 검증 기록](../docs/evidence/windows-workbench-checks.json)

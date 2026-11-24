@@ -615,6 +615,15 @@ function Test-StoredComparison {
         Close-AuditDisclosure $toggle
         Capture-Desktop '06-native-stored-run-comparison.png'
         Mark-Qa 'The main native comparison grid displays the real FAIL-to-PASS transition and audit retains both exact run IDs.'
+        Select-Ui (Wait-Qa 'evaluation tab while comparing saved runs' { Find-Ui 'EvaluationTab' })
+        Select-Ui (Wait-Qa 'return to the retained comparison grid' { Find-Ui 'ComparisonTab' })
+        $toggle = Open-AuditDisclosure 'audit references after returning to the comparison tab'
+        Wait-Qa 'both exact retained comparison run IDs after a tab roundtrip' {
+            $evidence = Read-Ui 'ProofAuditContent'
+            $evidence -and $evidence.Contains($blocked.run.id) -and $evidence.Contains($passed.run.id)
+        } 4 | Out-Null
+        Close-AuditDisclosure $toggle
+        Mark-Qa 'Returning to a displayed comparison restores the exact two captured run IDs in its audit inspector.'
         return
     }
     Wait-Qa 'stored evaluation comparison with verdict transition' {

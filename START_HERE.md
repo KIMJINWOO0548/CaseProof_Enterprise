@@ -2,6 +2,8 @@
 
 현재 개발 버전은 **`5.3.0.dev6`**입니다. 합성 보험 규칙을 평가하고 요청자·현업 검토자·최종 승인자의 결정을 불변 기록과 연결하는 로컬 연구용 서비스입니다. 공개 저장소는 [KIMJINWOO0548/CaseProof_Enterprise](https://github.com/KIMJINWOO0548/CaseProof_Enterprise)이며, 이 폴더가 Git 저장소 루트입니다.
 
+Windows 데스크톱 앱은 같은 `/api/v1` 서버에 연결합니다. [실행 파일 받기와 직접 빌드하기](desktop/README.ko.md)에서 시작할 수 있습니다.
+
 ## 실행 프로필
 
 - 기존 `/api` baseline은 기존 SQLite 데이터·API·digest 계약을 유지합니다.

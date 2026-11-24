@@ -1,5 +1,10 @@
 # Changelog
 
+## Native Windows review workspace — 2026-11-24
+
+- Review synthetic changes in a compact native workbench with a request queue, case results, and linked clause evidence. Keep approval and recovery on the existing versioned server workflow.
+- Preserve saved-run references across tabs, keep narrow-window CSV diagnostics visible, and publish a self-contained Windows x64 artifact through CI on `main`.
+
 ## Synthetic evaluation CSV preview — 2026-11-20
 
 - Check an uploaded UTF-8 CSV against the authorized draft's pinned case suite before executing an evaluation. The preview does not write evaluation or workflow state. Use the existing evaluation command to submit the checked input explicitly.
