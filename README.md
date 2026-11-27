@@ -10,21 +10,21 @@
 
 *합성 데이터로 실행한 Windows 포터블 앱의 화면을 15초로 편집했습니다.*
 
-## Windows desktop
+## Windows 작업대
 
-Open a request, inspect failures and inconclusive cases, and compare saved runs in one native Windows window. Keep each case's clause, policy version, and basis date beside the decision. The client uses the same `/api/v1` workspace as the web interface, including separate reviewer roles and recovery for a decision whose response was lost.
+한 창에서 요청을 열고 실패·미확정 사례를 살펴보며 저장된 평가를 비교합니다. 판정 옆에서 적용 조항, 규칙 버전, 업무 기준일을 확인할 수 있습니다. 웹과 같은 `/api/v1`을 사용하며, 검토자 역할을 분리하고 응답 유실 후 원래 결정 결과를 복구합니다.
 
-![Native CaseProof on Windows with the request queue, case results and clause evidence](docs/images/windows-workbench-density.png)
+![CaseProof Windows 작업대의 요청 목록, 사례 판정 표와 적용 조항](docs/images/windows-workbench-density.png)
 
-[Windows setup and local build](desktop/README.ko.md) · [Windows UI Automation evidence](docs/evidence/windows-workbench-density-checks.json) · [CI runs and Windows artifacts](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/workflows/ci.yml?query=branch%3Amain)
+[실행과 로컬 빌드](desktop/README.ko.md) · [Windows UI 자동화 검증](docs/evidence/windows-workbench-density-checks.json) · [main CI와 Windows 빌드 결과](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/workflows/ci.yml?query=branch%3Amain)
 
-## Web review workspace
+## 웹 검토 작업대
 
-The web interface combines locally included [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started) components with an ink/iris/peach identity and OFL-1.1 SUIT typography. Searchable requests, a current-stage indicator, and separate evaluation and evidence panels keep the selected change in context. It runs without a CDN. See the [visual design and primary references](docs/VISUAL_DESIGN.md), the [Langfuse/LangSmith/Dify inspection patterns](docs/AI_UI_REFERENCES.md), and the [error and focus audit](docs/UI_FOCUS_AUDIT.md).
+검색할 수 있는 요청 목록과 현재 처리 단계가 표시됩니다. 평가와 근거는 별도 영역으로 보여 주며, 요청을 선택하면 두 영역이 함께 갱신됩니다. 웹은 CDN 없이 실행되며, 번들된 [Tabler 1.7.3](https://docs.tabler.io/ui/getting-started)과 OFL-1.1 SUIT 글꼴을 사용합니다. [화면 설계](docs/VISUAL_DESIGN.md) · [참고 제품의 근거 검토 방식](docs/AI_UI_REFERENCES.md) · [오류·포커스 점검](docs/UI_FOCUS_AUDIT.md)
 
-![CaseProof web review workspace with current stage, filtered synthetic change and separate verified evidence](docs/images/v1-review-desktop.jpg)
+![CaseProof 웹 작업대의 처리 단계, 합성 요청과 근거 영역](docs/images/v1-review-desktop.jpg)
 
-[Narrow-screen web capture](docs/images/v1-review-mobile.jpg). Screenshots show temporary synthetic workflows and recorded demo decisions.
+[좁은 웹 화면](docs/images/v1-review-mobile.jpg)도 합성 요청과 시연 승인 결과를 보여 줍니다.
 
 ## 기술 및 검증 범위
 
@@ -35,17 +35,11 @@ The web interface combines locally included [Tabler 1.7.3](https://docs.tabler.i
 - LLM 연동, 운영 인증, 외부 증거 앵커, 360건 연구 및 외부 독립 검토는 별도 범위입니다. PostgreSQL 권한 실험은 운영 배포 수용을 검증하지 않습니다.
 - `PASS`는 사례의 숫자가 합성 규칙과 일치했다는 의미입니다. `APPROVED_FOR_DEMO`는 시연 승인만을 의미합니다.
 
-## Versioned workspace
+## 버전이 보존되는 작업대
 
-The synthetic workspace saves an unfinished request before sending it. Reopen
-the same browser profile and origin, sign in again, and select **원래 요청 복구**
-to check the original result. [Recovery and restored-database behavior](docs/REQUEST_RECONNECT.md)
-explains how the workflow handles uncertain requests.
+합성 시연 작업대는 요청을 보내기 전에 내용을 보관합니다. 처리 여부가 불분명하면 같은 브라우저 프로필과 주소에서 다시 로그인한 뒤 **원래 요청 복구**를 선택합니다. [요청 복구와 DB 복원](docs/REQUEST_RECONNECT.md)
 
-Saved v2 evaluations can be inspected through the workspace's lazy history and
-baseline/candidate comparison controls. Comparison describes saved results and
-input/context hashes; it does not change the latest evaluation or recommend
-approval. See [saved-run comparison and bounds](docs/RUN_COMPARISON.md).
+저장된 v2 평가는 이력에서 읽거나 기준·후보 실행을 선택해 비교할 수 있습니다. 비교 화면에는 두 실행의 결과와 입력·평가 조건 해시가 표시됩니다. [저장 실행 비교 범위](docs/RUN_COMPARISON.md)
 
 ```powershell
 py -3.12 -m venv .venv
@@ -54,15 +48,15 @@ $env:CASEPROOF_DEMO_MODE = '1'
 .\.venv\Scripts\python.exe -m scripts.windows_checks scripts.v1_demo --port 8766
 ```
 
-Open `http://127.0.0.1:8766/v1`. The command creates a new disposable profile and prints its path. Copy role tokens from that ignored local `profile.json`; tokens are never published or stored in browser persistent storage. Restart with `--profile <path>` to preserve the same synthetic database. No migration or seeding runs on application startup. See [workspace details](docs/G4_WORKSPACE.md), [policy packs](docs/G3_POLICIES.md), [PostgreSQL checks](docs/G2_POSTGRES.md), and [local recovery](docs/operations/RECOVERY.md).
+`http://127.0.0.1:8766/v1`을 엽니다. 실행 명령이 일회용 프로필을 만들고 폴더 경로를 표시합니다. Git에 포함되지 않는 로컬 `profile.json`에서 역할별 토큰을 복사합니다. 브라우저는 토큰을 영구 저장하지 않습니다. 같은 합성 데이터베이스를 쓰려면 `--profile <path>`를 지정해 다시 시작합니다. 앱 시작과 데이터베이스 마이그레이션·초기 자료 생성은 별도 단계입니다. [작업대](docs/G4_WORKSPACE.md) · [규칙 팩](docs/G3_POLICIES.md) · [PostgreSQL 검증](docs/G2_POSTGRES.md) · [로컬 복구](docs/operations/RECOVERY.md)
 
-dev6 writes versioned execution configurations. Preserve older profiles; their v1 runs remain `LEGACY_UNVERIFIED` and require a fresh evaluation in a new disposable profile. See [the explicit format boundary](docs/EXECUTION_CONFIG.md).
+dev6는 실행 설정의 버전을 기록합니다. 이전 프로필은 보관하고, `LEGACY_UNVERIFIED`로 표시되는 기존 v1 실행은 새 일회용 프로필에서 다시 평가합니다. [실행 설정 형식](docs/EXECUTION_CONFIG.md)
 
-Optional test environments use separate hash locks: `requirements-evaluation.lock` for NumPy statistics and `requirements-postgres.lock` for PostgreSQL. The [readiness checklist](docs/operations/RELEASE_READINESS.md) separates local exercises from unavailable external evidence.
+NumPy 통계 검증은 `requirements-evaluation.lock`, PostgreSQL 검증은 `requirements-postgres.lock`의 해시 고정 환경을 사용합니다. [릴리스 점검표](docs/operations/RELEASE_READINESS.md)에 로컬 시험과 외부 검증 상태를 기록했습니다.
 
-## Baseline quick start
+## 기본 데모 실행
 
-Python 3.11–3.13 is the declared support target. See [validation](docs/VALIDATION.md) for versions actually run. Node.js is only needed for the JavaScript syntax check. No cloud account or API key is needed.
+지원 대상은 Python 3.11–3.13입니다. Node.js는 JavaScript 문법 검사에 사용합니다. 데모는 별도 계정이나 API 키 없이 실행할 수 있습니다. [환경별 실제 검증 결과](docs/VALIDATION.md)
 
 ### Windows PowerShell
 
@@ -74,7 +68,7 @@ $env:CASEPROOF_DEMO_MODE = '1'
 .\.venv\Scripts\python.exe -m uvicorn service.app:app --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-Activation is optional; these commands avoid PowerShell activation-policy issues. Use another supported Python minor if 3.12 is unavailable.
+위 명령은 가상 환경을 활성화하지 않고도 실행할 수 있습니다. 3.12가 없으면 지원하는 다른 Python 버전을 사용하세요.
 
 ### macOS / Linux
 
@@ -86,21 +80,21 @@ export CASEPROOF_DEMO_MODE=1
 .venv/bin/python -m uvicorn service.app:app --host 127.0.0.1 --port 8000 --workers 1
 ```
 
-Open [http://127.0.0.1:8000](http://127.0.0.1:8000). The initializer prints freshly generated local tokens once. Keep them private; they do not expire automatically. Change roles with **연결 해제 / 역할 변경**. Tokens remain in browser memory only. Initialization does not reset an existing database or reissue its credentials. For another demo, choose a **new database path** using `CASEPROOF_DATABASE_URL` and pass the same path to `init-demo --database`; do not delete an unknown database.
+[http://127.0.0.1:8000](http://127.0.0.1:8000)을 엽니다. 초기화 명령은 자동 만료되지 않는 새 로컬 토큰을 한 번 표시합니다. 토큰을 비공개로 보관하세요. **연결 해제 / 역할 변경**으로 역할을 바꿀 수 있으며, 브라우저는 토큰을 메모리에만 보관합니다. 초기화는 기존 데이터베이스와 자격 증명을 보존합니다. 별도 시연에는 `CASEPROOF_DATABASE_URL`과 `init-demo --database`에 같은 새 데이터베이스 경로를 지정합니다.
 
-## Baseline five-minute scenario
+## 기본 데모 시나리오
 
-1. Sign in as `aurora-analyst`; create a change for `AUTO-101 / DOCUMENT_WINDOW_DAYS`.
-2. Evaluate `30` days on `2026-06-30`, then `20` days on `2026-07-01`.
-3. Submit for domain review. Sign in as `aurora-reviewer`, inspect evidence and record a meaningful approval reason.
-4. Sign in as `aurora-approver` and approve for the demo with a reason.
-5. Inspect evidence: audit and record checks should be true; `external_trust_anchor` and `real_release` stay false.
+1. `aurora-analyst`로 접속해 `AUTO-101 / DOCUMENT_WINDOW_DAYS` 변경을 등록합니다.
+2. `2026-06-30`에 `30`일, `2026-07-01`에 `20`일이 적용되는지 평가합니다.
+3. 현업 검토를 요청합니다. `aurora-reviewer`로 접속해 근거를 살펴보고 승인 이유를 기록합니다.
+4. `aurora-approver`로 접속해 이유와 함께 데모 승인을 기록합니다.
+5. 근거에서 감사 및 기록 검사가 `true`, `external_trust_anchor`와 `real_release`가 `false`인지 확인합니다.
 
-A failed evaluation blocks this baseline change. Create a fresh change to try again. The separate `/api/v1` workspace supports complete immutable evaluation runs and linked corrections; use its explicit launcher above to exercise that workflow.
+기본 데모에서 평가에 실패하면 변경이 차단됩니다. 다시 시험하려면 새 변경을 등록합니다. 저장된 평가 실행과 연결된 정정 이력을 다루려면 위의 `/api/v1` 실행 명령을 사용합니다.
 
-## Checks
+## 검증 명령
 
-Run from the repository root with the virtual environment's Python:
+저장소의 최상위 폴더에서 가상 환경의 Python으로 실행합니다.
 
 ```bash
 python -m pytest -q
@@ -109,9 +103,9 @@ python -m scripts.check_ui_syntax
 python -m scripts.check_package
 ```
 
-Smoke reports use new `reports/runs/<run-id>/` paths. To choose another **new** output path: `python -m scripts.smoke --output reports/my-run/smoke.json`. Existing reports are never overwritten. Test tokens are public test fixtures used only with disposable databases; they are not login credentials for the CLI demo.
+스모크 검사 결과는 새 `reports/runs/<run-id>/` 폴더에 저장합니다. 출력 경로를 직접 지정하려면 `python -m scripts.smoke --output reports/my-run/smoke.json`처럼 새 파일 경로를 지정합니다. 테스트 토큰은 일회용 DB에 사용하는 공개 테스트 자료입니다. 실제 데모는 초기화가 발급한 토큰을 사용합니다.
 
-Optional isolated browser scenario:
+별도 브라우저 시나리오는 다음과 같이 실행합니다.
 
 ```bash
 python -m pip install --require-hashes -r requirements-browser.lock
@@ -119,25 +113,25 @@ python -m playwright install chromium
 python -m scripts.browser_e2e
 ```
 
-This starts its own local server and temporary database, then cleans up only the files it created. A browser installation or execution failure is a failed/unrun check, not a browser PASS.
+브라우저 검사는 별도 로컬 서버와 임시 데이터베이스를 만들고, 검사에서 생성한 파일을 정리합니다. 브라우저 설치와 실제 실행 결과는 각각 기록합니다.
 
-The included GitHub Actions workflow defines fresh CI runs. A workflow file is not proof GitHub executed it. Dependency audit and Docker/browser/platform checks are reported separately in [VALIDATION.md](docs/VALIDATION.md).
+[GitHub Actions](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/actions/workflows/ci.yml?query=branch%3Amain)에서 해당 커밋의 CI 결과를 확인할 수 있습니다. 의존성 검사와 Docker·브라우저·플랫폼별 확인 결과는 [검증 기록](docs/VALIDATION.md)에 있습니다.
 
-## Architecture and documentation
+## 설계와 문서
 
-| Path | Purpose |
+| 문서 | 내용 |
 | --- | --- |
-| [prebuild/01_TARGET_DESIGN.md](prebuild/01_TARGET_DESIGN.md) | Product scope, design decisions, invariants |
-| [prebuild/08_IMPLEMENTATION_CONTRACTS.md](prebuild/08_IMPLEMENTATION_CONTRACTS.md) | Exact target API, transactions, state/evidence and data contracts |
-| [prebuild/05_DEVELOPMENT_GUIDE.md](prebuild/05_DEVELOPMENT_GUIDE.md) | Development workflow, safety boundaries and verification |
-| [prebuild/02_IMPLEMENTATION_PLAN.md](prebuild/02_IMPLEMENTATION_PLAN.md) | Development roadmap and acceptance criteria |
-| [contracts/README.md](contracts/README.md) | Versioned schemas, structural examples and links to the actual standalone v1 API |
-| [docs/STATUS.md](docs/STATUS.md) | Implemented vs planned capability matrix |
-| [docs/PUBLISHING.md](docs/PUBLISHING.md) | GitHub publishing and release procedure |
-| [docs/PROVENANCE.md](docs/PROVENANCE.md) | Origin, retained code, exclusions and license boundaries |
+| [목표 설계](prebuild/01_TARGET_DESIGN.md) | 제품 범위, 설계 판단, 지켜야 할 조건 |
+| [구현 계약](prebuild/08_IMPLEMENTATION_CONTRACTS.md) | API, 트랜잭션, 상태·근거·데이터 계약 |
+| [개발 안내](prebuild/05_DEVELOPMENT_GUIDE.md) | 개발 절차, 안전 범위, 검증 방법 |
+| [구현 계획](prebuild/02_IMPLEMENTATION_PLAN.md) | 개발 순서와 수용 기준 |
+| [버전별 계약](contracts/README.md) | 스키마, 구조 예제, 독립 v1 API |
+| [현재 상태](docs/STATUS.md) | 구현된 기능과 계획 |
+| [배포 안내](docs/PUBLISHING.md) | 공개·패키징 절차 |
+| [출처와 라이선스](docs/PROVENANCE.md) | 원본, 보존한 코드, 제외 대상과 라이선스 |
 
-The target architecture is a modular monolith. Full enterprise functionality, real-model experiments, SME review, and external operations evidence remain separate gates. No score or “production ready” label is earned by the number of documents or tests.
+목표 아키텍처는 모듈형 모놀리스입니다. 엔터프라이즈 기능 전체, 실제 모델 실험, 전문가 검토, 외부 운영 근거는 각자의 수용 기준으로 검증합니다.
 
-## Contributing and security
+## 기여와 보안
 
-Read [CONTRIBUTING.md](CONTRIBUTING.md), [SECURITY.md](SECURITY.md), and [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md). Original project files are offered under [Apache-2.0](LICENSE); dependency licenses are separate. Before the first public publication, the maintainer must confirm rights to the imported original code and enable a real private security-reporting channel. No release has been published by preparing this package.
+기여 전에 [기여 안내](CONTRIBUTING.md), [보안 신고 안내](SECURITY.md), [행동 강령](CODE_OF_CONDUCT.md)을 확인하세요. 프로젝트 원본 파일은 [Apache-2.0](LICENSE)을 따르며, 의존성마다 별도 라이선스가 적용됩니다. 공개 Windows 실행 파일과 확인 범위는 [릴리스](https://github.com/KIMJINWOO0548/CaseProof_Enterprise/releases/latest)에 기록합니다.
